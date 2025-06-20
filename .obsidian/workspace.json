@@ -167,6 +167,7 @@
   },
   "active": "7378b553131365f1",
   "lastOpenFiles": [
+    "README.md",
     "reactjs/reactjs-internals.md",
     "reactjs/reactjs-production-optimization.md",
     "reactjs/reactjs-architecture-patterns.md",
@@ -196,7 +197,6 @@
     "javascript/The Complete React.js Mastery Roadmap_ From Fundamentals to Advanced Architecture.md",
     "The Complete React.js Mastery Roadmap_ From Fundamentals to Advanced Architecture.md",
     "The Architect's Roadmap_ A Definitive Guide to JavaScript Mastery.md",
-    "09-frontend-system-design.md",
     "Untitled.canvas"
   ]
 }
