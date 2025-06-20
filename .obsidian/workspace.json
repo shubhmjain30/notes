@@ -167,6 +167,13 @@
   },
   "active": "7378b553131365f1",
   "lastOpenFiles": [
+    "reactjs/reactjs-internals.md",
+    "reactjs/reactjs-production-optimization.md",
+    "reactjs/reactjs-architecture-patterns.md",
+    "reactjs/reactjs-ecosystem.md",
+    "reactjs/reactjs-interactivity-hooks.md",
+    "reactjs/reactjs-core-concepts.md",
+    "reactjs/reactjs-bedrock.md",
     "javascript/javascript-system-design.md",
     "javascript/javascript-performance-memory.md",
     "javascript/javascript-advanced-frontend.md",
@@ -190,13 +197,6 @@
     "The Complete React.js Mastery Roadmap_ From Fundamentals to Advanced Architecture.md",
     "The Architect's Roadmap_ A Definitive Guide to JavaScript Mastery.md",
     "09-frontend-system-design.md",
-    "08-advanced-performance-memory.md",
-    "07-frontend-design-patterns.md",
-    "06-es6-performance.md",
-    "05-asynchronous-programming.md",
-    "04-prototypes-classes.md",
-    "03-scope-closures-this.md",
-    "02-values-types-grammar.md",
     "Untitled.canvas"
   ]
 }
