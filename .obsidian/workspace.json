@@ -1,0 +1,202 @@
+{
+  "main": {
+    "id": "56b1de7fbf1d5068",
+    "type": "split",
+    "children": [
+      {
+        "id": "a1eeb194596d90ba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "7378b553131365f1",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "eebd0df86f810f5d",
+    "type": "split",
+    "children": [
+      {
+        "id": "8d1618986825786b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "33c78ad343a8039e",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a64e925bce3bce90",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "2c5115ee48a1d30c",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 237.5
+  },
+  "right": {
+    "id": "8cba6da67d5a9588",
+    "type": "split",
+    "children": [
+      {
+        "id": "065e267da623ddf3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ab9ec7ec975d4f8c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "2025-06-16.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for 2025-06-16"
+            }
+          },
+          {
+            "id": "184bb92a5975b2bd",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "2025-06-16.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from 2025-06-16"
+            }
+          },
+          {
+            "id": "e64e205e3d8ad5dc",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "24c6d2c77c4ec4c8",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "2025-06-16.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of 2025-06-16"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "obsidian-git:Open Git source control": false
+    }
+  },
+  "active": "7378b553131365f1",
+  "lastOpenFiles": [
+    "javascript/javascript-system-design.md",
+    "javascript/javascript-performance-memory.md",
+    "javascript/javascript-advanced-frontend.md",
+    "javascript/javascript-modern-toolkit.md",
+    "javascript/javascript-async.md",
+    "javascript/javascript-object-model.md",
+    "javascript/javascript-structure.md",
+    "javascript/javascript-building-blocks.md",
+    "javascript/javascript-first-principle.md",
+    "reactjs/reactjs-roadmap.md",
+    "javascript/javascript-roadmap.md",
+    "javascript/The Architect's Roadmap_ A Definitive Guide to JavaScript Mastery.md",
+    "javascript",
+    "reactjs/The Complete React.js Mastery Roadmap_ From Fundamentals to Advanced Architecture.md",
+    "reactjs",
+    "javascripts/The Architect's Roadmap_ A Definitive Guide to JavaScript Mastery.md",
+    "javascripts",
+    "reactjs/The Architect's Roadmap_ A Definitive Guide to JavaScript Mastery.md",
+    "untitled folder",
+    "javascript/The Complete React.js Mastery Roadmap_ From Fundamentals to Advanced Architecture.md",
+    "The Complete React.js Mastery Roadmap_ From Fundamentals to Advanced Architecture.md",
+    "The Architect's Roadmap_ A Definitive Guide to JavaScript Mastery.md",
+    "09-frontend-system-design.md",
+    "08-advanced-performance-memory.md",
+    "07-frontend-design-patterns.md",
+    "06-es6-performance.md",
+    "05-asynchronous-programming.md",
+    "04-prototypes-classes.md",
+    "03-scope-closures-this.md",
+    "02-values-types-grammar.md",
+    "Untitled.canvas"
+  ]
+}
