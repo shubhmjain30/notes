@@ -1,14 +1,13 @@
-
 ## **Section 1: The First Principle \- JavaScript as a Compiled Language**
 
 [[javascript-first-principle.md]]
 
 A pervasive and foundational misunderstanding of JavaScript is that it is an "interpreted" language, processed line-by-line from top to bottom. While this view might seem intuitive, it is fundamentally incorrect and obstructs a true understanding of the language's core mechanics. To achieve mastery, one must begin with the correct mental model: JavaScript is a compiled language.
 
-- This compilation does not happen in a separate, advance build step as with languages like C++ or Java. Instead, the JavaScript engine performs its compilation in a highly sophisticated and optimized manner, often just microseconds before the code is executed.
-- This "just-in-time" compilation is what allows for the dynamic nature of the language, but it is compilation nonetheless. Understanding this process is not an academic exercise; it is the key to unlocking a logical and predictable understanding of scope, hoisting, and other behaviors that otherwise appear magical or buggy.
+-   This compilation does not happen in a separate, advance build step as with languages like C++ or Java. Instead, the JavaScript engine performs its compilation in a highly sophisticated and optimized manner, often just microseconds before the code is executed.
+-   This "just-in-time" compilation is what allows for the dynamic nature of the language, but it is compilation nonetheless. Understanding this process is not an academic exercise; it is the key to unlocking a logical and predictable understanding of scope, hoisting, and other behaviors that otherwise appear magical or buggy.
 
-### **1.1. The Compiler Conversation: Deconstructing var a = 2;**
+### **1.1. The Compiler Conversation: Deconstructing `var a = 2;`**
 
 A seemingly atomic statement such as var a = 2; is not a single operation to the JavaScript engine. It is processed in two distinct phases, handled by a cast of interacting components within the engine.
 
@@ -22,7 +21,7 @@ To reason about the process, it is useful to personify the components involved:
 
 **The Two-Pass Process**
 
-When the Engine encounters var a = 2;, it initiates a conversation between these components, resulting in a two-pass process:
+When the Engine encounters `var a = 2;`, it initiates a conversation between these components, resulting in a two-pass process:
 
 1. **Compilation:** The Compiler begins by tokenizing the program (e.g., into var, a, =, 2, ;) and parsing it into an AST. When it processes the declaration, it does not allocate memory or assign a value. Instead, it performs the following:
     - It encounters var `a` and asks the Scope Manager if `a` variable named a already exists in the current scope bucket.
@@ -50,12 +49,14 @@ Lexical scope is the most common scoping model and is the one used by JavaScript
 
 **Scope Bubbles**
 A helpful metaphor for visualizing lexical scope is a series of nested "scope bubbles".
+
 -   Each function or block ({...}) creates a new scope bubble.
 -   When one scope is defined inside another, its bubble is strictly nested within the parent's bubble. A scope bubble can never be partially in two different outer scopes.
 -   This nesting creates a hierarchical chain of scopes.
 
 **The Look-up Process**
 When the Engine needs to resolve an identifier reference (either LHS or RHS), it follows a simple, deterministic process:
+
 1. It starts its search in the current, innermost scope bubble.
 2. If the identifier is not found, it moves one level up to the immediate enclosing scope bubble and searches there.
 3. This process repeats, moving outwards through each layer of nested scope.
@@ -65,21 +66,20 @@ When the Engine needs to resolve an identifier reference (either LHS or RHS), it
 Consider this code example:
 
 ```JavaScript
-function outer() {  
-	 var a = 1;  
-	 function inner() {  
-		 var b = 2;  
-		 // RHS look-up for 'a' starts in inner's scope, fails, moves to outer's scope, and finds it.  
-		 // RHS look-up for 'b' starts in inner's scope and finds it immediately.  
-		 console.log(a + b); // 3  
-		 }  
-	 inner();  
-	 // An RHS look-up for 'b' here would fail, as it cannot look down into inner's scope.  
-	 // console.log(b); // ReferenceError: b is not defined  
-}  
+function outer() {
+	 var a = 1;
+	 function inner() {
+		 var b = 2;
+		 // RHS look-up for 'a' starts in inner's scope, fails, moves to outer's scope, and finds it.
+		 // RHS look-up for 'b' starts in inner's scope and finds it immediately.
+		 console.log(a + b); // 3
+		 }
+	 inner();
+	 // An RHS look-up for 'b' here would fail, as it cannot look down into inner's scope.
+	 // console.log(b); // ReferenceError: b is not defined
+}
 outer();
 ```
-
 
 The scope of inner is nested within the scope of outer. Code inside inner can access variables from its own scope (b) and its parent's scope (a). However, code in outer cannot access variables declared inside inner. This predictable, one-way accessibility is the core of lexical scope.
 
