@@ -1,20 +1,20 @@
-# **The Architect's Roadmap: A Definitive Guide to JavaScript Mastery**
 
 ## **Section 1: The First Principle \- JavaScript as a Compiled Language**
 
 [[javascript-first-principle.md]]
 
-A pervasive and foundational misunderstanding of JavaScript is that it is an "interpreted" language, processed line-by-line from top to bottom. While this view might seem intuitive, it is fundamentally incorrect and obstructs a true understanding of the language's core mechanics. To achieve mastery, one must begin with the correct mental model: JavaScript is a compiled language.1
+A pervasive and foundational misunderstanding of JavaScript is that it is an "interpreted" language, processed line-by-line from top to bottom. While this view might seem intuitive, it is fundamentally incorrect and obstructs a true understanding of the language's core mechanics. To achieve mastery, one must begin with the correct mental model: JavaScript is a compiled language.
 
-This compilation does not happen in a separate, advance build step as with languages like C++ or Java. Instead, the JavaScript engine performs its compilation in a highly sophisticated and optimized manner, often just microseconds before the code is executed.2 This "just-in-time" compilation is what allows for the dynamic nature of the language, but it is compilation nonetheless. Understanding this process is not an academic exercise; it is the key to unlocking a logical and predictable understanding of scope, hoisting, and other behaviors that otherwise appear magical or buggy.
+- This compilation does not happen in a separate, advance build step as with languages like C++ or Java. Instead, the JavaScript engine performs its compilation in a highly sophisticated and optimized manner, often just microseconds before the code is executed.
+- This "just-in-time" compilation is what allows for the dynamic nature of the language, but it is compilation nonetheless. Understanding this process is not an academic exercise; it is the key to unlocking a logical and predictable understanding of scope, hoisting, and other behaviors that otherwise appear magical or buggy.
 
-### **1.1. The Compiler Conversation: Deconstructing var a \\= 2;**
+### **1.1. The Compiler Conversation: Deconstructing var a = 2;**
 
-A seemingly atomic statement such as var a \\= 2; is not a single operation to the JavaScript engine. It is processed in two distinct phases, handled by a cast of interacting components within the engine.1
+A seemingly atomic statement such as var a = 2; is not a single operation to the JavaScript engine. It is processed in two distinct phases, handled by a cast of interacting components within the engine.
 
 **The Cast of Characters**
 
-To reason about the process, it is useful to personify the components involved 1:
+To reason about the process, it is useful to personify the components involved:
 
 -   **Engine:** The orchestrator of the entire process, responsible for start-to-finish compilation and execution of the JavaScript program.
 -   **Compiler:** The Engine's subordinate, which handles the work of parsing the source code into an Abstract Syntax Tree (AST) and generating executable code.
@@ -22,67 +22,64 @@ To reason about the process, it is useful to personify the components involved 1
 
 **The Two-Pass Process**
 
-When the Engine encounters var a \\= 2;, it initiates a conversation between these components, resulting in a two-pass process 1:
+When the Engine encounters var a = 2;, it initiates a conversation between these components, resulting in a two-pass process:
 
-1. **Pass 1 (Compilation):** The Compiler begins by tokenizing the program (e.g., into var, a, \\=, 2, ;) and parsing it into an AST.2 When it processes the declaration, it does not allocate memory or assign a value. Instead, it performs the following:
-    - It encounters var a and asks the Scope Manager if a variable named a already exists in the current scope bucket.
-    - If a variable a already exists, the Compiler ignores the declaration and moves on.
-    - If not, the Compiler produces code that, when executed, will ask the Scope Manager to declare a new variable called a within that scope.
-2. **Pass 2 (Execution):** After compilation, the Engine begins executing the machine-level instructions produced by the Compiler. When it reaches the instruction for a \\= 2, it does the following:
-    - The Engine asks the Scope Manager if a variable named a is accessible in the current scope.
+1. **Compilation:** The Compiler begins by tokenizing the program (e.g., into var, a, =, 2, ;) and parsing it into an AST. When it processes the declaration, it does not allocate memory or assign a value. Instead, it performs the following:
+    - It encounters var `a` and asks the Scope Manager if `a` variable named a already exists in the current scope bucket.
+    - If `a` variable a already exists, the Compiler ignores the declaration and moves on.
+    - If not, the Compiler produces code that, when executed, will ask the Scope Manager to declare a new variable called `a` within that scope.
+2. **Execution:** After compilation, the Engine begins executing the machine-level instructions produced by the Compiler. When it reaches the instruction for `a = 2`, it does the following:
+    - The Engine asks the Scope Manager if a variable named `a` is accessible in the current scope.
     - If so, the Engine proceeds to assign the value 2 to it.
-    - If not, the Engine will continue looking for a in outer scopes (as detailed in the next section).
+    - If not, the Engine will continue looking for `a` in outer scopes (as detailed in the next section).
 
 This separation is the fundamental reason for behaviors like hoisting. The declaration part of a statement happens during the initial compilation phase, while the assignment part happens later, during the execution phase.
 
 **LHS vs. RHS Look-ups**
 
-To further refine this model, it is critical to understand the two types of look-ups the Engine performs when consulting the Scope Manager.1
+To further refine this model, it is critical to understand the two types of look-ups the Engine performs when consulting the Scope Manager.
 
--   **LHS (Left-Hand Side) Look-up:** An LHS look-up occurs when a variable appears on the left-hand side of an assignment operation (e.g., a \\= 2). The goal is to find the variable's container itself, to place a value into it.
--   **RHS (Right-Hand Side) Look-up:** An RHS look-up is essentially a retrieval of a variable's source value. It occurs when a variable appears on the right-hand side of an assignment (e.g., console.log(a)) or in any other context where its value is needed.
+-   **LHS (Left-Hand Side) Look-up:** An LHS look-up occurs when a variable appears on the left-hand side of an assignment operation (e.g., `a = 2`). The goal is to find the variable's container itself, to place a value into it.
+-   **RHS (Right-Hand Side) Look-up:** An RHS look-up is essentially a retrieval of a variable's source value. It occurs when a variable appears on the right-hand side of an assignment (e.g., `console.log(a)`) or in any other context where its value is needed.
 
-This distinction is vital for accurate error diagnosis. If an RHS look-up for a variable fails to find it anywhere in the nested scopes, the Engine throws a ReferenceError. In non-strict mode, if an LHS look-up fails to find the variable, a new global variable is implicitly created to fulfill the assignment. In strict mode, this action is prohibited, and a ReferenceError is thrown instead.
+This distinction is vital for accurate error diagnosis. If an RHS look-up for a variable fails to find it anywhere in the nested scopes, the Engine throws a `ReferenceError`. In non-strict mode, if an LHS look-up fails to find the variable, a new global variable is implicitly created to fulfill the assignment. In strict mode, this action is prohibited, and a `ReferenceError` is thrown instead.
 
 ### **1.2. Lexical Scope: The Author-Time Decision**
 
-Lexical scope is the most common scoping model and is the one used by JavaScript. The term "lexical" implies that scope is defined during the lexing phase of compilation, based entirely on where variables and blocks of scope are authored by the developer at write-time. This structure is therefore largely static and predictable.1
+Lexical scope is the most common scoping model and is the one used by JavaScript. The term "lexical" implies that scope is defined during the lexing phase of compilation, based entirely on where variables and blocks of scope are authored by the developer at write-time. This structure is therefore largely static and predictable.
 
 **Scope Bubbles**
-
-A helpful metaphor for visualizing lexical scope is a series of nested "scope bubbles".4
-
+A helpful metaphor for visualizing lexical scope is a series of nested "scope bubbles".
 -   Each function or block ({...}) creates a new scope bubble.
 -   When one scope is defined inside another, its bubble is strictly nested within the parent's bubble. A scope bubble can never be partially in two different outer scopes.
 -   This nesting creates a hierarchical chain of scopes.
 
 **The Look-up Process**
-
-When the Engine needs to resolve an identifier reference (either LHS or RHS), it follows a simple, deterministic process 1:
-
+When the Engine needs to resolve an identifier reference (either LHS or RHS), it follows a simple, deterministic process:
 1. It starts its search in the current, innermost scope bubble.
 2. If the identifier is not found, it moves one level up to the immediate enclosing scope bubble and searches there.
 3. This process repeats, moving outwards through each layer of nested scope.
 4. The look-up stops as soon as the first matching identifier declaration is found. This is the principle of "shadowing," where an inner variable declaration can mask an outer one of the same name.
-5. If the look-up reaches the outermost, global scope and still has not found the identifier, the look-up fails, resulting in a ReferenceError (for an RHS look-up).
+5. If the look-up reaches the outermost, global scope and still has not found the identifier, the look-up fails, resulting in a `ReferenceError` (for an RHS look-up).
 
-Consider this code example 1:
+Consider this code example:
 
-JavaScript
-
+```JavaScript
 function outer() {  
- var a \\= 1;  
- function inner() {  
- var b \\= 2;  
- // RHS look-up for 'a' starts in inner's scope, fails, moves to outer's scope, and finds it.  
- // RHS look-up for 'b' starts in inner's scope and finds it immediately.  
- console.log(a \+ b); // 3  
- }  
- inner();  
- // An RHS look-up for 'b' here would fail, as it cannot look down into inner's scope.  
- // console.log(b); // ReferenceError: b is not defined  
+	 var a = 1;  
+	 function inner() {  
+		 var b = 2;  
+		 // RHS look-up for 'a' starts in inner's scope, fails, moves to outer's scope, and finds it.  
+		 // RHS look-up for 'b' starts in inner's scope and finds it immediately.  
+		 console.log(a + b); // 3  
+		 }  
+	 inner();  
+	 // An RHS look-up for 'b' here would fail, as it cannot look down into inner's scope.  
+	 // console.log(b); // ReferenceError: b is not defined  
 }  
 outer();
+```
+
 
 The scope of inner is nested within the scope of outer. Code inside inner can access variables from its own scope (b) and its parent's scope (a). However, code in outer cannot access variables declared inside inner. This predictable, one-way accessibility is the core of lexical scope.
 
@@ -127,7 +124,7 @@ var a \\= 2;
 foo(); // Executes the function, which changes 'a' to 3
 
 function foo() {  
- a \\= 3;  
+ a = 3;  
  console.log(a); // 3  
  var a; // This declaration is hoisted to the top of foo()'s scope  
 }
