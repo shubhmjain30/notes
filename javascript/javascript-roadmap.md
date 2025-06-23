@@ -327,47 +327,49 @@ console.log(fred.username); // undefined
 ```
 In this structure, username and password are private data, shielded from the outside world by the scope of the User function. The publicAPI object exposes only the login method. When fred.login() is called, it can still access and modify the username and password variables because the doLogin function maintains a closure over the scope of User(), even after User() has finished executing.
 
-### **3.3. Demystifying this**
-The this keyword is a source of endless confusion for many developers because it behaves very differently from lexical scope. While scope is static and determined at author-time, this is a dynamic binding determined entirely by _how a function is called_—its "call-site".1
+### **3.3. Demystifying `this`**
+The `this` keyword is a source of endless confusion for many developers because it behaves very differently from lexical scope. While scope is static and determined at author-time, this is a dynamic binding determined entirely by _how a function is called_—its "call-site".
 
 **The Four Rules of this Binding**
-
-To determine the value of this, one must examine the call-site and apply one of four rules in a specific order of precedence.1
+To determine the value of this, one must examine the call-site and apply one of four rules in a specific order of precedence.
 
 1. **Default Binding:** This applies to a standalone function invocation. In non-strict mode, this refers to the global object (window in browsers). In strict mode, this is undefined.  
-   JavaScript  
+```JavaScript  
    function sayHi() {  
     console.log(this.name);  
    }  
-   var name \\= "Global";  
+   var name = "Global";  
    sayHi(); // "Global" (in non-strict mode)
+```
 
 2. **Implicit Binding:** This occurs when a function is called as a method of an object. this refers to the object that contains the function reference at the call-site.  
-   JavaScript  
+```JavaScript  
    function sayHi() {  
     console.log(this.name);  
    }  
-   var person \\= { name: "Kyle", sayHi: sayHi };  
+   var person = { name: "Kyle", sayHi: sayHi };  
    person.sayHi(); // "Kyle"
+```
 
-3. **Explicit Binding:** This involves using the .call() or .apply() methods to force a function to use a specific object for its this binding.  
-   JavaScript  
+3. **Explicit Binding:** This involves using the .call() or .apply() methods to force a function to use a specific object for its `this` binding.  
+```JavaScript  
    function sayHi() {  
     console.log(this.name);  
    }  
-   var person \\= { name: "Kyle" };  
+   var person = { name: "Kyle" };  
    sayHi.call(person); // "Kyle"
+```
 
 4. **new Binding:** When a function is called with the new keyword (a "constructor call"), a new object is created, and this is bound to that new object.  
-   JavaScript  
+```JavaScript  
    function Person(name) {  
-    this.name \\= name;  
+    this.name = name;  
    }  
-   var kyle \\= new Person("Kyle");  
+   var kyle = new Person("Kyle");  
    console.log(kyle.name); // "Kyle"
+```
 
 **this Binding Precedence**
-
 When multiple rules could apply to a call-site, they are resolved according to a clear hierarchy.
 
 | Rank | Binding Rule     | How to Identify                               |
@@ -377,28 +379,25 @@ When multiple rules could apply to a call-site, they are resolved according to a
 | 3    | Implicit Binding | obj.myFunction()                              |
 | 4    | Default Binding  | myFunction()                                  |
 
-_Table derived from rules in 1._
-
 This precedence means that an explicit binding with .call() will override an implicit binding, and a new binding will override both.
 
 **Lexical this with Arrow Functions**
+ES6 arrow functions (=>) provide an alternative to the four standard binding rules. An arrow function does not have its own `this` binding. Instead, it lexically inherits the `this` value from its immediate enclosing function. This makes them a syntactic solution to the common `var self = this;` pattern, which was used to preserve a this context inside callbacks.
 
-ES6 arrow functions (\\=\\\>) provide an alternative to the four standard binding rules. An arrow function does not have its own this binding. Instead, it lexically inherits the this value from its immediate enclosing function. This makes them a syntactic solution to the common var self \\= this; pattern, which was used to preserve a this context inside callbacks.1
+```JavaScript
 
-JavaScript
-
-var controller \\= {  
+var controller = {  
  makeRequest: function() {  
- // \`this\` here refers to the \`controller\` object  
- btn.addEventListener("click", () \\=\\\> {  
- // Inside the arrow function, \`this\` is lexically inherited  
- // from \`makeRequest\`, so it also refers to \`controller\`.  
- this.makeRequest();  
- }, false);  
+ // `this` here refers to the `controller` object  
+		 btn.addEventListener("click", () => {  
+		 // Inside the arrow function, `this` is lexically inherited  
+		 // from `makeRequest`, so it also refers to `controller`.  
+		 this.makeRequest();  
+	 }, false);  
  }  
 };
-
-Using an arrow function here is appropriate because it solves a specific this binding problem. Using it for top-level functions or methods on an object literal where the standard this rules are desired would be a misapplication of the feature and lead to incorrect behavior.
+```
+Using an arrow function here is appropriate because it solves a specific this binding problem. Using it for top-level functions or methods on an object literal where the standard this rules are desired would be a misapplication of the feature and lead to incorrect behaviour.
 
 ---
 
