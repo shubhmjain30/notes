@@ -8,6 +8,7 @@ A pervasive and foundational misunderstanding of JavaScript is that it is an "in
 -   This "just-in-time" compilation is what allows for the dynamic nature of the language, but it is compilation nonetheless. Understanding this process is not an academic exercise; it is the key to unlocking a logical and predictable understanding of scope, hoisting, and other behaviors that otherwise appear magical or buggy.
 
 ### **1.1. The Compiler Conversation: Deconstructing `var a = 2;`**
+
 A seemingly atomic statement such as var a = 2; is not a single operation to the JavaScript engine. It is processed in two distinct phases, handled by a cast of interacting components within the engine.
 
 **The Cast of Characters**
@@ -40,6 +41,7 @@ To further refine this model, it is critical to understand the two types of look
 This distinction is vital for accurate error diagnosis. If an RHS look-up for a variable fails to find it anywhere in the nested scopes, the Engine throws a `ReferenceError`. In non-strict mode, if an LHS look-up fails to find the variable, a new global variable is implicitly created to fulfill the assignment. In strict mode, this action is prohibited, and a `ReferenceError` is thrown instead.
 
 ### **1.2. Lexical Scope: The Author-Time Decision**
+
 Lexical scope is the most common scoping model and is the one used by JavaScript. The term "lexical" implies that scope is defined during the lexing phase of compilation, based entirely on where variables and blocks of scope are authored by the developer at write-time. This structure is therefore largely static and predictable.
 
 **Scope Bubbles**
@@ -79,30 +81,31 @@ outer();
 The scope of inner is nested within the scope of outer. Code inside inner can access variables from its own scope (b) and its parent's scope (a). However, code in outer cannot access variables declared inside inner. This predictable, one-way accessibility is the core of lexical scope.
 
 ### **1.3. Hoisting: The Result of Compilation**
+
 Hoisting is one of the most frequently misunderstood concepts in JavaScript. It is not a feature where code is physically moved around by the engine. Rather, hoisting is the logical and observable outcome of JavaScript being a compiled language that processes declarations in a separate pass before execution. All declarations within a scope are registered with the
 scope manager during the compilation phase, it appears as if they have been "hoisted" or "moved" to the top of their containing scope.
 
 **Function Declarations vs. Function Expressions**
 The distinction between function declarations and function expressions is critical to understanding hoisting.
 
--   **Function Declarations:** The entire function, including its name and body, is hoisted. This means you can call a function before its physical location in the code.  
+-   **Function Declarations:** The entire function, including its name and body, is hoisted. This means you can call a function before its physical location in the code.
 
-```JavaScript  
-    hoistedFunction(); // Works\! Prints "I am hoisted."
+```javascript
+hoistedFunction(); // Works! Prints "I am hoisted."
 
-    function hoistedFunction() {  
-     console.log("I am hoisted.");  
-    }
+function hoistedFunction() {
+	console.log("I am hoisted.");
+}
 ```
 
--   **Function Expressions:** When a function is assigned to a variable (e.g., var notHoisted = function() {...};), only the variable declaration (var notHoisted;) is hoisted. The assignment of the function value remains in place and is not executed until that line of code is reached.  
+-   **Function Expressions:** When a function is assigned to a variable (e.g., var notHoisted = function() {...};), only the variable declaration (var notHoisted;) is hoisted. The assignment of the function value remains in place and is not executed until that line of code is reached.
 
-``` JavaScript  
-    notHoisted(); // TypeError: notHoisted is not a function
+```javascript
+notHoisted(); // TypeError: notHoisted is not a function
 
-    var notHoisted = function() {  
-         console.log("I am not fully hoisted.");  
-   };
+var notHoisted = function () {
+	console.log("I am not fully hoisted.");
+};
 ```
 
 In this case, var notHoisted is hoisted, so the variable exists from the top of the scope with an initial value of undefined. Attempting to invoke undefined as a function results in a TypeError.
@@ -111,16 +114,16 @@ In this case, var notHoisted is hoisted, so the variable exists from the top of 
 When both variable and function declarations for the same identifier exist in a scope, function declarations take precedence and are hoisted first. Subsequent variable declarations for the same name are treated as duplicates and are ignored by the compiler.
 
 Consider this classic example:
-``` JavaScript
 
+```javascript
 var a = 2;
 
 foo(); // Executes the function, which changes 'a' to 3
 
-function foo() {  
- a = 3;  
- console.log(a); // 3  
- var a; // This declaration is hoisted to the top of foo()'s scope  
+function foo() {
+	a = 3;
+	console.log(a); // 3
+	var a; // This declaration is hoisted to the top of foo()'s scope
 }
 
 console.log(a); // 2
@@ -128,19 +131,19 @@ console.log(a); // 2
 
 Here is how the engine interprets the foo function after compilation and hoisting:
 
-``` JavaScript
-
-function foo() {  
- var a; // Declaration is hoisted  
- a = 3; // Assignment remains in place  
- console.log(a);  
- // The 'var a' at the end is now gone  
+```javascript
+function foo() {
+	var a; // Declaration is hoisted
+	a = 3; // Assignment remains in place
+	console.log(a);
+	// The 'var a' at the end is now gone
 }
 ```
 
 The console.log(a) at the end of the snippet outputs 2\. This is because the a = 3 assignment inside foo affects the local variable a (local to foo), not the global a.
 
 ### **1.4. Cheating Lexical Scope: eval and with**
+
 While lexical scope is designed to be static and author-time defined, JavaScript provides two mechanisms to modify it at runtime. These features are almost universally discouraged because they subvert the engine's ability to perform crucial optimisations.
 
 -   **eval(..):** The eval function accepts a string of code and executes it as if it were present at that point in the program. If the string contains declarations, eval can modify the existing lexical scope it was called from. In strict mode, eval operates within its own lexical scope, preventing modification of the enclosing scope, but the performance cost remains.
@@ -157,10 +160,12 @@ The primary reason to avoid these mechanisms is their severe impact on performan
 A deep understanding of a language requires mastery of its fundamental components: its values, the types that define their behaviour, and the grammatical rules that govern their interaction. In JavaScript, this is particularly crucial due to its dynamic nature and its powerful, though often misunderstood, coercion system.
 
 ### **2.1. The JavaScript Type System**
+
 The core principle of JavaScript's type system is that variables do not have types; _values_ have types. A variable is merely a container that can hold a value of any type at any time, a characteristic known as dynamic typing. The ECMAScript standard defines eight built-in types.
 
 **The Seven Primitive Types**
 Primitives are values that are not objects and have no methods. They are immutable. The seven primitive types are:
+
 -   `string`: An immutable sequence of characters used to represent text.
 -   `number`: Represents both integer and floating-point numbers using the IEEE 754 double-precision standard. This includes the special numeric values Infinity, \-Infinity, and NaN (Not a Number).
 -   `boolean`: A logical entity with two values: true and false.
@@ -171,24 +176,29 @@ Primitives are values that are not objects and have no methods. They are immutab
 
 **The `object` Type**
 The eighth type is object, which is a complex data type used as a collection of key-value pairs. Unlike primitives, objects are mutable. Several specialised object subtypes exist:
+
 -   `Arrays`: Ordered collections of values indexed by number.
 -   `Functions`: Callable objects that can execute a block of code.
 
 **Type System Anomalies and Clarifications**
+
 -   **undefined vs. undeclared:** These two states are distinct. A variable is undefined if it has been declared but not yet assigned a value. A variable is undeclared if it has never been declared in any accessible scope. A key feature of the typeof operator is its "safety guard": typeof someUndeclaredVar returns the string "undefined" instead of throwing a ReferenceError, making it a safe way to check for the existence of a variable.
 -   **typeof null === "object":** This is a famous, long-standing bug in JavaScript. null is a primitive type, but the typeof operator incorrectly reports it as "object". This is unlikely to ever be fixed due to the vast amount of web code that relies on this behaviour.
 
 ### **2.2. Coercion: The Misunderstood Power Tool**
+
 Coercion—the conversion of a value from one type to another—is one of the most controversial aspects of JavaScript. It is often labeled as a "bad part" of the language, a source of bugs and confusion. However, this perspective often stems from a lack of understanding of its well-defined rules. When mastered, coercion is a powerful mechanism that can lead to more readable and expressive code. Coercion can be categorised as either explicit or implicit.
 
 **Explicit Coercion**
 This is when the type conversion is obvious and intentional from the code's syntax.
+
 -   **To String:** The String() function explicitly converts any value to its string representation. For example, String(42) produces "42".
 -   **To Number:** The Number() function explicitly converts a value to a number. Number("42") produces 42, while Number("hello") produces NaN. A common shorthand for explicit number coercion is the unary \+ operator (e.g., \+"42").
 -   **To Boolean:** The Boolean() function forces a value to true or false. A more common and idiomatic way to achieve this is with the double-negation (or "bang-bang") operator: \!\!. For example, \!\!"hello" produces true.
 
 **Implicit Coercion**
 This occurs when a type conversion is a less obvious side effect of another operation.
+
 -   The \+ operator, when one operand is a string, will implicitly coerce the other operand to a string for concatenation: 42 + "" produces "42".
 -   Arithmetic operators like -, \*, and / will implicitly coerce non-number operands to numbers: "42" - 0 produces 42.
 -   Logical operators and conditional statements like if (value) will implicitly coerce value to a boolean to determine the code path.
@@ -205,15 +215,16 @@ The behaviour of coercion is governed by internal abstract operations like ToStr
 | NaN         | number    | Represents "Not a Number".                             |
 | ""          | string    | An empty string.                                       |
 
-_Table based on 1, Page 36\._
+_Table of JavaScript falsy values_
 
 ### **2.3. Equality, Anomalies, and Gotchas**
 
 The rules of equality and coercion intersect to produce some of JavaScript's most infamous "gotchas." Understanding the difference between loose and strict equality is paramount.
 
-**`==` vs. `===`
--   **`===` (Strict Equality):** Compares two values for equality _without_ allowing any type coercion. If the types are different, it returns false.1
--   **`==` (Loose Equality):** Compares two values for equality _after_ allowing for type coercion if the types are different.1
+\*\*`==` vs. `===`
+
+-   **`===` (Strict Equality):** Compares two values for equality _without_ allowing any type coercion. If the types are different, it returns false.
+-   **`==` (Loose Equality):** Compares two values for equality _after_ allowing for type coercion if the types are different.
 
 While many guides advocate for exclusively using `===`, a more nuanced approach allows for the safe use of `==` in specific contexts, which can improve code readability. A reliable heuristic is: if you can be certain about the types of values involved and they are not true, false, 0, "", or \`\`, using `==` is generally safe and can be more expressive. Otherwise, default to `===` for predictability.
 
@@ -229,7 +240,7 @@ The behaviour of loose equality can be surprising if its rules are not understoo
 | `NaN === NaN`       | false  | NaN is the only value in JavaScript that is not equal to itself. Use Number.isNaN() to check for it.                                                                                                              |
 | `0 === -0`          | true   | Although they are distinct values, strict equality considers them equal. Use Object.is(x, \-0) to distinguish them.                                                                                               |
 
-_Table derived from coercion and equality rules in 1._
+_Table of JavaScript equality comparisons_
 
 ### **2.4. Grammar and Syntax**
 
@@ -249,6 +260,7 @@ JavaScript's grammar contains nuances that can lead to confusion if not properly
 Mastery of JavaScript program structure hinges on a deep, interconnected understanding of three core concepts: **scope**, which dictates where variables are stored and accessed; **closure**, which allows functions to retain access to their birth-scope; and the **this** keyword, which provides a dynamic execution context. These are not isolated topics but an integrated system that governs how data and behaviour are organised and linked.
 
 ### **3.1. The Power of Closure**
+
 Closure is arguably the most essential concept in JavaScript, underpinning patterns from modules to functional programming. Its definition is a direct consequence of lexical scope.
 
 **Core Concept of Closure**
@@ -259,114 +271,125 @@ Closure is the behaviour where a function remembers and maintains access to vari
 **The Classic Loop Problem and Its Modern Solution**
 A quintessential example demonstrates the power and potential pitfalls of closure, especially in pre-ES6 JavaScript.
 
--   **The Problem with var:**  
-    ``` JavaScript  
-    for (var i = 1; i <= 5; i++) {  
-     setTimeout(function timer() {  
-	     console.log(i);  
-     }, i * 1000);  
-    }  
+-   **The Problem with var:**
+    ```javascript
+    for (var i = 1; i <= 5; i++) {
+    setTimeout(function timer() {
+    console.log(i);
+    }, i \* 1000);
+    }
     // Output: 6, 6, 6, 6, 6
+    ```
+
 ```
-    
+
+```
+
 In this code, all five timer functions are created within the single scope of the for loop. They all share a closure over the _same_ variable i. The setTimeout calls are asynchronous. By the time the first timer fires (after 1000ms), the for loop has already completed its synchronous execution, and the value of the single i variable is 6. Thus, all five callbacks log the final value of i.
 
--   **The ES6 Solution with let:**  
-``` JavaScript  
-    for (let i = 1; i <= 5; i++) {  
-     setTimeout(function timer() {  
-     console.log(i);  
-     }, i * 1000);  
-    }  
-    // Output: 1, 2, 3, 4, 5
- ```
-    
+-   **The ES6 Solution with let:**
+
+```javascript
+for (let i = 1; i <= 5; i++) {
+	setTimeout(function timer() {
+		console.log(i);
+	}, i * 1000);
+}
+// Output: 1, 2, 3, 4, 5
+```
+
 The let keyword introduces block scoping. When used in a for loop header, it does something special: it declares a new i variable not just for the loop itself, but for _each iteration_ of the loop. Each timer function therefore closes over a separate, distinct i variable that holds the value for that specific iteration (1, 2, 3, 4, and 5, respectively). This modern feature elegantly solves one of the most common closure-related gotchas.
 
 ### **3.2. The Module Pattern: Closure in Action**
+
 The most prevalent and powerful application of closure in JavaScript is the module pattern. It provides a way to encapsulate implementation details while exposing a public API, a cornerstone of robust software architecture.
 
 **Key Characteristics of the Module Pattern**
 A module is defined by two key characteristics :
+
 1. **An Outer Wrapping Function:** This function is executed at least once (often as an Immediately Invoked Function Expression, or IIFE) to create the enclosing scope.
 2. **A Public API:** The return value of the wrapping function must include a reference to at least one inner function. This inner function has closure over the private inner scope of the wrapper, allowing it to access and manipulate the module's private state.
 
 **Code Example: A User Module**
 This example from _You Don't Know JS_ illustrates the pattern perfectly:
 
- 
-```JavaScript
+```javascript
+function User() {
+	var username, password; // Private variables within User's scope
 
-function User() {  
- var username, password; // Private variables within User's scope
+	// Private function, only accessible within User's scope
+	function doLogin(user, pw) {
+		username = user;
+		password = pw;
+		// Perform login logic...
+		console.log(`User '${username}' logged in.`);
+	}
 
-// Private function, only accessible within User's scope  
- function doLogin(user, pw) {  
-	 username = user;  
-	 password = pw;  
-	 // Perform login logic...  
-	 console.log(`User '${username}' logged in.`);  
- }
+	// The public API is an object with references to inner functions
+	var publicAPI = {
+		login: doLogin,
+	};
 
-	// The public API is an object with references to inner functions  
- var publicAPI = {  
-	 login: doLogin  
- };
-
- return publicAPI;  
+	return publicAPI;
 }
 
-// Create an instance of the User module  
+// Create an instance of the User module
 var fred = User();
 
-// Call the public method, which has closure over private variables  
-fred.login("fred", "12Battery34\!"); // Outputs: User 'fred' logged in.
+// Call the public method, which has closure over private variables
+fred.login("fred", "12Battery34!"); // Outputs: User 'fred' logged in.
 
-// Direct access to private variables is impossible  
+// Direct access to private variables is impossible
 console.log(fred.username); // undefined
 ```
+
 In this structure, username and password are private data, shielded from the outside world by the scope of the User function. The publicAPI object exposes only the login method. When fred.login() is called, it can still access and modify the username and password variables because the doLogin function maintains a closure over the scope of User(), even after User() has finished executing.
 
 ### **3.3. Demystifying `this`**
+
 The `this` keyword is a source of endless confusion for many developers because it behaves very differently from lexical scope. While scope is static and determined at author-time, this is a dynamic binding determined entirely by _how a function is called_—its "call-site".
 
 **The Four Rules of this Binding**
 To determine the value of this, one must examine the call-site and apply one of four rules in a specific order of precedence.
 
-1. **Default Binding:** This applies to a standalone function invocation. In non-strict mode, this refers to the global object (window in browsers). In strict mode, this is undefined.  
-```JavaScript  
-   function sayHi() {  
-    console.log(this.name);  
-   }  
-   var name = "Global";  
-   sayHi(); // "Global" (in non-strict mode)
+1. **Default Binding:** This applies to a standalone function invocation. In non-strict mode, this refers to the global object (window in browsers). In strict mode, this is undefined.
+
+```javascript
+function sayHi() {
+	console.log(this.name);
+}
+var name = "Global";
+sayHi(); // "Global" (in non-strict mode)
 ```
 
-2. **Implicit Binding:** This occurs when a function is called as a method of an object. this refers to the object that contains the function reference at the call-site.  
-```JavaScript  
-   function sayHi() {  
-    console.log(this.name);  
-   }  
-   var person = { name: "Kyle", sayHi: sayHi };  
-   person.sayHi(); // "Kyle"
+2. **Implicit Binding:** This occurs when a function is called as a method of an object. this refers to the object that contains the function reference at the call-site.
+
+```javascript
+function sayHi() {
+	console.log(this.name);
+}
+var person = { name: "Kyle", sayHi: sayHi };
+person.sayHi(); // "Kyle"
 ```
 
-3. **Explicit Binding:** This involves using the .call() or .apply() methods to force a function to use a specific object for its `this` binding.  
-```JavaScript  
-   function sayHi() {  
-    console.log(this.name);  
-   }  
-   var person = { name: "Kyle" };  
-   sayHi.call(person); // "Kyle"
+3. **Explicit Binding:** This involves using the .call() or .apply() methods to force a function to use a specific object for its `this` binding.
+
+```javascript
+function sayHi() {
+	console.log(this.name);
+}
+var person = { name: "Kyle" };
+sayHi.call(person); // "Kyle"
 ```
 
-4. **new Binding:** When a function is called with the new keyword (a "constructor call"), a new object is created, and this is bound to that new object.  
-```JavaScript  
-   function Person(name) {  
-    this.name = name;  
-   }  
-   var kyle = new Person("Kyle");  
-   console.log(kyle.name); // "Kyle"
+4. **new Binding:** When a function is called with the new keyword (a "constructor call"), a new object is created, and this is bound to that new object.
+
+```javascript
+function Person(name) {
+	this.name = name;
+}
+var kyle = new Person("Kyle");
+console.log(kyle.name); // "Kyle"
 ```
 
 **this Binding Precedence**
@@ -384,19 +407,23 @@ This precedence means that an explicit binding with .call() will override an imp
 **Lexical this with Arrow Functions**
 ES6 arrow functions (=>) provide an alternative to the four standard binding rules. An arrow function does not have its own `this` binding. Instead, it lexically inherits the `this` value from its immediate enclosing function. This makes them a syntactic solution to the common `var self = this;` pattern, which was used to preserve a this context inside callbacks.
 
-```JavaScript
-
-var controller = {  
- makeRequest: function() {  
- // `this` here refers to the `controller` object  
-		 btn.addEventListener("click", () => {  
-		 // Inside the arrow function, `this` is lexically inherited  
-		 // from `makeRequest`, so it also refers to `controller`.  
-		 this.makeRequest();  
-	 }, false);  
- }  
+```javascript
+var controller = {
+	makeRequest: function () {
+		// `this` here refers to the `controller` object
+		btn.addEventListener(
+			"click",
+			() => {
+				// Inside the arrow function, `this` is lexically inherited
+				// from `makeRequest`, so it also refers to `controller`.
+				this.makeRequest();
+			},
+			false
+		);
+	},
 };
 ```
+
 Using an arrow function here is appropriate because it solves a specific this binding problem. Using it for top-level functions or methods on an object literal where the standard this rules are desired would be a misapplication of the feature and lead to incorrect behaviour.
 
 ---
@@ -410,6 +437,7 @@ One of the most profound paradigm shifts required for JavaScript mastery is movi
 ### **4.1. The \[\[Prototype\]\] Chain: Behaviour Delegation**
 
 At the heart of JavaScript's object model is the \[\[Prototype\]\] chain.
+
 -   **Core Concept:** Nearly every object in JavaScript has an internal property, denoted in the specification as \[\[Prototype\]\], which is a link to another object. When a property or method is accessed on an object, and the engine cannot find it directly on that object, it follows the \[\[Prototype\]\] link to the next object in the chain and continues the search there. This process repeats until the property is found or the chain ends.
 -   **Delegation, Not Inheritance:** This mechanism is fundamentally **behaviour delegation**. An object does not receive a _copy_ of properties from its prototype; instead, it _delegates_ the responsibility of handling a property or method look-up to another object. This is a crucial distinction from classical inheritance, where behavior is copied from a parent class into a child instance.1
 -   **The End of the Chain:** All normal prototype chains terminate at the built-in Object.prototype. This object contains common utilities like .toString(), .valueOf(), and .hasOwnProperty(), which is why they are available on all standard objects in the language.19
@@ -419,25 +447,29 @@ At the heart of JavaScript's object model is the \[\[Prototype\]\] chain.
 The most direct and idiomatic way to implement behavior delegation in JavaScript is the OLOO (Objects-Linking-to-Other-Objects) pattern, which leverages Object.create().
 
 -   **Object.create():** This ES5 utility creates a new object and sets its internal \[\[Prototype\]\] link to an existing object that you specify. It is the purest expression of the delegation pattern, free from the complexities and misconceptions of "constructor" functions and the .prototype property.1
--   **Code Example: Delegation with OLOO**  
-    JavaScript  
-    // A base object with some behavior  
-    var Task \\= {  
-     setID: function(ID) { this.id \\= ID; }  
-    };
+-   **Code Example: Delegation with OLOO**
 
-    // Create a new object \`XYZ\` and link its \[\[Prototype\]\] to \`Task\`  
-    var XYZ \\= Object.create(Task);
+```javascript
+// A base object with some behavior
+var Task = {
+	setID: function (ID) {
+		this.id = ID;
+	},
+};
 
-    XYZ.prepareTask \\= function(ID, label) {  
-     this.setID(ID); // \`this\` is XYZ. \`setID\` is not on XYZ.  
-     // The engine delegates the look-up to \`Task\`.  
-     this.label \\= label;  
-    };
+// Create a new object `XYZ` and link its [[Prototype]] to `Task`
+var XYZ = Object.create(Task);
 
-    var myTask \\= Object.create(XYZ);  
-    myTask.prepareTask(1, "My XYZ Task");  
-    console.log(myTask.id); // 1
+XYZ.prepareTask = function (ID, label) {
+	this.setID(ID); // `this` is XYZ. `setID` is not on XYZ.
+	// The engine delegates the look-up to `Task`.
+	this.label = label;
+};
+
+var myTask = Object.create(XYZ);
+myTask.prepareTask(1, "My XYZ Task");
+console.log(myTask.id); // 1
+```
 
 In this example, \`myTask\` delegates to \`XYZ\`, which in turn delegates to \`Task\`. When \`myTask.setID()\` is called within \`prepareTask\`, the engine follows the prototype chain from \`myTask\` to \`XYZ\` (where it's not found) and then to \`Task\`, where \`setID()\` is found and executed. The \`this\` context for the call remains \`myTask\`.
 
@@ -462,32 +494,38 @@ ES6 introduced the class keyword, which provides a cleaner, more familiar syntax
     -   Methods defined within the class body (like identify() in the example below) are placed on the .prototype object of that function.
     -   The constructor method defines the work to be done when new is used.
     -   extends sets up the \[\[Prototype\]\] link between the child's .prototype object and the parent's .prototype object.
--   **Code Example: class Syntax**  
-    JavaScript  
-    class Person {  
-     constructor(name) {  
-     this.name \\= name;  
-     }  
-     identify() {  
-     return \`I am ${this.name}.\`;  
-     }  
-    }
+-   **Code Example: class Syntax**
 
-    class Student extends Person {  
-     constructor(name, studentId) {  
-     super(name); // Calls the parent's constructor  
-     this.studentId \\= studentId;  
-     }  
-     study() {  
-     return \`${this.name} is studying.\`;  
-     }  
-    }
+```javascript
+class Person {
+	constructor(name) {
+		this.name = name;
+	}
+	identify() {
+		return `I am ${this.name}.`;
+	}
+}
+```
 
-    var kyle \\= new Student("Kyle", 123);  
-    console.log(kyle.identify()); // "I am Kyle." (delegated to Person.prototype)  
-    console.log(kyle.study()); // "Kyle is studying."
+    ```javascript
 
-\!\]\` chain linking them.\](placeholder.png)
+class Student extends Person {
+constructor(name, studentId) {
+super(name); // Calls the parent's constructor
+this.studentId = studentId;
+}
+study() {
+return `${this.name} is studying.`;
+}
+}
+
+var kyle = new Student("Kyle", 123);
+console.log(kyle.identify()); // "I am Kyle." (delegated to Person.prototype)
+console.log(kyle.study()); // "Kyle is studying."
+
+```
+
+
 
 -   **super:** The super keyword is a significant enhancement provided by the class syntax. It allows a child class to reliably reference methods on its parent's prototype (e.g., super.identify()). This provides a clean solution for relative polymorphism, which was notoriously difficult and fragile to implement in pre-ES6 "prototypal inheritance" patterns.1
 
@@ -514,7 +552,7 @@ A visual model helps clarify how these parts interact 21:
 -   **Callback Queue (Task Queue / Macrotask Queue):** When a background task handled by a Web API completes (e.g., a timer finishes or data arrives from a network request), its associated callback function is not executed immediately. Instead, it is placed in the Callback Queue.
 -   **Event Loop:** This is a constantly running process with a simple job: it checks if the Call Stack is empty. If it is, the Event Loop takes the first task from the Callback Queue and pushes it onto the Call Stack for execution.
 
-\!(placeholder.png)
+
 
 This model ensures that long-running I/O operations do not block the main thread, allowing the user interface to remain responsive.
 
@@ -550,33 +588,33 @@ The Generator \+ Promise pattern proved so effective that it was formalized in E
 -   **async function:** Declaring a function with async ensures that it automatically returns a Promise. If the function returns a value, it will be a promise fulfilled with that value. If it throws an error, it will be a promise rejected with that error.
 -   **await:** The await operator can only be used inside an async function. It pauses the function's execution and waits for a Promise to settle. It then "unwraps" the result, returning the fulfilled value or throwing the rejection reason. It effectively replaces the yield keyword from the generator pattern.
 
-Code Example: Comparison  
+Code Example: Comparison
 This comparison illustrates the syntactic symmetry 1:
 
--   **Generator \+ Runner:**  
-    JavaScript  
-    // \`run\` is a utility that manages the generator  
-    run(function\* main() {  
-     try {  
-     var result \\= yield fetch(url);  
-     var data \\= yield result.json();  
-     console.log(data);  
-     } catch (err) {  
-     console.error(err);  
-     }  
+-   **Generator \+ Runner:**
+    JavaScript
+    // \`run\` is a utility that manages the generator
+    run(function\* main() {
+     try {
+     var result \\= yield fetch(url);
+     var data \\= yield result.json();
+     console.log(data);
+     } catch (err) {
+     console.error(err);
+     }
     });
 
--   **async/await:**  
-    JavaScript  
-    async function main() {  
-     try {  
-     var result \\= await fetch(url);  
-     var data \\= await result.json();  
-     console.log(data);  
-     } catch (err) {  
-     console.error(err);  
-     }  
-    }  
+-   **async/await:**
+    JavaScript
+    async function main() {
+     try {
+     var result \\= await fetch(url);
+     var data \\= await result.json();
+     console.log(data);
+     } catch (err) {
+     console.error(err);
+     }
+    }
     main();
 
 async/await provides a native, clean syntax for the most robust asynchronous pattern in JavaScript, making complex asynchronous logic dramatically easier to write and reason about.
@@ -597,12 +635,12 @@ The introduction of ECMAScript 2015 (ES6) marked the most significant evolution 
     -   **Default Parameters:** Allow for specifying default values for function parameters directly in the function signature (e.g., function foo(a \\= 2\) {...}). This is cleaner than the old pattern of a \\= a | | 2;.1
     -   **Rest Parameters:** The ... operator, when used in a function's parameter list, gathers all remaining arguments into a true array, providing a modern replacement for the quirky arguments object.
     -   **Spread Operator:** The ... operator, when used on an iterable (like an array) in contexts like function calls or array literals, expands the iterable into its individual elements.
--   **Destructuring:** A powerful syntax that allows for unpacking values from arrays or properties from objects into distinct variables. It makes code for data extraction significantly more concise and readable.1  
-    JavaScript  
-    // Object Destructuring  
+-   **Destructuring:** A powerful syntax that allows for unpacking values from arrays or properties from objects into distinct variables. It makes code for data extraction significantly more concise and readable.1
+    JavaScript
+    // Object Destructuring
     var { name, age } \\= person;
 
-    // Array Destructuring  
+    // Array Destructuring
     var \[first, second\] \\= someArray;
 
 -   **Template Literals:** These are string literals, enclosed in backticks (\`), that allow for embedded expressions (interpolations) using ${...} syntax and support for multi-line strings without escape characters.1
@@ -645,11 +683,11 @@ To bridge the gap from a proficient JavaScript developer to a top-tier SDE 3 can
 
 In modern React, useEffect and useLayoutEffect are fundamental for managing side effects, but they have a critical difference in their timing that is a common interview topic.37
 
--   **useEffect (Asynchronous):** This is the hook you will use 99% of the time.39 It runs  
+-   **useEffect (Asynchronous):** This is the hook you will use 99% of the time.39 It runs
     _asynchronously_ after React has rendered the component and the browser has painted the changes to the screen. This non-blocking behavior ensures that side effects like data fetching or setting up subscriptions don't prevent the user from seeing UI updates, leading to better performance.38
 -   **useLayoutEffect (Synchronous):** This hook runs _synchronously_ after all DOM mutations have been performed by React but _before_ the browser paints those changes to the screen.37 Because it blocks the painting process, it should be used sparingly to avoid performance issues.38
 
-When to Use useLayoutEffect  
+When to Use useLayoutEffect
 The primary use case for useLayoutEffect is when you need to read layout information from the DOM and then synchronously re-render before the browser paints. This is essential for 39:
 
 -   **DOM Measurements:** Getting an element's size or position (e.g., getBoundingClientRect()) to programmatically adjust another element's style or position.
@@ -722,3 +760,4 @@ A structured approach is key. A common framework involves these steps 61:
     - **Scalability:** How will your design handle growth in users and data?
     - **Accessibility (a11y):** How will you ensure the application is usable by people with disabilities? Mention semantic HTML, ARIA attributes, and keyboard navigation.52
     - **Security:** What are potential vulnerabilities (e.g., XSS, CSRF) and how would you mitigate them?.52
+```
