@@ -405,14 +405,13 @@ Using an arrow function here is appropriate because it solves a specific this bi
 
 [[javascript-object-model.md]]
 
-One of the most profound paradigm shifts required for JavaScript mastery is moving away from the familiar mental model of classical inheritance and embracing the language's true object system: prototypal delegation. The class keyword, introduced in ES6, is a powerful and convenient abstraction, but it is crucial to understand that it is syntactic sugar layered over this underlying prototypal mechanism.1
+One of the most profound paradigm shifts required for JavaScript mastery is moving away from the familiar mental model of classical inheritance and embracing the language's true object system: prototypal delegation. The class keyword, introduced in ES6, is a powerful and convenient abstraction, but it is crucial to understand that it is syntactic sugar layered over this underlying prototypal mechanism.
 
-### **4.1. The \[\[Prototype\]\] Chain: Behavior Delegation**
+### **4.1. The \[\[Prototype\]\] Chain: Behaviour Delegation**
 
 At the heart of JavaScript's object model is the \[\[Prototype\]\] chain.
-
--   **Core Concept:** Nearly every object in JavaScript has an internal property, denoted in the specification as \[\[Prototype\]\], which is a link to another object. When a property or method is accessed on an object, and the engine cannot find it directly on that object, it follows the \[\[Prototype\]\] link to the next object in the chain and continues the search there. This process repeats until the property is found or the chain ends.1
--   **Delegation, Not Inheritance:** This mechanism is fundamentally **behavior delegation**. An object does not receive a _copy_ of properties from its prototype; instead, it _delegates_ the responsibility of handling a property or method look-up to another object. This is a crucial distinction from classical inheritance, where behavior is copied from a parent class into a child instance.1
+-   **Core Concept:** Nearly every object in JavaScript has an internal property, denoted in the specification as \[\[Prototype\]\], which is a link to another object. When a property or method is accessed on an object, and the engine cannot find it directly on that object, it follows the \[\[Prototype\]\] link to the next object in the chain and continues the search there. This process repeats until the property is found or the chain ends.
+-   **Delegation, Not Inheritance:** This mechanism is fundamentally **behaviour delegation**. An object does not receive a _copy_ of properties from its prototype; instead, it _delegates_ the responsibility of handling a property or method look-up to another object. This is a crucial distinction from classical inheritance, where behavior is copied from a parent class into a child instance.1
 -   **The End of the Chain:** All normal prototype chains terminate at the built-in Object.prototype. This object contains common utilities like .toString(), .valueOf(), and .hasOwnProperty(), which is why they are available on all standard objects in the language.19
 
 ### **4.2. The OLOO Pattern: Objects-Linking-to-Other-Objects**

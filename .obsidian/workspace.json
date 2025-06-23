@@ -172,10 +172,11 @@
   },
   "active": "d6b4101126119e15",
   "lastOpenFiles": [
+    "Prototype.md",
+    "javascript/javascript-roadmap.md",
     "reactjs/reactjs-roadmap.md",
     "nodejs/Node.js Express.js Roadmap.md",
     "nodejs/nodejs-roadmap-files.md",
-    "javascript/javascript-roadmap.md",
     "Untitled 1.canvas",
     "2025-06-21.md",
     "Untitled.canvas",
@@ -202,7 +203,6 @@
     "The Four Rules of this Binding.md",
     "javascript/javascript-modern-toolkit.md",
     "JavaScript as a Compiled Language.md",
-    "Memory Leaks.md",
     "javascript",
     "reactjs",
     "javascripts"
