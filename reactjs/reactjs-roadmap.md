@@ -1,12 +1,12 @@
 # **The Complete React.js Mastery Roadmap: From Fundamentals to Advanced Architecture**
 
-React is more than a JavaScript library for building user interfaces; it represents a paradigm shift in how developers approach front-end development. Created and maintained by Meta (formerly Facebook), React introduced a declarative, component-based approach that has since become the industry standard for creating scalable, interactive, and efficient web applications.1 Its core philosophy revolves around a simple yet powerful idea: UI is a function of state. This means that for any given state of your application, the UI will look the same, making applications more predictable, easier to debug, and simpler to reason about.2
+React is more than a JavaScript library for building user interfaces; it represents a paradigm shift in how developers approach front-end development. Created and maintained by Meta (formerly Facebook), React introduced a declarative, component-based approach that has since become the industry standard for creating scalable, interactive, and efficient web applications. Its core philosophy revolves around a simple yet powerful idea: UI is a function of state. This means that for any given state of your application, the UI will look the same, making applications more predictable, easier to debug, and simpler to reason about.
 
 Mastering React is not merely about learning its API. It is a journey that involves understanding its foundational principles, the modern JavaScript features it leverages, the ecosystem of tools that surround it, and the architectural patterns that enable the construction of large-scale, maintainable applications. This roadmap provides a structured, comprehensive path for developers aiming to achieve true proficiency. It begins with the non-negotiable prerequisites, moves through the core concepts of the library, explores the vast ecosystem, delves into advanced design patterns, and concludes with production-grade considerations like performance optimization and testing. Each stage is designed to build upon the last, ensuring a solid and deep understanding of not just the "how," but, more importantly, the "why" behind React's design and best practices.
 
 ## **Stage 1: The Bedrock - Foundational Web & JavaScript Knowledge**
 
-[[reactjs-bedrock.md]]
+[[reactjs-bedrock|Foundational Web & JavaScript Knowledge]]
 
 Before writing a single line of React code, a solid foundation in core web technologies and modern JavaScript is essential. React does not exist in a vacuum; it is a tool to build for the web, and it is written _in_ JavaScript. Attempting to learn React without this bedrock is like trying to build a house without a foundation—it is possible to erect a frame, but it will be unstable and fundamentally flawed. The most common struggles for beginners stem not from React's complexity, but from a weak grasp of the underlying JavaScript concepts that React utilizes extensively.3
 
@@ -143,7 +143,7 @@ useEffect hook.
 
 ## **Stage 2: First Steps with React - Core Concepts & Tooling**
 
-[[reactjs-core-concepts.md]]
+[[reactjs-core-concepts|Core Concepts & Tooling]]
 
 With a strong JavaScript foundation, the next stage is to dive into React itself. This involves setting up a modern development environment and mastering the fundamental building blocks of any React application: JSX, Components, Props, and State. These concepts are deeply intertwined and form the core mental model for "thinking in React."
 
@@ -262,7 +262,7 @@ With components, JSX, props, and state understood, the final piece of the core p
 
 ## **Stage 3: Building Interactivity - State, Events, and Hooks**
 
-[[reactjs-interactivity-hooks.md]]
+[[reactjs-interactivity-hooks|Building Interactivity: State, Events, and Hooks]]
 
 This stage marks the transition from rendering static views to building dynamic applications that respond to user interaction. The central technology for this in modern React is **Hooks**. Hooks are functions that let you "hook into" React state and lifecycle features from functional components, effectively replacing the need for class components for most use cases.8
 
@@ -441,7 +441,7 @@ For complex forms, using a dedicated library like **React Hook Form** is highly 
 
 ## **Stage 4: Scaling Up - The React Ecosystem**
 
-[[reactjs-ecosystem.md]]
+[[reactjs-ecosystem|Scaling Up: The React Ecosystem]]
 
 React itself is a library, not a framework.12 It is focused exclusively on building user interfaces. To build a complete, feature-rich application, developers must rely on the broader React ecosystem for functionalities like routing, advanced state management, and styling. This stage is about learning to select and integrate these critical third-party libraries to scale an application effectively. Making the right architectural choices here is a hallmark of an experienced React developer.
 
@@ -520,7 +520,7 @@ The decision between these strategies is not about finding the "best" one, but t
 
 ## **Stage 5: Architectural Excellence - Design Patterns & Advanced Concepts**
 
-[[reactjs-architecture-patterns.md]]
+[[reactjs-architecture-patterns|Architectural Excellence: Design Patterns & Advanced Concepts]]
 
 Moving beyond the use of libraries, true mastery of React involves understanding and applying architectural design patterns. These patterns are not specific features but are reusable solutions to common problems in building component-based applications. They provide a shared vocabulary and a set of best practices for creating code that is clean, scalable, maintainable, and reusable.56
 
@@ -647,7 +647,7 @@ The official React documentation outlines a formal process for approaching UI de
 
 ## **Stage 6: Production & Beyond - Optimization, Testing, and Deployment**
 
-[[reactjs-production-optimization.md]]
+[[reactjs-production-optimization|Production & Beyond: Optimization, Testing, and Deployment]]
 
 The final stage of the roadmap focuses on the skills required to build and ship professional, high-quality React applications. This includes ensuring the application is performant, well-tested, accessible, and ready for deployment.
 
@@ -719,7 +719,7 @@ While React is a library, full-stack frameworks like **Next.js** and **Remix** a
 
 ## **A Deep Dive into React's Internals**
 
-[[reactjs-internals.md]]
+[[reactjs-internals|A Deep Dive into React's Internals]]
 
 To truly master React, it's essential to look beyond the public APIs and understand the core mechanisms that make it work. This "under the hood" knowledge explains _why_ certain patterns are recommended and how React achieves its renowned performance and developer experience.
 
