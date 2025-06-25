@@ -1,6 +1,6 @@
 ## **Section 1: The First Principle \- JavaScript as a Compiled Language**
 
-[[javascript-first-principle.md]]
+[[javascript-first-principle|JavaScript as a Compiled Language]]
 
 A pervasive and foundational misunderstanding of JavaScript is that it is an "interpreted" language, processed line-by-line from top to bottom. While this view might seem intuitive, it is fundamentally incorrect and obstructs a true understanding of the language's core mechanics. To achieve mastery, one must begin with the correct mental model: JavaScript is a compiled language.
 
@@ -155,7 +155,7 @@ The primary reason to avoid these mechanisms is their severe impact on performan
 
 ## **Section 2: The Building Blocks \- Values, Types, and Grammar**
 
-[[javascript-building-blocks.md]]
+[[javascript-building-blocks|Values, Types, and Grammar]]
 
 A deep understanding of a language requires mastery of its fundamental components: its values, the types that define their behaviour, and the grammatical rules that govern their interaction. In JavaScript, this is particularly crucial due to its dynamic nature and its powerful, though often misunderstood, coercion system.
 
@@ -253,9 +253,9 @@ JavaScript's grammar contains nuances that can lead to confusion if not properly
 
 ---
 
-## **Section 3: The Pillars of Structure \- Scope, Closures, and this**
+## **Section 3: The Structure \- Scope, Closures, and this**
 
-[[javascript-structure.md]]
+[[javascript-structure|Scope, Closures, and this]]
 
 Mastery of JavaScript program structure hinges on a deep, interconnected understanding of three core concepts: **scope**, which dictates where variables are stored and accessed; **closure**, which allows functions to retain access to their birth-scope; and the **this** keyword, which provides a dynamic execution context. These are not isolated topics but an integrated system that governs how data and behaviour are organised and linked.
 
@@ -430,7 +430,7 @@ Using an arrow function here is appropriate because it solves a specific this bi
 
 ## **Section 4: The Object Model \- Prototypes and "Classes"**
 
-[[javascript-object-model.md]]
+[[javascript-object-model|Prototypes and "Classes"]]
 
 One of the most profound paradigm shifts required for JavaScript mastery is moving away from the familiar mental model of classical inheritance and embracing the language's true object system: prototypal delegation. The class keyword, introduced in ES6, is a powerful and convenient abstraction, but it is crucial to understand that it is syntactic sugar layered over this underlying prototypal mechanism.
 
@@ -533,9 +533,9 @@ By understanding that class is an abstraction over delegation, a developer can l
 
 ---
 
-## **Section 5: The Dimension of Time \- Asynchronous Programming**
+## **Section 5: The Asynchronous Model \- Event Loop, Promises, and async/await**
 
-[[javascript-async.md]]
+[[javascript-async|Asynchronous Programming]]
 
 JavaScript's execution model is single-threaded, meaning it can only perform one operation at a time. However, it operates in environments (like browsers) that are inherently asynchronous, needing to respond to user input, network requests, and timers without blocking. Mastering JavaScript requires a complete mental model of its concurrency system and the modern patterns used to manage asynchronous flow control.
 
@@ -623,7 +623,7 @@ async/await provides a native, clean syntax for the most robust asynchronous pat
 
 ## **Section 6: The Modern Toolkit \- ES6+ and Performance**
 
-[[javascript-modern-toolkit.md]]
+[[javascript-modern-toolkit|ES6+ and Performance]]
 
 The introduction of ECMAScript 2015 (ES6) marked the most significant evolution in JavaScript's history. These modern features are not merely syntactic conveniences; they are carefully designed tools that solve long-standing problems, enable more robust patterns, and improve code organization and readability. A top-tier developer must master this modern toolkit and understand the principles of writing performant code in this new landscape.
 
@@ -675,7 +675,7 @@ While modern JavaScript engines are incredibly optimized, writing performant cod
 
 ## **Section 7: Advanced Frontend Concepts & Design Patterns**
 
-[[javascript-advanced-frontend.md]]
+[[javascript-advanced-frontend|Advanced Frontend Concepts]]
 
 To bridge the gap from a proficient JavaScript developer to a top-tier SDE 3 candidate, it's crucial to master concepts that extend beyond the core language into the practical realities of building complex applications. This includes a deep understanding of popular frameworks like React, common software design patterns, and the principles of frontend system design.
 
@@ -714,7 +714,7 @@ Design patterns are reusable, generalized solutions to common problems in softwa
 
 ## **Section 8: Advanced Performance & Memory Management**
 
-[[javascript-performance-memory.md]]
+[[javascript-performance-memory|Advanced Performance & Memory Management]]
 
 While Section 6 covered foundational performance principles, a senior engineer must also master lower-level optimizations, particularly around memory management and advanced loading strategies.
 
@@ -741,7 +741,7 @@ JavaScript uses automatic memory management, meaning the engine allocates memory
 
 ## **Section 9: Approaching Frontend System Design Interviews**
 
-[[javascript-system-design.md]]
+[[javascript-system-design|Approaching Frontend System Design Interviews]]
 
 For SDE 3 roles, you will likely face open-ended system design questions that require you to architect a complete frontend application or a complex UI component.60 The goal is to assess your ability to handle complexity, make trade-offs, and communicate your design decisions clearly.
 
