@@ -4,355 +4,229 @@ Routing and middleware are the core concepts that make Express.js powerful and f
 
 [[Node.js Express.js Roadmap|← Back to Node.js Roadmap]]
 
-## Advanced Routing
+## Routing System
 
-### Route Methods
+**Problem:** How do we organize request handlers in a maintainable way as applications grow in complexity?
 
-Express provides methods that correspond to HTTP methods. The most commonly used are:
+**Theory:** Express routing provides a structured way to map HTTP methods and URL paths to specific handler functions. The routing system allows for modular organization of endpoints based on resources, features, or domains.
 
-```javascript
-// Basic HTTP method routes
-app.get("/users", (req, res) => {
-	/* Handle GET request */
-});
-app.post("/users", (req, res) => {
-	/* Handle POST request */
-});
-app.put("/users/:id", (req, res) => {
-	/* Handle PUT request */
-});
-app.delete("/users/:id", (req, res) => {
-	/* Handle DELETE request */
-});
-app.patch("/users/:id", (req, res) => {
-	/* Handle PATCH request */
-});
-
-// Special method for handling all HTTP methods
-app.all("/api/*", (req, res, next) => {
-	console.log("Accessing the API...");
-	next(); // Pass control to the next handler
-});
-```
-
-### Route Paths
-
-Route paths can be strings, string patterns, or regular expressions:
+### Route Methods and Paths
 
 ```javascript
-// Simple string path
-app.get("/users", (req, res) => {
-	/* ... */
-});
+// HTTP method-based routing
+app.get("/products", listProducts); // GET request
+app.post("/products", createProduct); // POST request
+app.put("/products/:id", updateProduct); // PUT request
+app.delete("/products/:id", deleteProduct); // DELETE request
 
-// String pattern with route parameters
-app.get("/users/:userId/books/:bookId", (req, res) => {
-	console.log(req.params.userId, req.params.bookId);
-});
-
-// Regular expression path
-// This will match paths that start with /user/ followed by one or more digits
-app.get(/\/user\/(\d+)/, (req, res) => {
-	console.log(req.params[0]); // The captured value from the regex
-});
+// Path patterns
+app.get("/users/:userId", getUserProfile); // Named parameter
+app.get(/\/files\/(.+)/, serveFile); // Regular expression
+app.all("/api/*", authenticate); // Wildcard matching
 ```
+
+**When to use different path types:**
+
+-   **String paths:** For most routes with fixed segments
+-   **Named parameters:** When you need to capture variable parts of the URL
+-   **Regular expressions:** For complex pattern matching requirements
+-   **Wildcards:** For applying middleware to groups of routes
 
 ### Route Handlers
 
-You can provide multiple callback functions that behave like middleware:
+**Problem:** How do we process requests through multiple functions that may have different responsibilities?
+
+**Theory:** Express allows multiple handler functions (middleware) for a single route, enabling separation of concerns like authentication, validation, and business logic.
 
 ```javascript
-// Multiple callback functions
+// Multiple handlers for a single route
 app.get(
-	"/users/:id",
-	(req, res, next) => {
-		// First middleware - validate or load data
-		console.log("Validating user ID...");
-		if (isNaN(req.params.id)) {
-			return res.status(400).send("Invalid user ID");
-		}
-		next(); // Pass control to the next handler
-	},
-	(req, res) => {
-		// Final handler - send response
-		res.send(`User profile for ID ${req.params.id}`);
-	}
+	"/dashboard",
+	authenticate, // Check if user is logged in
+	authorize("admin"), // Check if user has admin role
+	loadDashboardData, // Retrieve necessary data
+	renderDashboard // Send response to client
 );
 
-// Array of callback functions
-const validateUser = (req, res, next) => {
-	// Validation logic
+// Conditional next() routing
+app.get("/users/:id", (req, res, next) => {
+	if (req.params.id === "me") {
+		// Special case handling
+		return res.redirect(`/users/${req.user.id}`);
+	}
+	// Regular case - continue to next handler
 	next();
-};
-
-const getUser = (req, res) => {
-	// Get user logic
-	res.send("User data");
-};
-
-app.get("/users/:id", [validateUser, getUser]);
+});
 ```
+
+**Best practices:**
+
+-   Keep route handlers focused on a single responsibility
+-   Use middleware chains for cross-cutting concerns
+-   Consider extracting complex logic to controller functions
 
 ## Express Router
 
-For larger applications, the Express Router is essential for creating modular, mountable route handlers:
+**Problem:** How do we organize routes for large applications with many endpoints?
+
+**Theory:** Express Router enables modular, mountable route handlers that can be organized by resource, feature, or domain and attached to the main application.
+
+**When to use:** When your application has many routes that can be logically grouped, or when you want to create reusable route modules.
 
 ```javascript
-// userRoutes.js
-const express = require("express");
+// users.js - Router module
 const router = express.Router();
 
-// Middleware specific to this router
-router.use((req, res, next) => {
-	console.log("Time:", Date.now());
-	next();
-});
+// Router-specific middleware
+router.use(trackUserActivity);
 
-// Define routes on the router
-router.get("/", (req, res) => {
-	res.send("All users");
-});
-
-router.get("/:id", (req, res) => {
-	res.send(`User with ID ${req.params.id}`);
-});
-
-router.post("/", (req, res) => {
-	res.status(201).send("User created");
-});
+// Define routes relative to mount point
+router.get("/", listUsers);
+router.post("/", createUser);
+router.get("/:id", getUser);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
 
 module.exports = router;
+
+// app.js - Main application
+const userRoutes = require("./routes/users");
+const productRoutes = require("./routes/products");
+
+// Mount routers at specific paths
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/products", productRoutes);
 ```
 
-```javascript
-// app.js
-const express = require("express");
-const app = express();
-const userRoutes = require("./userRoutes");
-const productRoutes = require("./productRoutes");
+**Benefits:**
 
-// Mount the routers at specific paths
-app.use("/api/users", userRoutes);
-app.use("/api/products", productRoutes);
+-   Modular organization by resource or feature
+-   Encapsulated middleware specific to routes
+-   Reusable route modules across applications
+-   Cleaner main application file
 
-app.listen(3000);
-```
+## Middleware Architecture
 
-This approach allows you to:
+**Problem:** How do we implement cross-cutting concerns and process requests through a pipeline of operations?
 
--   Organize routes by resource or feature
--   Apply middleware specific to certain route groups
--   Create reusable route modules
+**Theory:** Middleware functions form a pipeline where each function can access and modify the request/response objects, end the request cycle, or pass control to the next middleware.
 
-## Middleware Deep Dive
-
-Middleware functions are the backbone of Express applications. They have access to the request object, response object, and the next middleware function in the cycle.
-
-### Middleware Types
-
-#### Application-Level Middleware
+### Middleware Flow
 
 ```javascript
-const express = require("express");
-const app = express();
-
-// Middleware with no mount path (runs for every request)
+// Middleware execution flow
 app.use((req, res, next) => {
-	console.log("Request Time:", Date.now());
+	console.log("Middleware 1 - Start");
 	next();
+	console.log("Middleware 1 - After next()"); // Executes after route handler
 });
 
-// Middleware with a mount path (runs only for specific paths)
-app.use("/user/:id", (req, res, next) => {
-	console.log("Request Type:", req.method);
+app.use((req, res, next) => {
+	console.log("Middleware 2 - Start");
 	next();
+	console.log("Middleware 2 - After next()");
 });
 
-// Middleware that only runs for specific HTTP methods
-app.get(
-	"/user/:id",
-	(req, res, next) => {
-		// If user ID is 0, skip to the next route
-		if (req.params.id === "0") return next("route");
-		// Otherwise pass control to the next middleware in this stack
-		next();
-	},
-	(req, res, next) => {
-		// This will be skipped for user ID 0
-		res.send("Regular User");
-	}
-);
-
-// This route will handle user ID 0
-app.get("/user/:id", (req, res) => {
-	res.send("Special User");
+app.get("/", (req, res) => {
+	console.log("Route handler");
+	res.send("Response");
 });
+
+// Console output for GET /
+// Middleware 1 - Start
+// Middleware 2 - Start
+// Route handler
+// Middleware 2 - After next()
+// Middleware 1 - After next()
 ```
 
-#### Router-Level Middleware
+### Middleware Categories
 
-Router-level middleware works the same way as application-level middleware, except it is bound to an instance of `express.Router()`.
+**1. Application-Level Middleware**
+
+```javascript
+// Runs for every request
+app.use((req, res, next) => {
+	req.requestTime = Date.now();
+	next();
+});
+
+// Runs only for specific paths
+app.use("/api", apiKeyValidator);
+```
+
+**2. Router-Level Middleware**
 
 ```javascript
 const router = express.Router();
-
-router.use((req, res, next) => {
-	console.log("Router-specific middleware");
-	next();
-});
-
-router.get("/users", (req, res, next) => {
-	// ...
-});
+router.use(resourceLogger);
+router.get("/:id", getResource);
 ```
 
-#### Error-Handling Middleware
-
-Error-handling middleware has four arguments instead of three (err, req, res, next):
+**3. Error-Handling Middleware**
 
 ```javascript
+// Must have 4 parameters to be recognized as error handler
 app.use((err, req, res, next) => {
 	console.error(err.stack);
-	res.status(500).send("Something broke!");
+	res.status(err.statusCode || 500).json({ error: err.message });
 });
 ```
 
-#### Built-in Middleware
-
-Express has several built-in middleware functions:
+**4. Built-in Middleware**
 
 ```javascript
-// Parse JSON bodies
+// Parse JSON request bodies
 app.use(express.json());
 
-// Parse URL-encoded bodies
+// Parse URL-encoded request bodies
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files
 app.use(express.static("public"));
 ```
 
-#### Third-Party Middleware
-
-Many third-party middleware packages are available for common tasks:
+**5. Third-Party Middleware**
 
 ```javascript
 const morgan = require("morgan"); // HTTP request logger
 const helmet = require("helmet"); // Security headers
-const compression = require("compression"); // Compress responses
-const cors = require("cors"); // Enable CORS
+const compression = require("compression"); // Response compression
 
-app.use(morgan("dev")); // Log requests
-app.use(helmet()); // Set security headers
-app.use(compression()); // Compress all responses
-app.use(cors()); // Enable CORS for all requests
+app.use(morgan("dev"));
+app.use(helmet());
+app.use(compression());
 ```
 
-### Creating Custom Middleware
+## Middleware Design Patterns
 
-Custom middleware allows you to add specific functionality to your application:
+**Problem:** How do we implement common web application requirements using middleware?
+
+**Theory:** Middleware can be composed and configured to implement various patterns for authentication, validation, error handling, and more.
+
+### Authentication Middleware
 
 ```javascript
-// Authentication middleware
-const authenticate = (req, res, next) => {
-	const token = req.headers.authorization;
+function authenticate(req, res, next) {
+	const token = req.headers.authorization?.split(" ")[1];
 
 	if (!token) {
 		return res.status(401).json({ message: "Authentication required" });
 	}
 
 	try {
-		// Verify token (simplified example)
-		const user = verifyToken(token);
-		req.user = user; // Attach user to request object
+		const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		req.user = decoded; // Attach user info to request
 		next(); // Proceed to the next middleware/route handler
 	} catch (error) {
 		res.status(401).json({ message: "Invalid token" });
 	}
-};
+}
 
-// Usage
+// Use on specific routes
 app.get("/protected", authenticate, (req, res) => {
 	res.json({ message: "Protected data", user: req.user });
 });
-```
-
-### Middleware Execution Order
-
-The order in which middleware is defined is crucial - they execute in the sequence they are added:
-
-```javascript
-// This middleware will run first
-app.use((req, res, next) => {
-	console.log("First middleware");
-	next();
-});
-
-// This middleware will run second
-app.use((req, res, next) => {
-	console.log("Second middleware");
-	next();
-});
-
-// Route handler will run last
-app.get("/", (req, res) => {
-	res.send("Response");
-});
-```
-
-### Middleware Chaining
-
-You can chain middleware to create a processing pipeline:
-
-```javascript
-const validateInput = (req, res, next) => {
-	if (!req.body.name) {
-		return res.status(400).json({ error: "Name is required" });
-	}
-	next();
-};
-
-const sanitizeInput = (req, res, next) => {
-	req.body.name = req.body.name.trim();
-	next();
-};
-
-const logRequest = (req, res, next) => {
-	console.log(`Processing request for ${req.body.name}`);
-	next();
-};
-
-// Use the middleware chain
-app.post(
-	"/users",
-	express.json(),
-	validateInput,
-	sanitizeInput,
-	logRequest,
-	(req, res) => {
-		// Create user
-		res.status(201).json({ message: "User created" });
-	}
-);
-```
-
-## Practical Examples
-
-### API Rate Limiting
-
-```javascript
-const rateLimit = require("express-rate-limit");
-
-// Create a limiter
-const apiLimiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 100, // Limit each IP to 100 requests per windowMs
-	message:
-		"Too many requests from this IP, please try again after 15 minutes",
-});
-
-// Apply to all requests to /api/
-app.use("/api/", apiLimiter);
 ```
 
 ### Request Validation
@@ -376,12 +250,51 @@ app.post(
 		}
 		next();
 	},
-	// Process the request if validation passed
-	(req, res) => {
-		// Create user
-		res.status(201).json({ message: "User created successfully" });
-	}
+	// Process valid request
+	createUser
 );
 ```
 
-Mastering routing and middleware is key to building efficient, maintainable Express applications. These concepts provide the structure and flexibility needed for everything from simple APIs to complex web applications.
+### Rate Limiting
+
+```javascript
+const rateLimit = require("express-rate-limit");
+
+// Create a limiter
+const apiLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per windowMs
+	message: "Too many requests, please try again after 15 minutes",
+});
+
+// Apply to all API routes
+app.use("/api/", apiLimiter);
+```
+
+## Best Practices
+
+**1. Middleware Organization**
+
+-   Organize middleware by functionality (auth, logging, etc.)
+-   Apply middleware in the correct order (parsing before validation, etc.)
+-   Use middleware composition for reusable combinations
+
+**2. Error Handling**
+
+-   Always use a centralized error handler
+-   Properly propagate errors using `next(error)`
+-   Use custom error classes for different error types
+
+**3. Route Organization**
+
+-   Group routes by resource or feature
+-   Use versioning for API routes
+-   Keep route handlers thin by moving business logic to services
+
+**4. Performance Considerations**
+
+-   Place more frequently used routes and middleware earlier
+-   Use efficient middleware only where needed
+-   Consider conditional middleware application
+
+Understanding these routing and middleware patterns is essential for building maintainable, secure, and efficient Express applications. The middleware architecture provides the flexibility to solve a wide range of web application requirements while keeping code modular and focused.

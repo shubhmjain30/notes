@@ -6,43 +6,35 @@ Asynchronous programming is at the heart of Node.js, enabling non-blocking opera
 
 ## Callbacks and Callback Hell
 
-Callbacks are the most basic form of asynchronous programming in Node.js. A callback is a function passed as an argument to another function, which is then executed when an operation completes.
+**Problem:** How do we handle operations that don't complete immediately without blocking the event loop?
+
+**Theory:** Callbacks are functions passed as arguments to other functions, which are executed when an asynchronous operation completes. They're the most basic form of asynchronous programming in Node.js.
+
+**When to use:** Best for simple, one-off asynchronous operations or when working with legacy APIs that don't support newer patterns.
 
 ```javascript
-// Basic callback example
+// Basic callback pattern
 const fs = require("fs");
 
 fs.readFile("example.txt", "utf8", (err, data) => {
-	if (err) {
-		console.error("Error reading file:", err);
-		return;
-	}
+	if (err) return console.error("Error:", err);
 	console.log("File content:", data);
 });
+console.log("This runs before file is read");
 ```
 
-However, when multiple dependent asynchronous operations are needed, callbacks can lead to deeply nested code known as "Callback Hell" or the "Pyramid of Doom":
+**Problem:** When multiple dependent asynchronous operations are needed, callbacks lead to deeply nested code known as "Callback Hell":
 
 ```javascript
-// Callback Hell example
-const fs = require("fs");
-
+// Callback Hell - avoid this pattern for complex operations
 fs.readFile("file1.txt", "utf8", (err1, data1) => {
-	if (err1) {
-		return console.error("Error reading file1:", err1);
-	}
-	console.log("Read file1");
+	if (err1) return console.error("Error reading file1:", err1);
 
 	fs.readFile("file2.txt", "utf8", (err2, data2) => {
-		if (err2) {
-			return console.error("Error reading file2:", err2);
-		}
-		console.log("Read file2");
+		if (err2) return console.error("Error reading file2:", err2);
 
 		fs.writeFile("combined.txt", data1 + data2, (err3) => {
-			if (err3) {
-				return console.error("Error writing file:", err3);
-			}
+			if (err3) return console.error("Error writing file:", err3);
 			console.log("Files combined successfully!");
 		});
 	});
@@ -51,10 +43,24 @@ fs.readFile("file1.txt", "utf8", (err1, data1) => {
 
 ## Promises and Chaining
 
-Promises provide a more structured approach to handling asynchronous operations. A Promise represents an operation that hasn't completed yet but is expected to in the future.
+**Problem:** How can we make asynchronous code more readable and maintainable?
+
+**Theory:** Promises represent operations that haven't completed yet but are expected to in the future. They exist in one of three states: pending, fulfilled, or rejected.
+
+**When to use:** For most asynchronous operations, especially when:
+
+-   You need to chain multiple operations
+-   You want centralized error handling
+-   You're working with modern APIs that return promises
+
+**Benefits:**
+
+-   Flattens nested callbacks
+-   Provides clear error propagation
+-   Enables powerful composition patterns
 
 ```javascript
-// Promise example
+// Promise-based approach
 const fs = require("fs").promises;
 
 fs.readFile("example.txt", "utf8")
@@ -62,42 +68,42 @@ fs.readFile("example.txt", "utf8")
 		console.log("File content:", data);
 		return data.toUpperCase();
 	})
-	.then((uppercased) => {
-		return fs.writeFile("example-uppercase.txt", uppercased);
-	})
-	.then(() => {
-		console.log("File written successfully");
-	})
-	.catch((err) => {
-		console.error("Error:", err);
-	});
+	.then((uppercased) => fs.writeFile("example-uppercase.txt", uppercased))
+	.then(() => console.log("File written successfully"))
+	.catch((err) => console.error("Error:", err));
 ```
 
-Promises can also be created manually for wrapping callback-based APIs:
+**Converting callback APIs to promises:**
 
 ```javascript
-// Creating a Promise from a callback-based function
+// Creating a Promise wrapper for callback-based APIs
 function readFilePromise(path) {
 	return new Promise((resolve, reject) => {
 		fs.readFile(path, "utf8", (err, data) => {
-			if (err) {
-				reject(err);
-			} else {
-				resolve(data);
-			}
+			if (err) reject(err);
+			else resolve(data);
 		});
 	});
 }
-
-// Using the Promise-based function
-readFilePromise("example.txt")
-	.then((data) => console.log("File content:", data))
-	.catch((err) => console.error("Error:", err));
 ```
 
 ## Async/Await Syntax
 
-Async/await is syntactic sugar built on top of Promises, making asynchronous code look and behave more like synchronous code.
+**Problem:** How can we write asynchronous code that looks and behaves like synchronous code?
+
+**Theory:** Async/await is syntactic sugar built on top of Promises, making asynchronous code more readable and maintainable.
+
+**When to use:**
+
+-   When working with complex promise chains
+-   When you need sequential asynchronous operations
+-   When you want to use try/catch for error handling
+
+**Benefits:**
+
+-   Looks like synchronous code
+-   Easier to debug (better stack traces)
+-   Simpler error handling with try/catch
 
 ```javascript
 // Async/await example
@@ -105,24 +111,18 @@ const fs = require("fs").promises;
 
 async function processFiles() {
 	try {
-		// These operations happen sequentially but don't block the event loop
+		// Sequential operations with clean syntax
 		const data1 = await fs.readFile("file1.txt", "utf8");
-		console.log("Read file1");
-
 		const data2 = await fs.readFile("file2.txt", "utf8");
-		console.log("Read file2");
-
 		await fs.writeFile("combined.txt", data1 + data2);
-		console.log("Files combined successfully!");
-
 		return "Operation completed";
 	} catch (err) {
 		console.error("Error:", err);
-		throw err; // Re-throw the error for further handling
+		throw err; // Re-throw for caller handling
 	}
 }
 
-// Using the async function
+// Async functions always return promises
 processFiles()
 	.then((result) => console.log(result))
 	.catch((err) => console.error("Caught error:", err));
@@ -130,64 +130,85 @@ processFiles()
 console.log("This runs before processFiles completes");
 ```
 
+## Parallel vs. Sequential Execution
+
+**Problem:** How do we run multiple asynchronous operations efficiently?
+
+**Theory:** Sequential execution waits for each operation to complete before starting the next, while parallel execution starts all operations at once.
+
+**When to use each approach:**
+
+-   **Sequential:** When operations depend on previous results or must happen in order
+-   **Parallel:** When operations are independent and can run simultaneously
+
+```javascript
+// Sequential execution (one after another)
+async function sequential() {
+	const start = Date.now();
+
+	const data1 = await fs.promises.readFile("file1.txt", "utf8");
+	const data2 = await fs.promises.readFile("file2.txt", "utf8");
+
+	console.log(`Sequential took ${Date.now() - start}ms`);
+	return data1 + data2;
+}
+
+// Parallel execution (all at once)
+async function parallel() {
+	const start = Date.now();
+
+	const [data1, data2] = await Promise.all([
+		fs.promises.readFile("file1.txt", "utf8"),
+		fs.promises.readFile("file2.txt", "utf8"),
+	]);
+
+	console.log(`Parallel took ${Date.now() - start}ms`);
+	return data1 + data2;
+}
+```
+
 ## Error Handling in Async Code
 
-Proper error handling is crucial in asynchronous code to prevent unhandled rejections and ensure application stability.
+**Problem:** How do we handle errors in different asynchronous patterns?
 
-### Callback Error Handling
+**Theory:** Each asynchronous pattern has its own approach to error handling. Proper error handling prevents unhandled rejections and application crashes.
+
+**Best practices:**
+
+-   Always handle errors in asynchronous code
+-   Use centralized error handling when possible
+-   Set up global handlers for uncaught exceptions
 
 ```javascript
-// Error-first callback pattern
-fs.readFile("nonexistent.txt", "utf8", (err, data) => {
-	if (err) {
-		// Handle the error appropriately
-		console.error("Could not read file:", err.message);
-		// Maybe log to a service, return an error response, etc.
-		return;
-	}
+// Error handling patterns
 
-	// Process data if no error occurred
-	console.log(data);
+// 1. Callback pattern - error-first convention
+fs.readFile("file.txt", (err, data) => {
+	if (err) return handleError(err);
+	processData(data);
 });
-```
 
-### Promise Error Handling
-
-```javascript
-// Using catch for Promise error handling
+// 2. Promise pattern - catch method
 fs.promises
-	.readFile("nonexistent.txt", "utf8")
-	.then((data) => {
-		console.log(data);
-	})
-	.catch((err) => {
-		console.error("Error caught in promise chain:", err.message);
-	})
-	.finally(() => {
-		console.log("This runs regardless of success or failure");
-	});
-```
+	.readFile("file.txt", "utf8")
+	.then((data) => processData(data))
+	.catch((err) => handleError(err));
 
-### Async/Await Error Handling
-
-```javascript
-// Try/catch with async/await
-async function readFileExample() {
+// 3. Async/await pattern - try/catch blocks
+async function readAndProcess() {
 	try {
-		const data = await fs.promises.readFile("nonexistent.txt", "utf8");
-		console.log(data);
+		const data = await fs.promises.readFile("file.txt", "utf8");
+		return processData(data);
 	} catch (err) {
-		console.error("Error caught in try/catch:", err.message);
-	} finally {
-		console.log("This runs regardless of success or failure");
+		handleError(err);
 	}
 }
 
-// Global unhandled rejection handler
+// 4. Global handlers for uncaught errors
 process.on("unhandledRejection", (reason, promise) => {
-	console.error("Unhandled Rejection at:", promise, "reason:", reason);
-	// Application specific logging, throwing an error, or other logic here
+	console.error("Unhandled Rejection:", reason);
+	// Log to monitoring service or gracefully shut down
 });
 ```
 
-Understanding these asynchronous patterns and their error handling mechanisms is essential for writing robust Node.js applications that can handle failures gracefully.
+Understanding these asynchronous patterns and when to use each one is essential for writing robust, efficient Node.js applications that can handle failures gracefully while maintaining optimal performance.

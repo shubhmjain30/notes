@@ -6,167 +6,116 @@ Node.js is built on a unique architecture that enables high performance and scal
 
 ## Event-Driven Non-Blocking I/O
 
-Node.js operates on a single-threaded event loop model, handling concurrent operations without blocking the main thread. This architecture is optimized for I/O-intensive operations.
+**Problem:** Traditional server architectures create a new thread for each connection, which becomes inefficient at scale due to memory overhead and context switching.
+
+**Theory:** Node.js solves this with a single-threaded event loop model that handles concurrent operations without blocking the main thread. This architecture is optimized for I/O-intensive operations but not for CPU-bound tasks.
+
+**When to use:** Ideal for applications with high concurrency needs like real-time applications, APIs, streaming services, and microservices where I/O operations dominate.
 
 ```javascript
-// Example of non-blocking I/O
+// Non-blocking I/O example
 const fs = require("fs");
 
 console.log("Start reading file...");
-
-// This operation doesn't block the execution
 fs.readFile("example.txt", "utf8", (err, data) => {
-	if (err) {
-		console.error("Error reading file:", err);
-		return;
-	}
-	console.log("File content:", data);
+	if (err) console.error("Error reading file:", err);
+	else console.log("File content:", data);
 });
-
 console.log("Continue execution while file is being read...");
 ```
 
 ## V8 Engine and JIT Compilation
 
-Node.js uses Google's V8 JavaScript engine, which compiles JavaScript directly to native machine code before execution using Just-In-Time (JIT) compilation.
+**Theory:** Node.js uses Google's V8 JavaScript engine, which compiles JavaScript directly to machine code using Just-In-Time (JIT) compilation. V8 optimizes hot code paths, making frequently executed functions run faster over time.
+
+**Why it matters:** Understanding V8's optimization techniques helps write more performant code and explains why certain patterns are faster than others.
 
 ```javascript
 // V8 optimizes frequently executed code paths
 function calculateSum(n) {
 	let sum = 0;
-	for (let i = 0; i < n; i++) {
-		sum += i;
-	}
+	for (let i = 0; i < n; i++) sum += i;
 	return sum;
 }
-
-// After multiple executions, V8 will optimize this function
-console.log(calculateSum(1000000));
+// After multiple executions with the same type of input,
+// V8 will optimize this function
 ```
 
 ## Libuv and the Event Loop
 
-Libuv is a C library that provides the event loop, thread pool, and asynchronous I/O operations. The event loop processes events in phases:
+**Problem:** How can a single-threaded environment handle multiple concurrent operations efficiently?
 
-1. **Timers**: Executes callbacks scheduled by `setTimeout()` and `setInterval()`
-2. **Pending callbacks**: Executes I/O callbacks deferred to the next loop iteration
-3. **Idle, prepare**: Used internally
-4. **Poll**: Retrieves new I/O events
-5. **Check**: Executes `setImmediate()` callbacks
-6. **Close callbacks**: Executes close event callbacks
+**Theory:** Libuv is a C library that provides the event loop, thread pool, and asynchronous I/O operations. The event loop processes events in specific phases, allowing Node.js to perform non-blocking operations.
+
+**How it works:** The event loop processes these phases in sequence:
+
+1. **Timers**: Executes `setTimeout()` and `setInterval()` callbacks
+2. **Pending callbacks**: Executes I/O callbacks deferred from previous loop
+3. **Poll**: Retrieves new I/O events and executes their callbacks
+4. **Check**: Executes `setImmediate()` callbacks
+5. **Close callbacks**: Executes close event callbacks
 
 ```javascript
-const fs = require("fs");
-
-// Different phases of the event loop
+// Event loop phases demonstration
 console.log("Start");
 
-// Timer phase
-setTimeout(() => {
-	console.log("Timer callback");
-}, 0);
+setTimeout(() => console.log("Timer callback"), 0);
+setImmediate(() => console.log("Immediate callback"));
 
-// Check phase
-setImmediate(() => {
-	console.log("Immediate callback");
-});
-
-// Poll phase (I/O)
 fs.readFile(__filename, () => {
 	console.log("File read complete");
-
-	// Nested timer and immediate
-	setTimeout(() => {
-		console.log("Nested timer");
-	}, 0);
-
-	setImmediate(() => {
-		console.log("Nested immediate");
-	});
+	// Within I/O callbacks, setImmediate always runs before setTimeout
+	setTimeout(() => console.log("Nested timer"), 0);
+	setImmediate(() => console.log("Nested immediate"));
 });
 
 console.log("End");
 ```
 
-## C++ Bindings and Node.js Core
-
-Node.js core functionality is implemented in C++ and exposed to JavaScript through bindings. This architecture allows JavaScript to access system-level functionality.
-
-```javascript
-// Node.js core modules are implemented in C++ but exposed as JavaScript APIs
-const os = require("os");
-const crypto = require("crypto");
-
-// These calls invoke C++ functions under the hood
-console.log(`Total memory: ${os.totalmem() / 1024 / 1024 / 1024} GB`);
-console.log(`Free memory: ${os.freemem() / 1024 / 1024 / 1024} GB`);
-
-// Cryptographic operations are CPU-intensive and handled by C++ code
-const hash = crypto.createHash("sha256");
-hash.update("Some data to hash");
-console.log(hash.digest("hex"));
-```
-
 ## Microtasks vs Macrotasks
 
-The event loop processes two types of tasks with different priorities:
+**Problem:** How does Node.js prioritize different types of asynchronous operations?
 
--   **Microtasks**: `process.nextTick()` and Promise callbacks
+**Theory:** The event loop processes two types of tasks with different priorities:
+
+-   **Microtasks** (highest priority): `process.nextTick()` and Promise callbacks
 -   **Macrotasks**: Timer callbacks, I/O operations, setImmediate
+
+**Why it matters:** Understanding this priority system is crucial for debugging race conditions and ensuring operations execute in the intended order.
 
 ```javascript
 console.log("Script start");
 
-// Macrotask (timer)
-setTimeout(() => {
-	console.log("setTimeout");
-}, 0);
+// Execution order demonstration
+setTimeout(() => console.log("4. setTimeout"), 0);
+setImmediate(() => console.log("5. setImmediate"));
+Promise.resolve().then(() => console.log("3. Promise resolved"));
+process.nextTick(() => console.log("2. nextTick"));
 
-// Microtask (promise)
-Promise.resolve().then(() => {
-	console.log("Promise resolved");
-});
-
-// Microtask (highest priority)
-process.nextTick(() => {
-	console.log("nextTick");
-});
-
-console.log("Script end");
-
-// Output order:
-// Script start
-// Script end
-// nextTick
-// Promise resolved
-// setTimeout
+console.log("1. Script end");
 ```
 
 ## Node.js vs Browser Runtime
 
-While both use JavaScript, Node.js and browser environments have significant differences:
+**Problem:** How do we adapt our JavaScript knowledge when moving between frontend and backend environments?
+
+**Theory:** While both use JavaScript, Node.js and browser environments have significant differences in their global objects, available APIs, and execution contexts.
+
+**Key differences:**
+
+-   **Global object**: `window` in browsers vs `global` in Node.js
+-   **Available APIs**: DOM/Web APIs in browsers vs system-level modules in Node.js
+-   **Module systems**: ES Modules in modern browsers vs CommonJS in Node.js (though both now support ES Modules)
 
 ```javascript
-// In a browser:
-// window is the global object
-// console.log(typeof window); // 'object'
-// console.log(typeof document); // 'object'
-// console.log(typeof global); // 'undefined'
-
-// In Node.js:
-console.log(typeof window); // 'undefined'
-console.log(typeof document); // 'undefined'
-console.log(typeof global); // 'object'
-console.log(typeof process); // 'object'
-
-// Node.js has modules not available in browsers
+// Key environment differences
+// Node.js has system-level modules not available in browsers
 const fs = require("fs");
 const http = require("http");
-const path = require("path");
 
 // Browsers have APIs not available in Node.js
 // document.getElementById('element');
 // window.localStorage.setItem('key', 'value');
 ```
 
-Understanding these architectural components is crucial for building efficient Node.js applications and debugging complex issues.
+Understanding these architectural components is crucial for building efficient Node.js applications, diagnosing performance bottlenecks, and choosing the right tools for specific problems.
