@@ -1,8 +1,45 @@
 # Data Persistence with Sequelize and PostgreSQL
 
-Sequelize is a powerful ORM (Object-Relational Mapping) for Node.js, making it easy to interact with relational databases like PostgreSQL, MySQL, MariaDB, SQLite, and Microsoft SQL Server using JavaScript.
+Sequelize is a powerful ORM (Object-Relational Mapping) for Node.js, making it easy to interact with relational databases using JavaScript. Understanding how to model, query, and manage data with Sequelize is essential for building robust, scalable Node.js applications.
 
-[[Node.js Express.js Roadmap|← Back to Node.js Roadmap]]
+## Conceptual Overview
+
+**Why use an ORM like Sequelize?**
+ORMs abstract away SQL queries, allowing you to interact with your database using JavaScript objects and methods. This improves productivity, reduces boilerplate, and helps prevent SQL injection.
+
+**Mental Model:**
+- Think of Sequelize as a translator between your JavaScript code and the SQL database. You define models (tables), and Sequelize handles the SQL behind the scenes.
+
+## Key Concepts
+- **Models:** Represent tables in your database.
+- **Associations:** Define relationships (one-to-one, one-to-many, many-to-many).
+- **Migrations:** Manage schema changes over time.
+- **Querying:** Use model methods to read/write data.
+
+## Best Practices
+- Use migrations to version-control your schema.
+- Validate data at both the model and application level.
+- Use transactions for multi-step operations.
+- Keep business logic out of models.
+
+## Common Pitfalls
+- Not handling connection errors or pool limits.
+- Overusing eager loading (can cause performance issues).
+- Ignoring SQL injection risks in raw queries.
+
+## Interview Q&A
+**Q: What is an ORM and why use one?**
+A: An ORM maps database tables to JavaScript objects, simplifying data access and reducing the need for raw SQL.
+
+**Q: How do you define relationships in Sequelize?**
+A: Use association methods like `hasMany`, `belongsTo`, and `belongsToMany` to define relationships between models.
+
+**Q: How do you handle schema changes in production?**
+A: Use Sequelize migrations to apply and track schema changes safely.
+
+---
+
+[[nodejs-roadmap|← Back to Node.js Roadmap]]
 
 ## Sequelize Setup and Configuration
 

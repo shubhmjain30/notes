@@ -1,8 +1,47 @@
 # Node.js Core Modules
 
-Node.js comes with a rich set of built-in modules that provide essential functionality for server-side applications. These core modules are the foundation of Node.js development and are available without any additional installation.
+Node.js comes with a powerful set of core modules that provide essential functionality for building server-side applications. Mastering these modules is key to writing efficient, idiomatic Node.js code.
 
-[[Node.js Express.js Roadmap|← Back to Node.js Roadmap]]
+## Conceptual Overview
+
+**Why Core Modules?**
+Core modules are built into Node.js and do not require installation. They offer low-level access to the file system, networking, streams, cryptography, and more.
+
+**Mental Model:**
+- Think of core modules as the standard library of Node.js—tools you can rely on for most server-side tasks, optimized for performance and security.
+
+## Key Modules
+- **fs:** File system operations (read, write, watch files)
+- **http/https:** Create web servers and clients
+- **path:** Work with file and directory paths
+- **os:** System information
+- **events:** Event-driven programming
+- **stream:** Handle streaming data
+- **crypto:** Cryptography utilities
+
+## Best Practices
+- Prefer asynchronous methods to avoid blocking the event loop.
+- Use streams for large file or network operations.
+- Always handle errors in callbacks and promise chains.
+
+## Common Pitfalls
+- Using synchronous methods in production code.
+- Not handling errors, leading to crashes.
+- Forgetting to close file descriptors or network connections.
+
+## Interview Q&A
+**Q: What is the difference between fs.readFile and fs.readFileSync?**
+A: fs.readFile is asynchronous and non-blocking; fs.readFileSync blocks the event loop until the operation completes.
+
+**Q: When should you use streams in Node.js?**
+A: Use streams for processing large files or data sources to avoid loading everything into memory at once.
+
+**Q: How do you handle errors in core module APIs?**
+A: Always check for errors in callbacks or use try/catch with promises/async functions.
+
+---
+
+[[nodejs-roadmap|← Back to Node.js Roadmap]]
 
 ## File System (fs)
 
