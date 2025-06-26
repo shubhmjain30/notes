@@ -231,14 +231,14 @@ While many guides advocate for exclusively using `===`, a more nuanced approach 
 **Common Anomalies and Gotchas**
 The behaviour of loose equality can be surprising if its rules are not understood.
 
-| Expression          | Result | Explanation                                                                                                                                                                                                       |
-| :------------------ | :----- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `false == "0"`      | true   | false is coerced to the number 0\. "0" is coerced to the number 0\. The comparison becomes 0 == 0\.                                                                                                               |
-| `null == undefined` | true   | The spec explicitly defines null and undefined as loosely equal to each other and nothing else.                                                                                                                   |
-| `==!`               | true   | \! becomes false (since is truthy). The comparison becomes \` == false\`. \`false\` is coerced to \`0\`. is coerced to the string "", which is then coerced to the number 0\. The comparison becomes 0 \\=\\= 0\. |
-| `== 0`              | true   | \`\` is coerced to the string "", which is then coerced to the number 0\. The comparison becomes `0 == 0`.                                                                                                        |
-| `NaN === NaN`       | false  | NaN is the only value in JavaScript that is not equal to itself. Use Number.isNaN() to check for it.                                                                                                              |
-| `0 === -0`          | true   | Although they are distinct values, strict equality considers them equal. Use Object.is(x, \-0) to distinguish them.                                                                                               |
+| Expression          | Result | Explanation                                                                                                                                                                                             |
+| :------------------ | :----- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `false == "0"`      | true   | false is coerced to the number 0\. "0" is coerced to the number 0\. The comparison becomes 0 == 0\.                                                                                                     |
+| `null == undefined` | true   | The spec explicitly defines null and undefined as loosely equal to each other and nothing else.                                                                                                         |
+| `==!`               | true   | \! becomes false (since is truthy). The comparison becomes \` == false\`. `false` is coerced to `0`. is coerced to the string "", which is then coerced to the number 0. The comparison becomes 0 == 0. |
+| `== 0`              | true   | \`\` is coerced to the string "", which is then coerced to the number 0\. The comparison becomes `0 == 0`.                                                                                              |
+| `NaN === NaN`       | false  | NaN is the only value in JavaScript that is not equal to itself. Use Number.isNaN() to check for it.                                                                                                    |
+| `0 === -0`          | true   | Although they are distinct values, strict equality considers them equal. Use Object.is(x, \-0) to distinguish them.                                                                                     |
 
 _Table of JavaScript equality comparisons_
 
