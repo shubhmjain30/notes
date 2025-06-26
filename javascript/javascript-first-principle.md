@@ -1,10 +1,16 @@
-[[javascript-roadmap.md]]
+# JavaScript as a Compiled Language: The First Principle
 
-# JavaScript as a Compiled Language
+Understanding JavaScript's true nature as a compiled language is fundamental to mastering its behavior. This foundational knowledge explains scope, hoisting, and execution patterns that might otherwise seem magical or unpredictable.
 
-## Introduction
+[[javascript-roadmap|← Back to JavaScript Roadmap]]
 
-This section explains why JavaScript is fundamentally a compiled language, how its engine works, and the mental models required to understand its core mechanics. It covers compilation, scope, hoisting, and the nuances of how code is processed.
+## The Compilation Paradigm Shift
+
+**Problem:** A common misconception treats JavaScript as an interpreted language, processed line-by-line. This mental model leads to confusion about scope, hoisting, and execution order.
+
+**Theory:** JavaScript is actually a compiled language, though compilation happens just-in-time (microseconds before execution) rather than in a separate build step. This compilation process creates an Abstract Syntax Tree (AST) and optimizes code for execution.
+
+**Why it matters:** Understanding compilation explains seemingly mysterious behaviors like variable hoisting and why certain variables are accessible before they're declared.
 
 ### Knowledge Points
 

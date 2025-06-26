@@ -1,22 +1,25 @@
-# Node.js Modules
+# Mastering Node.js Module Systems
 
-Modules are the building blocks of Node.js applications, allowing code to be organized into reusable, self-contained units. Understanding the different module systems and how to use them effectively is essential for building maintainable applications.
+Modules form the foundation of code organization in Node.js, enabling developers to create reusable, maintainable applications. Understanding both CommonJS and ES Modules, along with their interoperability, is crucial for modern Node.js development.
 
-[[Node.js Express.js Roadmap|← Back to Node.js Roadmap]]
+[[nodejs-roadmap|← Back to Node.js Roadmap]]
 
-## Module Systems Overview
+## The Module Paradigm
 
-**Problem:** How do we organize code into reusable, maintainable components with proper encapsulation?
+**Problem:** How do we organize code into reusable, maintainable components while avoiding global namespace pollution and managing dependencies effectively?
 
-**Theory:** Node.js supports two module systems:
+**Theory:** Node.js supports two module systems that serve different needs and use cases. Each provides encapsulation, dependency management, and code reuse capabilities, but with different syntax and loading mechanisms.
 
--   **CommonJS (CJS)**: The original Node.js module system using `require()` and `module.exports`
--   **ES Modules (ESM)**: The standardized JavaScript module system using `import` and `export`
+### **Module Systems Comparison**
 
-**When to use each:**
-
--   **CommonJS**: For older Node.js applications, when working with libraries that don't support ESM, or when dynamic requires are needed
--   **ES Modules**: For new projects, browser-compatible code, or when using modern JavaScript features
+| Feature             | CommonJS (CJS)                 | ES Modules (ESM)    |
+| ------------------- | ------------------------------ | ------------------- |
+| **Syntax**          | `require()` / `module.exports` | `import` / `export` |
+| **Loading**         | Synchronous                    | Asynchronous        |
+| **Browser Support** | No (requires bundling)         | Native support      |
+| **Dynamic Imports** | `require()` anywhere           | `import()` function |
+| **Tree Shaking**    | Limited                        | Full support        |
+| **Top-level await** | Not supported                  | Supported           |
 
 ## CommonJS Modules
 
