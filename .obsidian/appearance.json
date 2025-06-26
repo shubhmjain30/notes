@@ -1,5 +1,6 @@
 {
-	"textFontFamily": "",
-	"accentColor": "",
-	"cssTheme": "Things"
+  "textFontFamily": "",
+  "accentColor": "",
+  "cssTheme": "",
+  "theme": "obsidian"
 }
