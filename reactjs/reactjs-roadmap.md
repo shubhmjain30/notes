@@ -2,28 +2,28 @@
 
 React is more than a JavaScript library for building user interfaces; it represents a paradigm shift in how developers approach front-end development. Created and maintained by Meta (formerly Facebook), React introduced a declarative, component-based approach that has since become the industry standard for creating scalable, interactive, and efficient web applications. Its core philosophy revolves around a simple yet powerful idea: UI is a function of state. This means that for any given state of your application, the UI will look the same, making applications more predictable, easier to debug, and simpler to reason about.
 
-Mastering React is not merely about learning its API. It is a journey that involves understanding its foundational principles, the modern JavaScript features it leverages, the ecosystem of tools that surround it, and the architectural patterns that enable the construction of large-scale, maintainable applications. This roadmap provides a structured, comprehensive path for developers aiming to achieve true proficiency. It begins with the non-negotiable prerequisites, moves through the core concepts of the library, explores the vast ecosystem, delves into advanced design patterns, and concludes with production-grade considerations like performance optimization and testing. Each stage is designed to build upon the last, ensuring a solid and deep understanding of not just the "how," but, more importantly, the "why" behind React's design and best practices.
+Mastering React is not merely about learning its API. It is a journey that involves understanding its foundational principles, the modern JavaScript features it leverages, the ecosystem of tools that surround it, and the architectural patterns that enable the construction of large-scale, maintainable applications. This roadmap provides a structured, comprehensive path for developers aiming to achieve true proficiency. It begins with the non-negotiable prerequisites, moves through the core concepts of the library, explores the vast ecosystem, delves into advanced design patterns, and concludes with production-grade considerations like performance optimisation and testing. Each stage is designed to build upon the last, ensuring a solid and deep understanding of not just the "how," but, more importantly, the "why" behind React's design and best practices.
 
 ## **Stage 1: The Bedrock - Foundational Web & JavaScript Knowledge**
 
 [[reactjs-bedrock|Foundational Web & JavaScript Knowledge]]
 
-Before writing a single line of React code, a solid foundation in core web technologies and modern JavaScript is essential. React does not exist in a vacuum; it is a tool to build for the web, and it is written _in_ JavaScript. Attempting to learn React without this bedrock is like trying to build a house without a foundation—it is possible to erect a frame, but it will be unstable and fundamentally flawed. The most common struggles for beginners stem not from React's complexity, but from a weak grasp of the underlying JavaScript concepts that React utilizes extensively.3
+Before writing a single line of React code, a solid foundation in core web technologies and modern JavaScript is essential. React does not exist in a vacuum; it is a tool to build for the web, and it is written _in_ JavaScript. Attempting to learn React without this bedrock is like trying to build a house without a foundation—it is possible to erect a frame, but it will be unstable and fundamentally flawed. The most common struggles for beginners stem not from React's complexity, but from a weak grasp of the underlying JavaScript concepts that React utilises extensively.
 
 ### **The Non-Negotiables: Core Web Technologies**
 
-A fundamental understanding of HTML and CSS is a prerequisite for any front-end development, and React is no exception.1 React's ultimate output is a tree of DOM nodes, which are rendered by the browser based on HTML standards. Therefore, a developer must understand:
+A fundamental understanding of HTML and CSS is a prerequisite for any front-end development, and React is no exception. React's ultimate output is a tree of DOM nodes, which are rendered by the browser based on HTML standards. Therefore, a developer must understand:
 
 -   **Semantic HTML:** Knowing how to structure a document with semantic tags (\<header\>, \<main\>, \<article\>, \<footer\>, etc.) is crucial for accessibility and SEO, principles that remain vital in a React application.
--   **CSS Fundamentals:** A strong grasp of CSS, including the box model, flexbox, grid, and media queries, is necessary to style the components that React renders. While React offers various styling strategies, they all ultimately generate CSS that the browser must interpret.
+-   **CSS Fundamentals:** A strong grasp of CSS, including the box model, flex-box, grid, and media queries, is necessary to style the components that React renders. While React offers various styling strategies, they all ultimately generate CSS that the browser must interpret.
 
 ### **Modern JavaScript (ES6+): The Language of React**
 
-React leverages many features of modern JavaScript (officially ECMAScript 2015 and later, often referred to as ES6+). Mastering these concepts is not optional; they are the building blocks of idiomatic React code.3 The shift to these features enables the declarative and functional paradigm that React promotes.
+React leverages many features of modern JavaScript (officially ECMAScript 2015 and later, often referred to as ES6+). Mastering these concepts is not optional; they are the building blocks of idiomatic React code. The shift to these features enables the declarative and functional paradigm that React promotes.
 
 #### **Variables and Scope (let, const)**
 
-The introduction of let and const brought block-scoping to JavaScript, replacing the often-confusing function-scoping of var. In React, const is heavily preferred for variable declarations. This is not merely a stylistic choice; it reinforces the principle of immutability. React's state updates should be handled without directly mutating existing state variables or objects. Using const helps prevent accidental reassignments, which can lead to bugs and unpredictable behavior.6
+The introduction of let and const brought block-scoping to JavaScript, replacing the often-confusing function-scoping of var. In React, const is heavily preferred for variable declarations. This is not merely a stylistic choice; it reinforces the principle of immutability. React's state updates should be handled without directly mutating existing state variables or objects. Using const helps prevent accidental reassignments, which can lead to bugs and unpredictable behaviour.
 
 #### **Arrow Functions**
 
