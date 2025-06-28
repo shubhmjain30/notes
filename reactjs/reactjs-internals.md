@@ -45,7 +45,7 @@ function createElement(type, props, ...children) {
 				typeof child === "object" ? child : createTextElement(child)
 			),
 		},
-	};
+	}; // Returns a plain JavaScript object (a React Element)
 }
 
 function createTextElement(text) {
@@ -122,11 +122,14 @@ function ListWithoutKeys() {
 	};
 
 	return (
-		<ul>
-			{items.map((item, index) => (
-				<li key={index}>{item}</li> // Using index as key is problematic when list order changes
-			))}
-		</ul>
+		<div>
+			<button onClick={addItem}>Add Item to Beginning</button>
+			<ul>
+				{items.map((item, index) => (
+					<li key={index}>{item}</li> // Using index as key is problematic when list order changes
+				))}
+			</ul>
+		</div>
 	);
 }
 
@@ -145,11 +148,14 @@ function ListWithKeys() {
 	};
 
 	return (
-		<ul>
-			{items.map((item) => (
-				<li key={item.id}>{item.name}</li> // Stable, unique key
-			))}
-		</ul>
+		<div>
+			<button onClick={addItem}>Add Item to Beginning</button>
+			<ul>
+				{items.map((item) => (
+					<li key={item.id}>{item.name}</li> // Stable, unique key
+				))}
+			</ul>
+		</div>
 	);
 }
 ```

@@ -47,7 +47,7 @@ function ParentComponent() {
 	return (
 		<div>
 			<button onClick={() => setCount(count + 1)}>Increment</button>
-			<ExpensiveComponent data={expensiveData} onClick={handleClick} />
+			<ExpensiveComponent data={expensiveData} />
 		</div>
 	);
 }
@@ -129,7 +129,7 @@ function BadList() {
 	return (
 		<ul>
 			{["a", "b", "c"].map((item, index) => (
-				// Using index as key can cause issues with reordering
+				// Using index as key can cause issues with reordering, addition, or deletion
 				<li key={index} style={{ color: "red" }}>
 					{item}
 				</li>
@@ -139,15 +139,19 @@ function BadList() {
 }
 
 // Better performance
-const listItems = ["a", "b", "c"];
+const listItems = [
+	{ id: 1, text: "a" },
+	{ id: 2, text: "b" },
+	{ id: 3, text: "c" },
+];
 const redStyle = { color: "red" };
 
 function GoodList() {
 	return (
 		<ul>
 			{listItems.map((item) => (
-				<li key={item} style={redStyle}>
-					{item}
+				<li key={item.id} style={redStyle}>
+					{item.text}
 				</li>
 			))}
 		</ul>
@@ -200,7 +204,7 @@ test("calls onClick when clicked", () => {
 **Theory:** Accessibility is about ensuring your application can be used by everyone, including people with visual, motor, auditory, or cognitive disabilities.
 
 ```jsx
-// Inaccessible form
+// Inaccessible form - not keyboard focusable, no semantic meaning
 function BadForm() {
 	return (
 		<div>

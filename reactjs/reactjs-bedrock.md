@@ -28,6 +28,7 @@ const Header = () => (
 	<header>
 		<h1>Company</h1>
 		<nav>
+			{/* In a React Router app, you'd use <Link to="/">Home</Link> */}
 			<a href="/">Home</a>
 		</nav>
 	</header>
@@ -81,6 +82,7 @@ class Component extends React.Component {
 }
 
 // Modern functional component
+// Note: Functional components with hooks are now the standard in modern React development.
 const Component = () => {
 	const handleClick = () => {
 		/* ... */

@@ -1,6 +1,8 @@
 {
   "textFontFamily": "",
-  "accentColor": "",
-  "cssTheme": "",
-  "theme": "obsidian"
+  "accentColor": "#699fba",
+  "cssTheme": "Minimal",
+  "theme": "obsidian",
+  "enabledCssSnippets": [],
+  "showRibbon": true
 }

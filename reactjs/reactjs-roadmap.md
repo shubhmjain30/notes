@@ -29,117 +29,123 @@ The introduction of let and const brought block-scoping to JavaScript, replacing
 
 Arrow functions offer a more concise syntax for writing functions and, critically, they do not have their own this context. They inherit this from the surrounding (lexical) scope. This feature was a major advantage in the era of class components, as it eliminated the need to manually bind event handlers in the constructor. In modern functional components, their conciseness makes them the standard for defining helper functions, callbacks, and even the components themselves.
 
-JavaScript
-
-// Traditional function, requires binding 'this' in a class  
-class MyClassComponent extends React.Component {  
- handleClick() { /\*... \*/ }  
- render() {  
- return \<button onClick\={this.handleClick.bind(this)}\>Click\</button\>;  
- }  
+```javascript
+// Traditional function, requires binding 'this' in a class
+class MyClassComponent extends React.Component {
+	handleClick() {
+		/*...*/
+	}
+	render() {
+		return <button onClick={this.handleClick.bind(this)}>Click</button>;
+	}
 }
 
-// Arrow function, 'this' is handled lexically  
-class MyClassComponentWithArrow extends React.Component {  
- handleClick \= () \=\> { /\*... \*/ };  
- render() {  
- return \<button onClick\={this.handleClick}\>Click\</button\>;  
- }  
+// Arrow function, 'this' is handled lexically
+class MyClassComponentWithArrow extends React.Component {
+	handleClick = () => {
+		/*...*/
+	};
+	render() {
+		return <button onClick={this.handleClick}>Click</button>;
+	}
 }
+```
 
 #### **Destructuring (Objects and Arrays)**
 
-Destructuring is a convenient way of extracting values from arrays or properties from objects into distinct variables. This syntax is ubiquitous in React for two primary use cases: accessing props and using hooks.5
+Destructuring is a convenient way of extracting values from arrays or properties from objects into distinct variables. This syntax is ubiquitous in React for two primary use cases: accessing props and using hooks.
 
 -   **Props Destructuring:** Instead of repeatedly writing props.name and props.age, props can be destructured directly in the component's function signature, leading to cleaner and more readable code.
--   **Hook Destructuring:** The useState hook, for example, returns an array containing the state value and a setter function. Array destructuring provides a concise way to assign these to named variables.3
+-   **Hook Destructuring:** The useState hook, for example, returns an array containing the state value and a setter function. Array destructuring provides a concise way to assign these to named variables.
 
-JavaScript
-
-// Prop destructuring  
-function UserProfile({ name, email }) { // Destructuring props object  
- return (  
- \<div\>  
- \<p\>Name: {name}\</p\>  
- \<p\>Email: {email}\</p\>  
- \</div\>  
- );  
+```javascript
+// Prop destructuring
+function UserProfile({ name, email }) {
+	// Destructuring props object
+	return (
+		<div>
+			<p>Name: {name}</p>
+			<p>Email: {email}</p>
+		</div>
+	);
 }
 
-// Hook destructuring  
-import { useState } from 'react';  
-const \[count, setCount\] \= useState(0); // Destructuring array returned by useState
+// Hook destructuring
+import { useState } from "react";
+const [count, setCount] = useState(0); // Destructuring array returned by useState
+```
 
 #### **Template Literals**
 
-Template literals, enclosed in backticks (\`), allow for embedded expressions and multi-line strings. They provide a much cleaner way to construct strings with dynamic values compared to traditional string concatenation, a common requirement when generating text for the UI.5
+Template literals, enclosed in backticks (\`), allow for embedded expressions and multi-line strings. They provide a much cleaner way to construct strings with dynamic values compared to traditional string concatenation, a common requirement when generating text for the UI.
 
-JavaScript
+```javascript
+const userName = "Alex";
+const notificationCount = 5;
 
-const userName \= 'Alex';  
-const notificationCount \= 5;
+// Old way
+const messageOld =
+	"Welcome back, " +
+	userName +
+	"! You have " +
+	notificationCount +
+	" new messages.";
 
-// Old way  
-const messageOld \= 'Welcome back, ' \+ userName \+ '\! You have ' \+ notificationCount \+ ' new messages.';
-
-// With template literals  
-const messageNew \= \`Welcome back, ${userName}\! You have ${notificationCount} new messages.\`;
+// With template literals
+const messageNew = `Welcome back, ${userName}! You have ${notificationCount} new messages.`;
+```
 
 #### **Modules (import/export)**
 
-Modern JavaScript applications are modular, and React applications are no exception. The entire component model is built on the ability to define a component in one file and use it in another. A thorough understanding of the import and export syntax is therefore fundamental.5 This includes:
+Modern JavaScript applications are modular, and React applications are no exception. The entire component model is built on the ability to define a component in one file and use it in another. A thorough understanding of the import and export syntax is therefore fundamental. This includes:
 
 -   **Default Exports/Imports:** Used for the primary export of a module, typically the component itself.
 -   **Named Exports/Imports:** Used for exporting multiple, smaller utilities or helper functions from a single file.
 
-JavaScript
-
-// utils.js \- Named exports  
-export const PI \= 3.14159;  
-export function formatCurrency(amount) {  
- //...  
+```javascript
+// utils.js - Named exports
+export const PI = 3.14159;
+export function formatCurrency(amount) {
+	//...
 }
 
-// Button.jsx \- Default export  
-export default function Button({ children }) {  
- return \<button\>{children}\</button\>;  
+// Button.jsx - Default export
+export default function Button({ children }) {
+	return <button>{children}</button>;
 }
 
-// App.jsx \- Importing both types  
-import Button from './Button.jsx'; // Default import  
-import { PI, formatCurrency } from './utils.js'; // Named imports
+// App.jsx - Importing both types
+import Button from "./Button.jsx"; // Default import
+import { PI, formatCurrency } from "./utils.js"; // Named imports
+```
 
 #### **Array Methods (.map(), .filter(), .reduce())**
 
-These higher-order functions are essential for data manipulation. In React, the .map() method is the standard, idiomatic way to render a list of components from an array of data.9 Instead of using imperative
+These higher-order functions are essential for data manipulation. In React, the .map() method is the standard, idiomatic way to render a list of components from an array of data. Instead of using imperative for loops, .map() allows for a declarative transformation of data into UI elements. The .filter() method is also commonly used to selectively render items based on a condition, such as in a search feature.
 
-for loops, .map() allows for a declarative transformation of data into UI elements. The .filter() method is also commonly used to selectively render items based on a condition, such as in a search feature.
+```javascript
+const products = [
+	{ id: 1, name: "Laptop", price: 1200 },
+	{ id: 2, name: "Mouse", price: 25 },
+	{ id: 3, name: "Keyboard", price: 75 },
+];
 
-JavaScript
-
-const products \= \[  
- { id: 1, name: 'Laptop', price: 1200 },  
- { id: 2, name: 'Mouse', price: 25 },  
- { id: 3, name: 'Keyboard', price: 75 },  
-\];
-
-function ProductList() {  
- return (  
- \<ul\>  
- {products.map(product \=\> (  
- \<li key\={product.id}\>  
- {product.name} \- ${product.price}  
- \</li\>  
- ))}  
- \</ul\>  
- );  
+function ProductList() {
+	return (
+		<ul>
+			{products.map((product) => (
+				<li key={product.id}>
+					{product.name} - ${product.price}
+				</li>
+			))}
+		</ul>
+	);
 }
+```
 
 #### **Asynchronous JavaScript (Promises and async/await)**
 
-Web applications are inherently asynchronous, constantly fetching data from servers, waiting for user input, or handling timers. A deep understanding of how JavaScript handles asynchronous operations is critical. While callbacks and Promises are the underlying mechanisms, the async/await syntax provides a much cleaner and more readable way to write asynchronous code that looks synchronous.5 This is especially important when performing data fetching inside the
-
-useEffect hook.
+Web applications are inherently asynchronous, constantly fetching data from servers, waiting for user input, or handling timers. A deep understanding of how JavaScript handles asynchronous operations is critical. While callbacks and Promises are the underlying mechanisms, the async/await syntax provides a much cleaner and more readable way to write asynchronous code that looks synchronous. This is especially important when performing data fetching inside the useEffect hook.
 
 ## **Stage 2: First Steps with React - Core Concepts & Tooling**
 
@@ -149,242 +155,240 @@ With a strong JavaScript foundation, the next stage is to dive into React itself
 
 ### **Setting Up a Modern Development Environment**
 
-While it is possible to add React to a project via a simple \<script\> tag, modern development relies on a sophisticated toolchain to handle tasks like transpilation, bundling, and optimization.3
+While it is possible to add React to a project via a simple `<script>` tag, modern development relies on a sophisticated toolchain to handle tasks like transpilation, bundling, and optimization.
 
--   **Node.js and npm/yarn:** The React development environment runs on Node.js. It provides the runtime for build tools and includes a package manager (npm, the Node Package Manager, or its popular alternative, Yarn) to install and manage project dependencies like React itself.3 As of late 2023, a recent Long-Term Support (LTS) version of Node.js (e.g., Node 20 or later) is recommended.3
--   **Build Tools: Vite vs. Create React App (CRA):** For years, Create React App (CRA) was the official and most recommended tool for bootstrapping a new React project. However, the ecosystem has evolved. **Vite** is now the recommended choice for new projects due to its significantly faster development server startup and Hot Module Replacement (HMR) speeds.3 CRA is being officially sunsetted, making Vite the clear path forward for modern React development.12  
-    To start a new project with Vite, the command is simple:  
-    npm create vite@latest my-react-app \-- \--template react
--   **Project Structure and Bootstrapping:** A new Vite project provides a clean and understandable file structure. The entry point is src/main.jsx, where the root React component, \<App /\>, is rendered into the DOM element with the ID root in index.html. This process, known as "mounting," is what brings the React application to life in the browser.3
+-   **Node.js and npm/yarn:** The React development environment runs on Node.js. It provides the runtime for build tools and includes a package manager (npm, the Node Package Manager, or its popular alternative, Yarn) to install and manage project dependencies like React itself. As of late 2023, a recent Long-Term Support (LTS) version of Node.js (e.g., Node 20 or later) is recommended.
+-   **Build Tools: Vite vs. Create React App (CRA):** For years, Create React App (CRA) was the official and most recommended tool for bootstrapping a new React project. However, the ecosystem has evolved. **Vite** is now the recommended choice for new projects due to its significantly faster development server startup and Hot Module Replacement (HMR) speeds. CRA is being officially sunsetted, making Vite the clear path forward for modern React development.
+    To start a new project with Vite, the command is simple:
+    ```bash
+    npm create vite@latest my-react-app -- --template react
+    ```
+-   **Project Structure and Bootstrapping:** A new Vite project provides a clean and understandable file structure. The entry point is src/main.jsx, where the root React component, `<App />`, is rendered into the DOM element with the ID root in index.html. This process, known as "mounting," is what brings the React application to life in the browser.
 
 ### **The Heart of React: Components & JSX**
 
-The core abstraction in React is the **component**. A component is a self-contained, reusable piece of the user interface that encapsulates its own logic and appearance.3 Components can be as small as a button or as large as an entire page. This modularity is what makes complex UIs manageable. A critical convention is that component names must always start with a capital letter (e.g.,
-
-\<MyComponent /\>), which allows React to distinguish them from native HTML tags (e.g., \<div /\>).13
+The core abstraction in React is the **component**. A component is a self-contained, reusable piece of the user interface that encapsulates its own logic and appearance. Components can be as small as a button or as large as an entire page. This modularity is what makes complex UIs manageable. A critical convention is that component names must always start with a capital letter (e.g., `<MyComponent />`), which allows React to distinguish them from native HTML tags (e.g., `<div />`).
 
 #### **Understanding JSX (JavaScript XML)**
 
-React's most distinctive feature is JSX. It is a syntax extension for JavaScript, not a separate language, that allows developers to write markup that looks like HTML directly inside their JavaScript files.14 While optional, JSX is used in the vast majority of React projects for its conciseness and readability.15
+React's most distinctive feature is JSX. It is a syntax extension for JavaScript, not a separate language, that allows developers to write markup that looks like HTML directly inside their JavaScript files. While optional, JSX is used in the vast majority of React projects for its conciseness and readability.
 
-This blending of markup and logic is a deliberate philosophical choice. In traditional web development, concerns were separated by technology (HTML, CSS, JS). However, in modern UI development, the logic that determines what to display is inherently coupled with the markup that is displayed.16 JSX embraces this by allowing them to be co-located within a component, making the component a truly self-contained unit.
+This blending of markup and logic is a deliberate philosophical choice. In traditional web development, concerns were separated by technology (HTML, CSS, JS). However, in modern UI development, the logic that determines what to display is inherently coupled with the markup that is displayed. JSX embraces this by allowing them to be co-located within a component, making the component a truly self-contained unit.
 
-During the build process, a transpiler like Babel converts JSX into standard JavaScript function calls to React.createElement().16 These calls produce JavaScript objects called "React elements," which are lightweight descriptions of what should appear on the screen.16
+During the build process, a transpiler like Babel converts JSX into standard JavaScript function calls to `React.createElement()`. These calls produce JavaScript objects called "React elements," which are lightweight descriptions of what should appear on the screen.
 
-There are three fundamental rules of JSX 15:
+There are three fundamental rules of JSX:
 
-1. **Return a single root element:** A component can only return one top-level element. Multiple elements must be wrapped in a parent \<div\> or, to avoid adding an unnecessary node to the DOM, a \<React.Fragment\> (shorthand: \<\>...\</\>).
-2. **Close all tags:** Unlike HTML, JSX requires every tag to be explicitly closed. Self-closing tags like \<img\> must be written as \<img /\>.
-3. **Use className for CSS classes:** Since class is a reserved keyword in JavaScript, JSX uses the className attribute. Similarly, other HTML attributes that conflict with JavaScript keywords or use hyphens are converted to camelCase (e.g., tabindex becomes tabIndex).16
+1.  **Return a single root element:** A component can only return one top-level element. Multiple elements must be wrapped in a parent `<div>` or, to avoid adding an unnecessary node to the DOM, a `<React.Fragment>` (shorthand: `<>...</>`).
+2.  **Close all tags:** Unlike HTML, JSX requires every tag to be explicitly closed. Self-closing tags like `<img>` must be written as `<img />`.
+3.  **Use className for CSS classes:** Since `class` is a reserved keyword in JavaScript, JSX uses the `className` attribute. Similarly, other HTML attributes that conflict with JavaScript keywords or use hyphens are converted to camelCase (e.g., `tabindex` becomes `tabIndex`).
 
-JavaScript expressions can be embedded directly within JSX by wrapping them in curly braces {}. This allows for dynamic content rendering, from simple variables to the results of function calls.16
+JavaScript expressions can be embedded directly within JSX by wrapping them in curly braces `{}`. This allows for dynamic content rendering, from simple variables to the results of function calls.
 
-JavaScript
-
-const user \= {  
- name: 'Hedy Lamarr',  
- imageUrl: 'https://i.imgur.com/yXOvdOSs.jpg'  
+```javascript
+const user = {
+	name: "Hedy Lamarr",
+	imageUrl: "https://i.imgur.com/yXOvdOSs.jpg",
 };
 
-function Profile() {  
- return (  
- \<\>  
- \<h1\>{user.name}'s Profile\</h1\>  
- \<img  
- className\="avatar"  
- src\={user.imageUrl}  
- alt\={'Photo of ' \+ user.name}  
- style\={{
-          width: 100,
-          height: 100
-        }}  
- /\>  
- \</\>  
- );  
+function Profile() {
+	return (
+		<>
+			<h1>{user.name}'s Profile</h1>
+			<img
+				className="avatar"
+				src={user.imageUrl}
+				alt={"Photo of " + user.name}
+				style={{
+					width: 100,
+					height: 100,
+				}}
+			/>
+		</>
+	);
 }
+```
 
 #### **Functional vs. Class Components**
 
-React components can be defined in two ways. Understanding both is crucial, as modern codebases use one while legacy codebases are filled with the other. The official recommendation is to use Functional Components for all new code.19
+React components can be defined in two ways. Understanding both is crucial, as modern codebases use one while legacy codebases are filled with the other. The official recommendation is to use Functional Components for all new code.
 
--   **Functional Components:** These are simple JavaScript functions that accept an object of props as an argument and return JSX. They are the modern standard, especially since the introduction of Hooks, which allow them to manage state and side effects.13
--   **Class Components:** These are ES6 classes that extend React.Component. They require a render() method to return JSX and use this.props to access props and this.state for state management.19
+-   **Functional Components:** These are simple JavaScript functions that accept an object of props as an argument and return JSX. They are the modern standard, especially since the introduction of Hooks, which allow them to manage state and side effects.
+-   **Class Components:** These are ES6 classes that extend `React.Component`. They require a `render()` method to return JSX and use `this.props` to access props and `this.state` for state management.
 
-| Feature              | Functional Component                                                                   | Class Component                                                                                  |
-| :------------------- | :------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
-| **Syntax**           | A plain JavaScript function: function MyComponent(props) { return \<div /\>; }         | An ES6 class: class MyComponent extends React.Component { render() { return \<div /\>; } }       |
-| **State Management** | Uses the useState() Hook: const \= useState(0);                                        | Uses the this.state object and this.setState() method.                                           |
-| **Lifecycle**        | Uses the useEffect() Hook for all side effects.                                        | Uses specific lifecycle methods like componentDidMount, componentDidUpdate, etc.                 |
-| **Props Access**     | Props are passed as a function argument: props.name or { name }.                       | Props are accessed via this.props.name.                                                          |
-| **this Keyword**     | Not applicable; avoids complexity of this binding.                                     | Required to access props and state; often requires manual binding.                               |
-| **Recommendation**   | **Preferred for all new code.** Simpler, more concise, and fully supported by Hooks.19 | **Legacy.** Necessary for maintaining older codebases but not recommended for new development.19 |
+| Feature              | Functional Component                                                                 | Class Component                                                                                |
+| :------------------- | :----------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
+| **Syntax**           | A plain JavaScript function: `function MyComponent(props) { return <div />; }`       | An ES6 class: `class MyComponent extends React.Component { render() { return <div />; } }`     |
+| **State Management** | Uses the `useState()` Hook: `const [count, setCount] = useState(0);`                 | Uses the `this.state` object and `this.setState()` method.                                     |
+| **Lifecycle**        | Uses the `useEffect()` Hook for all side effects.                                    | Uses specific lifecycle methods like `componentDidMount`, `componentDidUpdate`, etc.           |
+| **Props Access**     | Props are passed as a function argument: `props.name` or `{ name }`.                 | Props are accessed via `this.props.name`.                                                      |
+| **`this` Keyword**   | Not applicable; avoids complexity of `this` binding.                                 | Required to access props and state; often requires manual binding.                             |
+| **Recommendation**   | **Preferred for all new code.** Simpler, more concise, and fully supported by Hooks. | **Legacy.** Necessary for maintaining older codebases but not recommended for new development. |
 
 ### **Data Flow: Props vs. State**
 
-The flow of data is a cornerstone of React's architecture. Understanding the distinction between props and state is one of the most critical steps to mastering the library. Both are plain JavaScript objects that hold information influencing the rendered output, but their roles and ownership are fundamentally different.22
+The flow of data is a cornerstone of React's architecture. Understanding the distinction between props and state is one of the most critical steps to mastering the library. Both are plain JavaScript objects that hold information influencing the rendered output, but their roles and ownership are fundamentally different.
 
--   **Props (Properties):** Props are used to pass data from a parent component down to a child component. They are analogous to arguments in a function call.13 The core principle of props is that they are  
-    **read-only** from the perspective of the child component.13 A child must never modify its own props. This enforces a strict  
-    **unidirectional data flow**, where data flows downwards from parent to child. This makes the application's logic predictable and easier to trace.2
--   **State:** State is a component's internal "memory." It is data that is managed _within_ a component and can change over time, typically in response to user actions like clicking a button or typing in a form.24 When a component's state changes (via a special setter function), React automatically re-renders the component to reflect the new state.22
+-   **Props (Properties):** Props are used to pass data from a parent component down to a child component. They are analogous to arguments in a function call. The core principle of props is that they are
+    **read-only** from the perspective of the child component. A child must never modify its own props. This enforces a strict
+    **unidirectional data flow**, where data flows downwards from parent to child. This makes the application's logic predictable and easier to trace.
+-   **State:** State is a component's internal "memory." It is data that is managed _within_ a component and can change over time, typically in response to user actions like clicking a button or typing in a form. When a component's state changes (via a special setter function), React automatically re-renders the component to reflect the new state.
 
-The key difference is **ownership**: props are owned and passed in by a parent, while state is owned and managed by the component itself.22
+The key difference is **ownership**: props are owned and passed in by a parent, while state is owned and managed by the component itself.
 
-| Characteristic | Props                                         | State                                                           |
-| :------------- | :-------------------------------------------- | :-------------------------------------------------------------- |
-| **Data Flow**  | Passed from parent to child (downward flow).  | Managed internally within the component.                        |
-| **Mutability** | Immutable (read-only) by the child component. | Mutable (can be changed using a setter function like setState). |
-| **Ownership**  | Owned and controlled by the parent component. | Owned and controlled by the component itself.                   |
-| **Purpose**    | To pass data and configure child components.  | To manage interactive data that changes over time.              |
-| **Example**    | \<UserCard name="Alex" /\>                    | const \[isVisible, setIsVisible\] \= useState(false);           |
+| Characteristic | Props                                         | State                                                             |
+| :------------- | :-------------------------------------------- | :---------------------------------------------------------------- |
+| **Data Flow**  | Passed from parent to child (downward flow).  | Managed internally within the component.                          |
+| **Mutability** | Immutable (read-only) by the child component. | Mutable (can be changed using a setter function like `setState`). |
+| **Ownership**  | Owned and controlled by the parent component. | Owned and controlled by the component itself.                     |
+| **Purpose**    | To pass data and configure child components.  | To manage interactive data that changes over time.                |
+| **Example**    | `<UserCard name="Alex" />`                    | `const [isVisible, setIsVisible] = useState(false);`              |
 
 ### **Rendering UI**
 
 With components, JSX, props, and state understood, the final piece of the core puzzle is rendering dynamic UIs.
 
--   **Conditional Rendering:** There is no special syntax for conditions in React; it uses standard JavaScript. The most common patterns are the ternary operator (? :) for simple if-else logic and the logical AND operator (&&) for rendering something only if a condition is true. These can be used directly inside JSX.9  
-    JavaScript  
-    function Mailbox({ unreadMessages }) {  
-     return (  
-     \<div\>  
-     \<h1\>Hello\!\</h1\>  
-     {unreadMessages.length \> 0? (  
-     \<h2\>You have {unreadMessages.length} unread messages.\</h2\>  
-     ) : (  
-     \<h2\>No new messages.\</h2\>  
-     )}  
-     \</div\>  
-     );  
+-   **Conditional Rendering:** There is no special syntax for conditions in React; it uses standard JavaScript. The most common patterns are the ternary operator (`? :`) for simple if-else logic and the logical AND operator (`&&`) for rendering something only if a condition is true. These can be used directly inside JSX.
+    ```javascript
+    function Mailbox({ unreadMessages }) {
+    	return (
+    		<div>
+    			<h1>Hello!</h1>
+    			{unreadMessages.length > 0 ? (
+    				<h2>You have {unreadMessages.length} unread messages.</h2>
+    			) : (
+    				<h2>No new messages.</h2>
+    			)}
+    		</div>
+    	);
     }
-
--   **Rendering Lists:** The standard pattern for rendering a list of items is to use the JavaScript .map() method.9 This method transforms an array of data into an array of React elements. When doing this, it is crucial to provide a unique  
-    key prop to each element in the list. The key should be a stable and unique string or number that identifies an item among its siblings. This key helps React identify which items have changed, been added, or been removed, allowing for much more efficient updates to the DOM.2 Using the array index as a key is discouraged if the list can be reordered, as it can lead to performance issues and bugs with component state.
+    ```
+-   **Rendering Lists:** The standard pattern for rendering a list of items is to use the JavaScript `.map()` method. This method transforms an array of data into an array of React elements. When doing this, it is crucial to provide a unique
+    **key** prop to each element in the list. The key should be a stable and unique string or number that identifies an item among its siblings. This key helps React identify which items have changed, been added, or been removed, allowing for much more efficient updates to the DOM. Using the array index as a key is discouraged if the list can be reordered, as it can lead to performance issues and bugs with component state.
 
 ## **Stage 3: Building Interactivity - State, Events, and Hooks**
 
 [[reactjs-interactivity-hooks|Building Interactivity: State, Events, and Hooks]]
 
-This stage marks the transition from rendering static views to building dynamic applications that respond to user interaction. The central technology for this in modern React is **Hooks**. Hooks are functions that let you "hook into" React state and lifecycle features from functional components, effectively replacing the need for class components for most use cases.8
+This stage marks the transition from rendering static views to building dynamic applications that respond to user interaction. The central technology for this in modern React is **Hooks**. Hooks are functions that let you "hook into" React state and lifecycle features from functional components, effectively replacing the need for class components for most use cases.
 
 ### **The Hooks Revolution**
 
-Introduced in React 16.8, Hooks solved several long-standing problems in the React ecosystem.26 Before Hooks, reusing stateful logic between components was cumbersome, typically requiring complex patterns like Higher-Order Components (HOCs) or Render Props, which led to deeply nested component trees known as "wrapper hell." Hooks allow developers to extract stateful logic into reusable functions, called
+Introduced in React 16.8, Hooks solved several long-standing problems in the React ecosystem. Before Hooks, reusing stateful logic between components was cumbersome, typically requiring complex patterns like Higher-Order Components (HOCs) or Render Props, which led to deeply nested component trees known as "wrapper hell." Hooks allow developers to extract stateful logic into reusable functions, called
 
-**custom Hooks**, which can be shared across components without altering the component hierarchy.26 Furthermore, Hooks enable better organization of logic within a component. Instead of splitting related logic across different lifecycle methods (e.g., fetching data in
-
-componentDidMount and cleaning up in componentWillUnmount), all related logic can be co-located within a single useEffect hook.8
+**custom Hooks**, which can be shared across components without altering the component hierarchy.
 
 This shift from component-based logic reuse (HOCs) to function-based logic reuse (custom hooks) is a fundamental evolution. It aligns React more closely with the principles of functional programming, resulting in code that is often flatter, more composable, and easier to understand and test.
 
-There are two essential rules for using Hooks 8:
+There are two essential rules for using Hooks:
 
 1. **Only call Hooks at the top level.** Do not call Hooks inside loops, conditions, or nested functions. This ensures that Hooks are called in the same order on every render, which is how React preserves their state between calls.
 2. **Only call Hooks from React function components or custom Hooks.** Do not call them from regular JavaScript functions.
 
 ### **The Essential Hooks Trio**
 
-While React provides several built-in Hooks, three are fundamental to nearly every application.27
+While React provides several built-in Hooks, three are fundamental to nearly every application.
 
 #### **useState**
 
-This is the most basic and common Hook. It allows you to add local state to a functional component.26
+This is the most basic and common Hook. It allows you to add local state to a functional component.
 
-useState takes one argument—the initial state—and returns an array containing two elements: the current state value and a function to update that value.8
+useState takes one argument—the initial state—and returns an array containing two elements: the current state value and a function to update that value.
 
-JavaScript
+```javascript
+import { useState } from "react";
 
-import { useState } from 'react';
+function Counter() {
+	// The array destructuring syntax is used to name the state variable and its setter.
+	const [count, setCount] = useState(0);
 
-function Counter() {  
- // The array destructuring syntax is used to name the state variable and its setter.  
- const \[count, setCount\] \= useState(0);
+	const handleIncrement = () => {
+		// The setter function is called to update the state.
+		setCount(count + 1);
+	};
 
-const handleIncrement \= () \=\> {  
- // The setter function is called to update the state.  
- setCount(count \+ 1);  
- };
-
-return (  
- \<div\>  
- \<p\>You clicked {count} times\</p\>  
- \<button onClick\={handleIncrement}\>Click me\</button\>  
- \</div\>  
- );  
+	return (
+		<div>
+			<p>You clicked {count} times</p>
+			<button onClick={handleIncrement}>Click me</button>
+		</div>
+	);
 }
+```
 
 #### **useEffect**
 
-This Hook lets you perform side effects in your components. Side effects are operations that are not directly related to rendering the UI, such as data fetching, setting up subscriptions, or manually changing the DOM.27 The
+This Hook lets you perform side effects in your components. Side effects are operations that are not directly related to rendering the UI, such as data fetching, setting up subscriptions, or manually changing the DOM. The
 
 useEffect Hook runs _after_ every render by default. Its behavior can be controlled with a dependency array, its second argument.
 
--   **Running Once on Mount:** To run an effect only once after the component initially mounts (similar to componentDidMount in classes), provide an empty dependency array (\`\`). This is the standard pattern for initial data fetching.7
+-   **Running Once on Mount:** To run an effect only once after the component initially mounts (similar to componentDidMount in classes), provide an empty dependency array (`[]`). This is the standard pattern for initial data fetching.
 -   **Running on State/Prop Change:** To re-run an effect only when specific values change (similar to componentDidUpdate), include those values (props or state) in the dependency array.
--   **Cleanup:** To perform cleanup when a component unmounts (e.g., canceling a network request or removing a subscription, similar to componentWillUnmount), return a function from the effect. React will execute this cleanup function before the component is removed from the UI.7
+-   **Cleanup:** To perform cleanup when a component unmounts (e.g., canceling a network request or removing a subscription, similar to componentWillUnmount), return a function from the effect. React will execute this cleanup function before the component is removed from the UI.
 
-JavaScript
+```javascript
+import { useState, useEffect } from "react";
 
-import { useState, useEffect } from 'react';
+function UserData({ userId }) {
+	const [user, setUser] = useState(null);
+	const [loading, setLoading] = useState(true);
 
-function UserData({ userId }) {  
- const \[user, setUser\] \= useState(null);  
- const \[loading, setLoading\] \= useState(true);
+	useEffect(() => {
+		// This effect runs whenever the `userId` prop changes.
+		setLoading(true);
+		const controller = new AbortController(); // For cleanup
 
-useEffect(() \=\> {  
- // This effect runs whenever the \`userId\` prop changes.  
- setLoading(true);  
- const controller \= new AbortController(); // For cleanup
+		fetch(`https://api.example.com/users/${userId}`, {
+			signal: controller.signal,
+		})
+			.then((response) => response.json())
+			.then((data) => setUser(data))
+			.catch((error) => console.error("Fetch error:", error))
+			.finally(() => setLoading(false));
 
-    fetch(\`https://api.example.com/users/${userId}\`, { signal: controller.signal })
+		// The cleanup function runs when the component unmounts or before the effect runs again.
+		return () => {
+			controller.abort(); // Abort the fetch request to prevent memory leaks.
+		};
+	}, [userId]); // Dependency array: re-run the effect if userId changes.
 
-.then(response \=\> response.json())  
- .then(data \=\> setUser(data))  
- .catch(error \=\> console.error("Fetch error:", error))  
- .finally(() \=\> setLoading(false));
+	if (loading) {
+		return <p>Loading...</p>;
+	}
 
-    // The cleanup function runs when the component unmounts or before the effect runs again.
-    return () \=\> {
-      controller.abort(); // Abort the fetch request to prevent memory leaks.
-    };
-
-}, \[userId\]); // Dependency array: re-run the effect if userId changes.
-
-if (loading) {  
- return \<p\>Loading...\</p\>;  
- }
-
-return \<h1\>{user?.name}\</h1\>;  
+	return <h1>{user?.name}</h1>;
 }
+```
 
 #### **useContext**
 
-This Hook provides a way to consume a value from a React Context. Context itself is a mechanism to pass data through the component tree without having to pass props down manually at every level (a problem known as "prop drilling").27
+This Hook provides a way to consume a value from a React Context. Context itself is a mechanism to pass data through the component tree without having to pass props down manually at every level (a problem known as "prop drilling").
 
-useContext makes consuming this shared data simple and declarative.27
+useContext makes consuming this shared data simple and declarative.
 
-JavaScript
+```javascript
+// ThemeContext.js
+import { createContext } from "react";
+export const ThemeContext = createContext("light"); // Default value
 
-// ThemeContext.js  
-import { createContext } from 'react';  
-export const ThemeContext \= createContext('light'); // Default value
-
-// App.js  
-import { ThemeContext } from './ThemeContext';  
-function App() {  
- return (  
- \<ThemeContext.Provider value\="dark"\>  
- \<Toolbar /\>  
- \</ThemeContext.Provider\>  
- );  
+// App.js
+import { ThemeContext } from "./ThemeContext";
+function App() {
+	return (
+		<ThemeContext.Provider value="dark">
+			<Toolbar />
+		</ThemeContext.Provider>
+	);
 }
 
-// Toolbar.js  
-import { useContext } from 'react';  
-import { ThemeContext } from './ThemeContext';  
-function Toolbar() {  
- const theme \= useContext(ThemeContext); // Consumes the 'dark' value  
- return \<div className\={\`toolbar-${theme}\`}\>Themed Toolbar\</div\>;  
+// Toolbar.js
+import { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
+function Toolbar() {
+	const theme = useContext(ThemeContext); // Consumes the 'dark' value
+	return <div className={`toolbar-${theme}`}>Themed Toolbar</div>;
 }
+```
 
 ### **Handling User Input: Forms in React**
 
@@ -392,42 +396,42 @@ Forms are a cornerstone of web interactivity. React provides two main approaches
 
 #### **Controlled Components**
 
-This is the standard and recommended approach in React.28 In a controlled component, form input elements like
+This is the standard and recommended approach in React. In a controlled component, form input elements like
 
-\<input\>, \<textarea\>, and \<select\> have their value controlled by the React state. The state is the "single source of truth".28
+\<input\>, \<textarea\>, and \<select\> have their value controlled by the React state. The state is the "single source of truth".
 
 1. A state variable is created to hold the input's value.
 2. The input's value attribute is bound to this state variable.
 3. An onChange event handler updates the state variable on every user keystroke.
 
-This pattern gives React full control over the form, making it easy to implement real-time validation, conditional logic, or format input as the user types.28
+This pattern gives React full control over the form, making it easy to implement real-time validation, conditional logic, or format input as the user types.
 
-JavaScript
+```javascript
+function NameForm() {
+	const [name, setName] = useState("");
 
-function NameForm() {  
- const \[name, setName\] \= useState('');
+	const handleChange = (event) => {
+		setName(event.target.value.toUpperCase()); // Example: force uppercase
+	};
 
-const handleChange \= (event) \=\> {  
- setName(event.target.value.toUpperCase()); // Example: force uppercase  
- };
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		alert(`A name was submitted: ${name}`);
+	};
 
-const handleSubmit \= (event) \=\> {  
- event.preventDefault();  
- alert(\`A name was submitted: ${name}\`);  
- };
-
-return (  
- \<form onSubmit\={handleSubmit}\>  
- \<label\>Name:\</label\>  
- \<input type\="text" value\={name} onChange\={handleChange} /\>  
- \<button type\="submit"\>Submit\</button\>  
- \</form\>  
- );  
+	return (
+		<form onSubmit={handleSubmit}>
+			<label>Name:</label>
+			<input type="text" value={name} onChange={handleChange} />
+			<button type="submit">Submit</button>
+		</form>
+	);
 }
+```
 
 #### **Uncontrolled Components**
 
-In an uncontrolled component, the form data is handled by the DOM itself, just like in traditional HTML. Instead of managing state for every input, you use a **ref** to get the form values when you need them, typically upon submission.31 This approach requires less code for simple forms but offers less control over the input's value and validation.
+In an uncontrolled component, the form data is handled by the DOM itself, just like in traditional HTML. Instead of managing state for every input, you use a **ref** to get the form values when you need them, typically upon submission. This approach requires less code for simple forms but offers less control over the input's value and validation.
 
 | Aspect          | Controlled Components                                                        | Uncontrolled Components                                                                           |
 | :-------------- | :--------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------ |
@@ -457,34 +461,34 @@ To get started, the react-router-dom package is installed. The entire applicatio
 -   **\<Link\>:** To enable client-side navigation without a full page refresh, anchor tags (\<a href="..."\>) are replaced with React Router's \<Link to="..."\> component. This component renders an \<a\> tag but intercepts the click event to handle the navigation internally.39
 -   **useNavigate:** For programmatic navigation—such as redirecting a user after a successful login—the useNavigate hook is used. Calling navigate('/dashboard') will update the URL and render the corresponding component.40
 
-JavaScript
+```javascript
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Users from "./pages/Users";
 
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';  
-import Home from './pages/Home';  
-import About from './pages/About';  
-import Users from './pages/Users';
-
-function App() {  
- return (  
- \<BrowserRouter\>  
- \<nav\>  
- \<Link to\="/"\>Home\</Link\> | \<Link to\="/about"\>About\</Link\>  
- \</nav\>  
- \<Routes\>  
- \<Route path\="/" element\={\<Home /\>} /\>  
- \<Route path\="/about" element\={\<About /\>} /\>  
- \<Route path\="/users" element\={\<Users /\>} /\>  
- \</Routes\>  
- \</BrowserRouter\>  
- );  
+function App() {
+	return (
+		<BrowserRouter>
+			<nav>
+				<Link to="/">Home</Link> | <Link to="/about">About</Link>
+			</nav>
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/about" element={<About />} />
+				<Route path="/users" element={<Users />} />
+			</Routes>
+		</BrowserRouter>
+	);
 }
+```
 
 #### **Advanced Routing Patterns**
 
 React Router supports sophisticated patterns for building complex layouts.
 
 -   **Nested Routes & \<Outlet\>:** This powerful feature allows for hierarchical UI layouts. A parent route can define a layout (e.g., a dashboard with a sidebar and header), and an \<Outlet\> component within that layout serves as a placeholder where child routes will be rendered. This is perfect for UIs where parts of the page are shared across multiple views.38
--   **Dynamic Routes & useParams:** To create routes for dynamic content, such as a user profile page, you can define a dynamic segment in the path using a colon (e.g., path="/users/:userId"). The useParams hook can then be used within the rendered component to access the value of this dynamic segment (e.g., const { userId } \= useParams();).38
+-   **Dynamic Routes & useParams:** To create routes for dynamic content, such as a user profile page, you can define a dynamic segment in the path using a colon (e.g., path="/users/:userId"). The useParams hook can then be used within the rendered component to access the value of this dynamic segment (e.g., const { userId } = useParams();).38
 
 ### **Advanced State Management**
 
@@ -530,120 +534,144 @@ These patterns focus on how to structure and compose components to create flexib
 
 #### **Container/Presentational Pattern**
 
-This pattern advocates for separating components into two distinct types 56:
+This pattern advocates for separating components into two distinct types:
 
 -   **Container Components (or "Smart" Components):** These components are concerned with _how things work_. They manage state, fetch data, and contain the application logic. They typically do not have their own styles and render one or more presentational components.
 -   **Presentational Components (or "Dumb" Components):** These components are concerned with _how things look_. They receive data and callbacks exclusively via props, render UI, and have no awareness of the application's state or data source. They are often pure functions.
 
 While the rise of Hooks has blurred the lines—as any functional component can now "contain" logic by using a hook—the underlying principle of separating concerns remains a vital best practice. It leads to more reusable presentational components and more focused, testable logic.
 
-JavaScript
+```javascript
+// Container Component: Manages state and data fetching
+function UserProfileContainer({ userId }) {
+	const [user, setUser] = useState(null);
 
-// Container Component: Manages state and data fetching  
-function UserProfileContainer({ userId }) {  
- const \[user, setUser\] \= useState(null);
+	useEffect(() => {
+		fetch(`/api/users/${userId}`)
+			.then((res) => res.json())
+			.then((data) => setUser(data));
+	}, [userId]);
 
-useEffect(() \=\> {  
- fetch(\`/api/users/${userId}\`)  
- .then(res \=\> res.json())  
- .then(data \=\> setUser(data));  
- }, \[userId\]);
+	if (!user) return <p>Loading...</p>;
 
-if (\!user) return \<p\>Loading...\</p\>;
-
-return \<UserProfileDisplay user\={user} /\>;  
+	return <UserProfileDisplay user={user} />;
 }
 
-// Presentational Component: Only concerned with rendering props  
-function UserProfileDisplay({ user }) {  
- return (  
- \<div\>  
- \<h1\>{user.name}\</h1\>  
- \<p\>Email: {user.email}\</p\>  
- \</div\>  
- );  
+// Presentational Component: Only concerned with rendering props
+function UserProfileDisplay({ user }) {
+	return (
+		<div>
+			<h1>{user.name}</h1>
+			<p>Email: {user.email}</p>
+		</div>
+	);
 }
+```
 
 #### **Compound Components**
 
-The Compound Components pattern allows you to create a set of components that work together to manage a shared state and accomplish a single task, providing a flexible and expressive API for the consumer.59 A classic HTML example is the
+The Compound Components pattern allows you to create a set of components that work together to manage a shared state and accomplish a single task, providing a flexible and expressive API for the consumer. A classic HTML example is the `<select>` and `<option>` tags; they are separate elements but are intrinsically linked.
 
-\<select\> and \<option\> tags; they are separate elements but are intrinsically linked.
+This pattern is often implemented using React's Context API to implicitly share state between a parent component and its children. This avoids prop drilling and allows the consumer to compose the components in any order they wish.
 
-This pattern is often implemented using React's Context API to implicitly share state between a parent component and its children. This avoids prop drilling and allows the consumer to compose the components in any order they wish.61
+```javascript
+// Example of a Compound Component for a custom dropdown menu
+import React, { useState, useContext, createContext } from "react";
 
-JavaScript
+const MenuContext = createContext();
 
-// Example of a Compound Component for a custom dropdown menu  
-import React, { useState, useContext, createContext } from 'react';
-
-const MenuContext \= createContext();
-
-function Menu({ children }) {  
- const \[isOpen, setIsOpen\] \= useState(false);  
- const toggle \= () \=\> setIsOpen(\!isOpen);  
- return \<MenuContext.Provider value\={{ isOpen, toggle }}\>{children}\</MenuContext.Provider\>;  
+function Menu({ children }) {
+	const [isOpen, setIsOpen] = useState(false);
+	const toggle = () => setIsOpen(!isOpen);
+	return (
+		<MenuContext.Provider value={{ isOpen, toggle }}>
+			{children}
+		</MenuContext.Provider>
+	);
 }
 
-function MenuButton({ children }) {  
- const { toggle } \= useContext(MenuContext);  
- return \<button onClick\={toggle}\>{children}\</button\>;  
+function MenuButton({ children }) {
+	const { toggle } = useContext(MenuContext);
+	return <button onClick={toggle}>{children}</button>;
 }
 
-function MenuList({ children }) {  
- const { isOpen } \= useContext(MenuContext);  
- return isOpen? \<ul\>{children}\</ul\> : null;  
+function MenuList({ children }) {
+	const { isOpen } = useContext(MenuContext);
+	return isOpen ? <ul>{children}</ul> : null;
 }
 
-function MenuItem({ children }) {  
- return \<li\>{children}\</li\>;  
+function MenuItem({ children }) {
+	return <li>{children}</li>;
 }
 
-// Attach children as properties of the parent  
-Menu.Button \= MenuButton;  
-Menu.List \= MenuList;  
-Menu.Item \= MenuItem;
+// Attach children as properties of the parent
+Menu.Button = MenuButton;
+Menu.List = MenuList;
+Menu.Item = MenuItem;
 
-// Usage:  
-function App() {  
- return (  
- \<Menu\>  
- \<Menu.Button\>Actions\</Menu.Button\>  
- \<Menu.List\>  
- \<Menu.Item\>Edit\</Menu.Item\>  
- \<Menu.Item\>Delete\</Menu.Item\>  
- \</Menu.List\>  
- \</Menu\>  
- );  
+// Usage:
+function App() {
+	return (
+		<Menu>
+			<Menu.Button>Actions</Menu.Button>
+			<Menu.List>
+				<Menu.Item>Edit</Menu.Item>
+				<Menu.Item>Delete</Menu.Item>
+			</Menu.List>
+		</Menu>
+	);
 }
+```
 
 #### **Provider Pattern**
 
-The Provider Pattern is a fundamental pattern for making data available to a large tree of components without passing props down manually through every level. It is the direct implementation of React's Context API.64 A
+The Provider Pattern is a fundamental pattern for making data available to a large tree of components without passing props down manually through every level. It is the direct implementation of React's Context API. A Provider component is created that holds the shared state, and it wraps a section of the component tree. Any component within that tree can then become a "consumer" of that state, typically by using the `useContext` hook. This pattern is the foundation for many state management libraries (like Redux) and is ideal for sharing global data like theme information, user authentication status, or language preferences.
 
-Provider component is created that holds the shared state, and it wraps a section of the component tree. Any component within that tree can then become a "consumer" of that state, typically by using the useContext hook.66 This pattern is the foundation for many state management libraries (like Redux) and is ideal for sharing global data like theme information, user authentication status, or language preferences.
+```javascript
+// ThemeContext.js
+import { createContext } from "react";
+export const ThemeContext = createContext("light"); // Default value
+
+// App.js
+import { ThemeContext } from "./ThemeContext";
+function App() {
+	return (
+		<ThemeContext.Provider value="dark">
+			<Toolbar />
+		</ThemeContext.Provider>
+	);
+}
+
+// Toolbar.js
+import { useContext } from "react";
+import { ThemeContext } from "./ThemeContext";
+function Toolbar() {
+	const theme = useContext(ThemeContext); // Consumes the 'dark' value
+	return <div className={`toolbar-${theme}`}>Themed Toolbar</div>;
+}
+```
 
 ### **Logic Reuse Patterns: The Old vs. The New**
 
 A central challenge in UI development is sharing stateful logic across different components. React's history shows a clear evolution in the patterns used to solve this problem.
 
-| Pattern                            | Mechanism                                                                                                                                                    | Pros                                                                                                                                                                                   | Cons                                                                                                                                                       |
-| :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Higher-Order Components (HOCs)** | A function that takes a component as an argument and returns a new component with enhanced props.68                                                          | Logic is abstracted away from the component.                                                                                                                                           | Can lead to "wrapper hell" (deeply nested components in DevTools), prop name collisions, and opaque logic (it's unclear where injected props come from).70 |
-| **Render Props**                   | A component that takes a function as a prop (often named render) and calls that function to render its output, passing its internal state to the function.71 | More explicit than HOCs; avoids prop collisions.                                                                                                                                       | Can lead to verbose JSX and deep nesting, similar to "callback hell".73                                                                                    |
-| **Custom Hooks**                   | A regular JavaScript function whose name starts with use and that calls other Hooks. It allows you to extract and reuse stateful logic.8                     | **Modern Standard.** No extra components or nesting. Logic is explicit, easy to compose, and follows standard function patterns. Avoids all the major cons of HOCs and Render Props.75 | Must adhere to the Rules of Hooks.                                                                                                                         |
+| Pattern                            | Mechanism                                                                                                                                                    | Pros                                                                                                                                                                                 | Cons                                                                                                                                                     |
+| :--------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Higher-Order Components (HOCs)** | A function that takes a component as an argument and returns a new component with enhanced props.                                                            | Logic is abstracted away from the component.                                                                                                                                         | Can lead to "wrapper hell" (deeply nested components in DevTools), prop name collisions, and opaque logic (it's unclear where injected props come from). |
+| **Render Props**                   | A component that takes a function as a prop (often named `render`) and calls that function to render its output, passing its internal state to the function. | More explicit than HOCs; avoids prop collisions.                                                                                                                                     | Can lead to verbose JSX and deep nesting, similar to "callback hell".                                                                                    |
+| **Custom Hooks**                   | A regular JavaScript function whose name starts with `use` and that calls other Hooks. It allows you to extract and reuse stateful logic.                    | **Modern Standard.** No extra components or nesting. Logic is explicit, easy to compose, and follows standard function patterns. Avoids all the major cons of HOCs and Render Props. | Must adhere to the Rules of Hooks.                                                                                                                       |
 
 The clear progression from HOCs and Render Props to Custom Hooks reflects React's move towards a more functional, composable, and less verbose paradigm. While understanding the older patterns is important for maintaining legacy code, Custom Hooks are the idiomatic solution for logic reuse in all new React applications.
 
 ### **Thinking in React**
 
-The official React documentation outlines a formal process for approaching UI development, which helps instill the correct mental model.76
+The official React documentation outlines a formal process for approaching UI development, which helps instill the correct mental model.
 
-1. **Break The UI Into A Component Hierarchy:** Look at a design mock and draw boxes around every component and sub-component, giving them all names. This creates a visual hierarchy.
-2. **Build A Static Version in React:** Create the components and render them with props, but without any interactivity. Pass data from parent to child. This step requires more typing and less thinking.
-3. **Find The Minimal (but complete) Representation Of UI State:** Identify every piece of data in the application that can change over time. Critically, follow the DRY (Don't Repeat Yourself) principle. If you can compute something from other state or props, it is not state. For example, if you have a list of items and a count of those items, the count is not state; it can be derived from list.length.
-4. **Identify Where Your State Should Live:** For each piece of state, find every component that renders something based on that state. Find their closest common parent component in the hierarchy. That common parent is where the state should live. This process is known as **"lifting state up."**
-5. **Add Inverse Data Flow:** The state is owned by the parent, but it needs to be changed by child components (e.g., an \<input\> in a child needs to update state in the parent). This is achieved by passing a callback function (the state setter) from the parent down to the child as a prop. The child then calls this prop when an event occurs.
+1.  **Break The UI Into A Component Hierarchy:** Look at a design mock and draw boxes around every component and sub-component, giving them all names. This creates a visual hierarchy.
+2.  **Build A Static Version in React:** Create the components and render them with props, but without any interactivity. Pass data from parent to child. This step requires more typing and less thinking.
+3.  **Find The Minimal (but complete) Representation Of UI State:** Identify every piece of data in the application that can change over time. Critically, follow the DRY (Don't Repeat Yourself) principle. If you can compute something from other state or props, it is not state. For example, if you have a list of items and a count of those items, the count is not state; it can be derived from `list.length`.
+4.  **Identify Where Your State Should Live:** For each piece of state, find every component that renders something based on that state. Find their closest common parent component in the hierarchy. That common parent is where the state should live. This process is known as **"lifting state up."**
+5.  **Add Inverse Data Flow:** The state is owned by the parent, but it needs to be changed by child components (e.g., an `<input>` in a child needs to update state in the parent). This is achieved by passing a callback function (the state setter) from the parent down to the child as a prop. The child then calls this prop when an event occurs.
 
 ## **Stage 6: Production & Beyond - Optimization, Testing, and Deployment**
 
@@ -653,51 +681,52 @@ The final stage of the roadmap focuses on the skills required to build and ship 
 
 ### **Performance Optimization Techniques**
 
-While React is fast by default, large and complex applications can suffer from performance issues, often due to unnecessary re-renders. It is crucial to profile an application to identify bottlenecks before applying optimizations, as premature optimization can add complexity without providing tangible benefits.35
+While React is fast by default, large and complex applications can suffer from performance issues, often due to unnecessary re-renders. It is crucial to profile an application to identify bottlenecks before applying optimizations, as premature optimization can add complexity without providing tangible benefits.
 
 #### **Memoization Deep Dive**
 
-Memoization is a technique for caching the result of a function call and returning the cached result when the same inputs occur again. React provides three primary tools for this.11
+Memoization is a technique for caching the result of a function call and returning the cached result when the same inputs occur again. React provides three primary tools for this.
 
--   **React.memo:** This is a Higher-Order Component that wraps a functional component. It prevents the component from re-rendering if its props have not changed. This is particularly useful for components that are rendered often with the same props, or that are computationally expensive to render.34 By default,  
-    React.memo performs a shallow comparison of props.
--   **useCallback:** This hook memoizes a callback function. When a parent component re-renders, any functions defined within it are re-created. If these functions are passed as props to a child component wrapped in React.memo, the child will re-render because the function prop is technically a new object. useCallback prevents this by returning the same function instance across renders, as long as its dependencies have not changed.35
--   **useMemo:** This hook memoizes the _return value_ of an expensive calculation. If a component performs a complex computation on every render, useMemo can cache the result and only re-compute it when one of its dependencies changes. This is ideal for filtering large arrays or performing complex data transformations.77
+-   **React.memo:** This is a Higher-Order Component that wraps a functional component. It prevents the component from re-rendering if its props have not changed. This is particularly useful for components that are rendered often with the same props, or that are computationally expensive to render. By default, `React.memo` performs a shallow comparison of props.
+-   **React.memo:** This is a Higher-Order Component that wraps a functional component. It prevents the component from re-rendering if its props have not changed. This is particularly useful for components that are rendered often with the same props, or that are computationally expensive to render. By default,
+    `React.memo` performs a shallow comparison of props.
+-   **useCallback:** This hook memoizes a callback function. When a parent component re-renders, any functions defined within it are re-created. If these functions are passed as props to a child component wrapped in `React.memo`, the child will re-render because the function prop is technically a new object. `useCallback` prevents this by returning the same function instance across renders, as long as its dependencies have not changed.
+-   **useMemo:** This hook memoizes the _return value_ of an expensive calculation. If a component performs a complex computation on every render, `useMemo` can cache the result and only re-compute it when one of its dependencies changes. This is ideal for filtering large arrays or performing complex data transformations.
 
-#### **Code Splitting with React.lazy and \<Suspense\>**
+#### **Code Splitting with React.lazy and `<Suspense>`**
 
-By default, bundlers like Vite or Webpack create a single large JavaScript file ("bundle") containing all the application's code. For large applications, this bundle can become very large, increasing the initial load time.81
+By default, bundlers like Vite or Webpack create a single large JavaScript file ("bundle") containing all the application's code. For large applications, this bundle can become very large, increasing the initial load time.
 
-**Code splitting** is the process of splitting this bundle into smaller chunks that can be loaded on demand.83
+**Code splitting** is the process of splitting this bundle into smaller chunks that can be loaded on demand.
 
-React provides built-in support for code splitting with React.lazy and \<Suspense\>.81
+React provides built-in support for code splitting with `React.lazy` and `<Suspense>`.
 
--   **React.lazy:** This function lets you render a dynamically imported component as a regular component. It takes a function that must call a dynamic import() and returns a Promise that resolves to a component.
--   **\<Suspense\>:** A lazy-loaded component must be rendered inside a \<Suspense\> component. The Suspense component has a fallback prop that accepts any React element (like a loading spinner) to display while the lazy component's code is being loaded over the network.
+-   **React.lazy:** This function lets you render a dynamically imported component as a regular component. It takes a function that must call a dynamic `import()` and returns a Promise that resolves to a component.
+-   **`<Suspense>`:** A lazy-loaded component must be rendered inside a `<Suspense>` component. The `Suspense` component has a `fallback` prop that accepts any React element (like a loading spinner) to display while the lazy component's code is being loaded over the network.
 
-This technique is most commonly applied at the route level. By lazy-loading the components for each page, the user only downloads the code for the specific page they are visiting, dramatically improving the initial performance of the application.81
+This technique is most commonly applied at the route level. By lazy-loading the components for each page, the user only downloads the code for the specific page they are visiting, dramatically improving the initial performance of the application.
 
-JavaScript
+```javascript
+import React, { Suspense, lazy } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import React, { Suspense, lazy } from 'react';  
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// Lazily import page components
+const HomePage = lazy(() => import("./pages/HomePage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
 
-// Lazily import page components  
-const HomePage \= lazy(() \=\> import('./pages/HomePage'));  
-const AboutPage \= lazy(() \=\> import('./pages/AboutPage'));
-
-function App() {  
- return (  
- \<BrowserRouter\>  
- \<Suspense fallback\={\<div\>Loading page...\</div\>}\>  
- \<Routes\>  
- \<Route path\="/" element\={\<HomePage /\>} /\>  
- \<Route path\="/about" element\={\<AboutPage /\>} /\>  
- \</Routes\>  
- \</Suspense\>  
- \</BrowserRouter\>  
- );  
+function App() {
+	return (
+		<BrowserRouter>
+			<Suspense fallback={<div>Loading page...</div>}>
+				<Routes>
+					<Route path="/" element={<HomePage />} />
+					<Route path="/about" element={<AboutPage />} />
+				</Routes>
+			</Suspense>
+		</BrowserRouter>
+	);
 }
+```
 
 #### **Virtual DOM and Reconciliation**
 
@@ -708,6 +737,17 @@ Under the hood, React's performance is driven by the **Virtual DOM**. The Virtua
 ### **Testing React Applications**
 
 Writing tests is a non-negotiable part of professional software development. The modern philosophy for testing React applications, championed by libraries like **React Testing Library**, is to test components from the user's perspective. Instead of testing implementation details, tests should query the DOM in the same way a user would (e.g., finding a button by its text) and assert that the UI behaves as expected after user interactions. **Jest** is the most common test runner used in the React ecosystem to execute these tests.
+
+```javascript
+import { render, screen } from "@testing-library/react";
+import App from "./App";
+
+test("renders learn react link", () => {
+	render(<App />);
+	const linkElement = screen.getByText(/learn react/i);
+	expect(linkElement).toBeInTheDocument();
+});
+```
 
 ### **Accessibility (A11y)**
 
@@ -818,8 +858,8 @@ The key prop is a special string attribute you need to include when creating lis
 7\. What are controlled vs. uncontrolled components?  
 This refers to two different ways of handling form input data in React.
 
--   **Controlled Components:** The form input's value is controlled by React state. The component's state is the "single source of truth," and any changes are handled by an onChange event handler that updates the state. This gives you more control over the form data, making validation and dynamic manipulation easier. 28
--   **Uncontrolled Components:** The form data is handled by the DOM itself, just like in traditional HTML. You typically use a ref to get the form values when needed (e.g., on submission). This approach involves less code but offers less control. 31
+-   **Controlled Components:** The form input's value is controlled by React state. The component's state is the "single source of truth", and any changes are handled by an onChange event handler that updates the state. This gives you more control over the form data, making validation and dynamic manipulation easier. 28
+-   **Uncontrolled Components:** The form data is handled by the DOM itself, just like in traditional HTML. You typically use a ref to get the form values when needed (e.g., on submission). This approach involves less code but offers less control.
 
 8\. What are React Fragments?  
 React Fragments let you group a list of children without adding extra nodes to the DOM. 88 Normally, a component must return a single root element. Fragments solve this by allowing you to return multiple elements without a wrapper  
@@ -837,22 +877,56 @@ Hooks are functions introduced in React 16.8 that let you "hook into" React stat
 11\. Explain useState. How does it work?  
 useState is a Hook that allows you to add a state variable to a functional component. 20 It takes an initial state value as an argument and returns an array with two elements: the current state value and a function to update it. 95 When the update function is called, React schedules a re-render of the component with the new state value. 95
 
-JavaScript
+```javascript
+import { useState } from "react";
 
-import { useState } from 'react';
-
-function Counter() {  
- const \[count, setCount\] \= useState(0); // Initial state is 0  
- return (  
- \<button onClick\={() \=\> setCount(count \+ 1)}\>  
- Clicked {count} times  
- \</button\>  
- );  
+function Counter() {
+	const [count, setCount] = useState(0); // Initial state is 0
+	return (
+		<button onClick={() => setCount(count + 1)}>
+			Clicked {count} times
+		</button>
+	);
 }
+```
 
 12\. Explain useEffect. What is its purpose?  
 useEffect is a Hook for performing side effects in functional components. 95 Side effects include data fetching, subscriptions, or manually changing the DOM. 92 The function passed to  
 useEffect runs after the component renders. Its execution can be controlled with a dependency array. 95
+
+```javascript
+import { useState, useEffect } from "react";
+
+function UserData({ userId }) {
+	const [user, setUser] = useState(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		// This effect runs whenever the `userId` prop changes.
+		setLoading(true);
+		const controller = new AbortController(); // For cleanup
+
+		fetch(`https://api.example.com/users/${userId}`, {
+			signal: controller.signal,
+		})
+			.then((response) => response.json())
+			.then((data) => setUser(data))
+			.catch((error) => console.error("Fetch error:", error))
+			.finally(() => setLoading(false));
+
+		// The cleanup function runs when the component unmounts or before the effect runs again.
+		return () => {
+			controller.abort(); // Abort the fetch request to prevent memory leaks.
+		};
+	}, [userId]); // Dependency array: re-run the effect if userId changes.
+
+	if (loading) {
+		return <p>Loading...</p>;
+	}
+
+	return <h1>{user?.name}</h1>;
+}
+```
 
 13\. How does the dependency array in useEffect work?  
 The dependency array is the second argument to useEffect and controls when the effect runs:
@@ -861,18 +935,28 @@ The dependency array is the second argument to useEffect and controls when the e
 -   **Empty array \`\`:** The effect runs _only once_ after the initial render (like componentDidMount). 95
 -   **Array with values \[prop, state\]:** The effect runs after the initial render and any time one of the dependency values changes. 95
 
+```javascript
+useEffect(() => {
+	const subscription = someApi.subscribe();
+	// Cleanup function
+	return () => {
+		subscription.unsubscribe();
+	};
+}, []);
+```
+
 14\. How do you perform cleanup in useEffect?  
 To perform cleanup (e.g., cancel a subscription or timer), you return a function from the useEffect callback. React will execute this cleanup function when the component unmounts or before the effect runs again if its dependencies have changed. 7
 
-JavaScript
-
-useEffect(() \=\> {  
- const subscription \= someApi.subscribe();  
- // Cleanup function  
- return () \=\> {  
- subscription.unsubscribe();  
- };  
-},);
+```javascript
+useEffect(() => {
+	const subscription = someApi.subscribe();
+	// Cleanup function
+	return () => {
+		subscription.unsubscribe();
+	};
+}, []);
+```
 
 15\. What is useContext used for?  
 The useContext Hook allows a component to consume a value from a React Context without introducing nesting. It makes it easy to pass data through the component tree without having to pass props down manually at every level (a problem known as "prop drilling"). 92  
@@ -884,14 +968,45 @@ useReducer when:
 -   The state logic is complex and involves multiple sub-values (e.g., an object with several properties). 99
 -   You want to move state update logic out of the component to make it more predictable and testable. 100
 
+```javascript
+useReducer(() => {
+	// state logic
+}, initialState);
+```
+
 17\. What is the difference between useEffect and useLayoutEffect?  
 The main difference is their timing:
 
 -   **useEffect:** Runs _asynchronously_ after the render is committed to the screen. It does not block the browser from painting, which is better for performance. This is the correct choice for most side effects. 102
 -   **useLayoutEffect:** Runs _synchronously_ after all DOM mutations but _before_ the browser paints the changes. This is useful for reading layout from the DOM (e.g., getting an element's size) and synchronously re-rendering to prevent visual flickers. Use it only when necessary, as it can hurt performance. 102
 
+```javascript
+useEffect(() => {
+	// side effect logic
+}, [prop, state]);
+
+useLayoutEffect(() => {
+	// layout-related side effect logic
+}, [prop, state]);
+```
+
 18\. What are custom Hooks?  
 A custom Hook is a reusable JavaScript function whose name starts with "use" and that can call other Hooks. 92 They allow you to extract component logic into reusable functions, which helps keep code clean, avoid duplication, and share stateful logic across multiple components without changing the component hierarchy. 95
+
+```javascript
+function useUserData(userId) {
+	const [user, setUser] = useState(null);
+	const [loading, setLoading] = useState(true);
+
+	useEffect(() => {
+		fetch(`/api/users/${userId}`)
+			.then((res) => res.json())
+			.then((data) => setUser(data));
+	}, [userId]);
+
+	return [user, loading];
+}
+```
 
 ### **Advanced Concepts & Performance**
 
@@ -905,6 +1020,21 @@ Common optimization techniques include:
 -   **Windowing/Virtualization:** For long lists, rendering only the items currently visible in the viewport.
 -   **Proper State Management:** Lifting state up only when necessary and using optimized state management libraries for global state.
 
+```javascript
+// Memoization
+const MemoizedComponent = React.memo(Component);
+
+// useCallback
+const handleClick = useCallback(() => {
+	// click handler logic
+}, []);
+
+// useMemo
+const expensiveCalculation = useMemo(() => {
+	// expensive calculation
+}, [prop, state]);
+```
+
 21\. Explain React.memo.  
 React.memo is a Higher-Order Component (HOC) that memoizes a functional component. It prevents the component from re-rendering if its props have not changed (based on a shallow comparison). This is useful for optimizing components that render often with the same props. 11  
 22\. What is the difference between useMemo and useCallback?  
@@ -912,6 +1042,18 @@ Both are performance optimization Hooks, but they memoize different things:
 
 -   **useMemo:** Memoizes a _value_. It takes a function and a dependency array and re-runs the function only when a dependency has changed, returning the cached result otherwise. It's used to avoid expensive calculations on every render. 2
 -   **useCallback:** Memoizes a _function_. It returns a memoized version of a callback function that only changes if one of its dependencies has changed. This is useful when passing callbacks to optimized child components that rely on reference equality to prevent unnecessary re-renders. 11
+
+```javascript
+// useMemo
+const memoizedValue = useMemo(() => {
+	// expensive calculation
+}, [prop, state]);
+
+// useCallback
+const memoizedCallback = useCallback(() => {
+	// callback logic
+}, [prop, state]);
+```
 
 23\. What is code splitting?  
 Code splitting is a technique supported by bundlers like Webpack and Vite to split your code into smaller chunks that can be loaded on demand or in parallel, rather than loading one large bundle on initial page load. 81 This dramatically improves the initial load time of an application. 84  
@@ -953,7 +1095,7 @@ startTransition are marked as non-urgent, allowing React to prioritize more crit
 28\. What is React Router?  
 React Router is the standard library for handling routing in React applications. It enables navigation between different views or components in a Single Page Application (SPA) without causing a full page refresh, managing the URL and keeping the UI in sync. 2  
 29\. How do you handle nested routes?  
-Nested routes allow for hierarchical UI layouts where a parent route can render a child route within its own layout. This is typically achieved by defining child routes in a children array in the router configuration and using the \<Outlet\> component in the parent route to specify where the child component should be rendered. 38  
+Nested routes allow for hierarchical UI layouts where a parent route can render a child route within its own layout. This is typically achieved by defining child routes in a `children` array in the router configuration and using the `<Outlet>` component in the parent route to specify where the child component should be rendered. 38  
 30\. Compare Redux and Zustand.  
 Both are state management libraries, but they have different philosophies.
 

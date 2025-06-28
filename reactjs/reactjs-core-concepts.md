@@ -209,24 +209,15 @@ function ConditionalExample({ isLoggedIn, isAdmin, content }) {
 		return <p>No content available</p>;
 	}
 
-	// Variable pattern for complex logic
-	let userSection;
-	if (isLoggedIn) {
-		userSection = isAdmin ? <AdminPanel /> : <UserDashboard />;
-	} else {
-		userSection = <LoginPrompt />;
-	}
-
 	return (
 		<div>
-			{/* Ternary operator */}
-			<header>{isLoggedIn ? <LogoutButton /> : <LoginButton />}</header>
+			{/* Ternary operator for simple if-else */}
+			<header>
+				{isLoggedIn ? <p>Welcome back!</p> : <p>Please log in.</p>}
+			</header>
 
-			{/* Logical AND */}
-			{isAdmin && <AdminBadge />}
-
-			{/* Variable with complex logic */}
-			{userSection}
+			{/* Logical AND for rendering an element only if the condition is true */}
+			{isAdmin && <p>Admin controls are visible.</p>}
 
 			<main>{content}</main>
 		</div>
@@ -250,25 +241,24 @@ function ConditionalExample({ isLoggedIn, isAdmin, content }) {
 ```jsx
 function ProductList({ products }) {
 	return (
-		<ul className="product-list">
+		<ul>
 			{products.map((product) => (
-				<ProductItem key={product.id} product={product} />
+				<li key={product.id}>
+					{product.name} - ${product.price}
+				</li>
 			))}
 		</ul>
 	);
 }
 
-function ProductItem({ product }) {
-	return (
-		<li className="product-item">
-			<img src={product.image} alt={product.name} />
-			<div>
-				<h3>{product.name}</h3>
-				<p>${product.price.toFixed(2)}</p>
-			</div>
-		</li>
-	);
-}
+// Usage:
+const productData = [
+	{ id: "a", name: "Laptop", price: 1200 },
+	{ id: "b", name: "Mouse", price: 25 },
+	{ id: "c", name: "Keyboard", price: 75 },
+];
+
+<ProductList products={productData} />;
 ```
 
 Understanding these core concepts provides the foundation for building React applications. As you progress, these concepts will be combined in increasingly sophisticated ways to create complex, interactive user interfaces.
