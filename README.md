@@ -2,13 +2,15 @@
 
 This workspace contains comprehensive learning materials for modern web development, organized by technology and structured for progressive mastery. Each folder follows a systematic approach from fundamental concepts to production-grade applications.
 
-## **Technology Folders**
+## **Technology Sections**
+
+Each technology section is designed to be studied independently, with its own learning path:
 
 ### **JavaScript** (`javascript/`)
 
 Core JavaScript concepts, from fundamental principles to advanced patterns. Covers compilation theory, scope, asynchronous programming, and modern language features.
 
--   **Roadmap:** [[javascript/javascript-roadmap|JavaScript Learning Path]]
+-   **Roadmap:** [[javascript/README|JavaScript Learning Path]]
 -   **Focus:** Language fundamentals, execution model, and advanced patterns
 
 ### **React.js** (`reactjs/`)
@@ -22,14 +24,14 @@ A comprehensive, checklist-driven guide to mastering React.js, structured for a 
 
 Server-side JavaScript development with Node.js runtime. Covers architecture, asynchronous programming, modules, and backend patterns.
 
--   **Roadmap:** [[nodejs/nodejs-roadmap|Node.js Learning Path]]
+-   **Roadmap:** [[nodejs/README|Node.js Learning Path]]
 -   **Focus:** Runtime architecture, async patterns, and backend development
 
 ### **Express.js** (`expressjs/`)
 
 Web framework for Node.js, covering routing, middleware, APIs, and production deployment.
 
--   **Roadmap:** [[expressjs/express-roadmap|Express.js Learning Path]]
+-   **Roadmap:** [[expressjs/README|Express.js Learning Path]]
 -   **Focus:** Web applications, RESTful APIs, and server-side development
 
 ## **Learning Philosophy**
@@ -43,11 +45,11 @@ Each technology section follows a consistent approach:
 
 ## **Navigation Guide**
 
--   Files are cross-linked with `[[]]` syntax for seamless navigation
--   Each folder contains a comprehensive roadmap outlining the learning journey
+-   Each technology has its own README file that serves as the entry point
+-   Each section is designed to be studied independently
 -   Topics progress from fundamental concepts to advanced applications
 -   Code examples emphasize understanding over memorization
 
 ---
 
-**Getting Started:** Begin with any technology roadmap to understand the structured learning path. Each roadmap provides prerequisites and recommended progression through topics.
+**Getting Started:** Choose a technology section and begin with its README file to understand the structured learning path. Each section provides prerequisites and recommended progression through topics.
