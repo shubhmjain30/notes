@@ -1,6 +1,6 @@
 # 🚀 Stage 3: Advanced Engineering (Upper-Intermediate)
 
-[[README|← Back to React.js Interview Prep Checklist]]
+← [Back to React.js Interview Prep Checklist](README.md)
 
 Master advanced React patterns, performance optimization, and production-ready techniques. This stage prepares you for senior-level development.
 

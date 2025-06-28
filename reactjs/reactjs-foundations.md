@@ -1,6 +1,6 @@
 # 🌱 Stage 1: Foundations (Beginner)
 
-[[README|← Back to React.js Interview Prep Checklist]]
+← [Back to React.js Interview Prep Checklist](README.md)
 
 Master these fundamental concepts before moving to Stage 2. Each topic builds the foundation for React development.
 

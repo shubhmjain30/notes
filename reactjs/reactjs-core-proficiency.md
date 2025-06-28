@@ -1,6 +1,6 @@
 # 🔧 Stage 2: Core Proficiency (Intermediate)
 
-[[README|← Back to React.js Interview Prep Checklist]]
+← [Back to React.js Interview Prep Checklist](README.md)
 
 Master these intermediate concepts to build dynamic, interactive React applications. This stage focuses on Hooks, advanced patterns, and essential tooling.
 
