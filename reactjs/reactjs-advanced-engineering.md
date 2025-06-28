@@ -27,7 +27,21 @@ Master advanced React patterns, performance optimization, and production-ready t
 
 **Problem:** How do we keep the UI responsive during heavy computational work or when handling large datasets?
 
-**Theory:** React 18 introduces concurrent rendering, which allows React to pause, resume, or abandon work to keep the UI responsive.
+**Theory:** React 18 introduces a revolutionary concept called **Concurrent Rendering**, which fundamentally changes how React updates the UI. Unlike the previous synchronous rendering model, where React had to complete rendering before returning control to the browser, concurrent rendering allows React to:
+
+1. **Interrupt rendering** work to handle more urgent updates
+2. **Prioritize updates** based on user interaction urgency
+3. **Yield to the browser** during long rendering operations to maintain responsiveness
+4. **Prepare UI in memory** (off the main thread) before committing to the DOM
+
+This shift from blocking to interruptible rendering helps maintain app responsiveness even during intensive rendering operations, creating a more fluid user experience.
+
+**Key Concurrent Features:**
+
+1. **Automatic Batching** - Multiple state updates are grouped into a single render pass
+2. **Transitions** - Mark UI updates as non-urgent so they can be interrupted
+3. **Suspense** - Declaratively specify loading states for code/data fetching
+4. **Streaming Server Rendering** - Send HTML in chunks for faster perceived loading
 
 #### useTransition for Non-Urgent Updates
 
@@ -188,1207 +202,629 @@ function LiveChart({ data, filters }) {
 }
 ```
 
-### Memoization & Re-render Profiling
+## Memoization & Re-render Profiling
 
-#### React.memo and Component Optimization
+### Understanding Why Components Re-render
 
-**Problem:** How do we prevent unnecessary re-renders in component trees?
+**Problem:** How do we identify and prevent unnecessary component re-renders?
 
-```jsx
-// ❌ Component that re-renders unnecessarily
-function ExpensiveComponent({ data, onUpdate, config }) {
-	console.log("ExpensiveComponent rendering");
+**Theory:** In React, a component re-renders when:
 
-	// Expensive computation on every render
-	const processedData = data.map((item) => ({
-		...item,
-		computed: performExpensiveCalculation(item, config),
-	}));
+1. Its **state changes** (via useState or setState)
+2. Its **props change** (even if the new props have the same values)
+3. Its **parent component re-renders** (even if props remain unchanged)
+4. The **context it consumes changes** (even if the component doesn't use the changed values)
 
-	return (
-		<div>
-			{processedData.map((item) => (
-				<div key={item.id}>{item.computed}</div>
-			))}
-		</div>
-	);
-}
+These cascading re-renders can cause performance issues in complex applications. While React's virtual DOM makes renders efficient, the component function still executes and diffing still happens, which can be expensive for complex components.
 
-// ✅ Optimized with React.memo and proper memoization
-const OptimizedComponent = React.memo(function OptimizedComponent({
-	data,
-	onUpdate,
-	config,
-}) {
-	console.log("OptimizedComponent rendering");
+**Key Performance Concepts:**
 
-	// Memoize expensive computation
-	const processedData = useMemo(() => {
-		console.log("Computing processed data...");
-		return data.map((item) => ({
-			...item,
-			computed: performExpensiveCalculation(item, config),
-		}));
-	}, [data, config]);
-
-	// Memoize callback to prevent child re-renders
-	const handleItemUpdate = useCallback(
-		(itemId, updates) => {
-			onUpdate(itemId, updates);
-		},
-		[onUpdate]
-	);
-
-	return (
-		<div>
-			{processedData.map((item) => (
-				<OptimizedItem
-					key={item.id}
-					item={item}
-					onUpdate={handleItemUpdate}
-				/>
-			))}
-		</div>
-	);
-});
-
-// Child component with React.memo
-const OptimizedItem = React.memo(function OptimizedItem({ item, onUpdate }) {
-	console.log(`Rendering item ${item.id}`);
-
-	const handleClick = useCallback(() => {
-		onUpdate(item.id, { lastClicked: Date.now() });
-	}, [item.id, onUpdate]);
-
-	return <div onClick={handleClick}>{item.computed}</div>;
-});
-```
-
-#### useCallback Deep Dive
+-   **Rendering** is the process of React calling your components to determine what to display
+-   **Reconciliation** is the algorithm React uses to diff old and new trees of React elements
+-   **Commit** is when React applies the changes to the DOM
+-   **Memoization** is the optimization technique of caching results to avoid redundant calculations
 
 ```jsx
-function ParentComponent() {
+// This will cause ALL child components to re-render,
+// even if they don't use 'count'
+function App() {
 	const [count, setCount] = useState(0);
-	const [items, setItems] = useState([]);
-	const [filter, setFilter] = useState("");
-
-	// ❌ Function recreated on every render
-	const handleItemClick = (itemId) => {
-		console.log("Item clicked:", itemId);
-		// Some logic here
-	};
-
-	// ✅ Memoized function
-	const handleItemClickMemo = useCallback((itemId) => {
-		console.log("Item clicked:", itemId);
-		// Some logic here
-	}, []); // No dependencies, function never changes
-
-	// ✅ Memoized function with dependencies
-	const handleItemUpdate = useCallback((itemId, updates) => {
-		setItems((prevItems) =>
-			prevItems.map((item) =>
-				item.id === itemId ? { ...item, ...updates } : item
-			)
-		);
-	}, []);
-
-	// ✅ Complex callback with proper dependencies
-	const handleFilteredAction = useCallback(
-		(action) => {
-			const filteredItems = items.filter((item) =>
-				item.name.toLowerCase().includes(filter.toLowerCase())
-			);
-
-			switch (action) {
-				case "delete":
-					setItems((prevItems) =>
-						prevItems.filter(
-							(item) => !filteredItems.includes(item)
-						)
-					);
-					break;
-				case "export":
-					exportItems(filteredItems);
-					break;
-			}
-		},
-		[items, filter]
-	);
 
 	return (
 		<div>
-			<div>Count: {count}</div>
-			<button onClick={() => setCount((c) => c + 1)}>Increment</button>
+			<h1>Count: {count}</h1>
+			<button onClick={() => setCount(count + 1)}>Increment</button>
 
-			<input
-				value={filter}
-				onChange={(e) => setFilter(e.target.value)}
-				placeholder="Filter items..."
-			/>
-
-			<ItemList
-				items={items}
-				onItemClick={handleItemClickMemo}
-				onItemUpdate={handleItemUpdate}
-				onFilteredAction={handleFilteredAction}
-			/>
+			{/* These will re-render on every count change */}
+			<Header title="My App" />
+			<Sidebar />
+			<MainContent />
+			<Footer year={2025} />
 		</div>
 	);
 }
 ```
 
-#### Performance Profiling with React DevTools
+### React.memo for Component Memoization
+
+**Theory:** `React.memo` is a higher-order component that memoizes your component, preventing re-renders when props remain unchanged. It performs a shallow comparison of props by default but can accept a custom comparison function for more complex scenarios.
+
+**When to use React.memo:**
+
+1. For pure functional components that render the same output given the same props
+2. For components that render often with the same props
+3. For expensive components (complex UI or calculations)
+4. For components receiving unchanged props from a frequently updating parent
+
+**When NOT to use React.memo:**
+
+1. For components whose props change on most parent renders (memoization overhead isn't worth it)
+2. For very simple components where the memo comparison might be more expensive than re-rendering
 
 ```jsx
-// Component to demonstrate profiling
-function PerformanceDemo() {
-	const [renderCount, setRenderCount] = useState(0);
-	const [heavyData, setHeavyData] = useState(generateHeavyData());
-
-	// Force re-render to see in profiler
-	const forceRender = () => setRenderCount((c) => c + 1);
+// Without memoization - will re-render whenever parent renders
+function UserCard({ user }) {
+	console.log(`UserCard rendered for ${user.name}`);
 
 	return (
-		<div>
-			<div>Render count: {renderCount}</div>
-			<button onClick={forceRender}>Force Re-render</button>
-
-			{/* These will show in profiler */}
-			<ExpensiveList data={heavyData} />
-			<AnotherExpensiveComponent />
-		</div>
-	);
-}
-
-// Profiling techniques:
-// 1. Open React DevTools Profiler tab
-// 2. Click "Start profiling"
-// 3. Interact with the app
-// 4. Click "Stop profiling"
-// 5. Analyze the flame graph:
-//    - Component render times
-//    - What triggered re-renders
-//    - Component that didn't re-render (grayed out)
-
-function ExpensiveList({ data }) {
-	// Add console.log to track renders
-	console.log("ExpensiveList rendered");
-
-	// Simulate expensive work
-	const processedData = useMemo(() => {
-		const start = performance.now();
-		const result = data.map((item) => ({
-			...item,
-			processed: item.value * 2,
-		}));
-		const end = performance.now();
-		console.log(`Processing took ${end - start} milliseconds`);
-		return result;
-	}, [data]);
-
-	return (
-		<ul>
-			{processedData.map((item) => (
-				<li key={item.id}>{item.processed}</li>
-			))}
-		</ul>
-	);
-}
-```
-
----
-
-## State Management Strategies
-
-### Redux Toolkit (RTK) - Enterprise Scale
-
-**Problem:** How do we manage complex, global state in large applications with predictable updates?
-
-```jsx
-// store/userSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-// Async thunk for API calls
-export const fetchUser = createAsyncThunk(
-  'user/fetchUser',
-  async (userId, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/users/${userId}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch user');
-      }
-      return await response.json();
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const updateUser = createAsyncThunk(
-  'user/updateUser',
-  async ({ userId, updates }, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates)
-      });
-      if (!response.ok) throw new Error('Update failed');
-      return await response.json();
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-const userSlice = createSlice({
-  name: 'user',
-  initialState: {
-    currentUser: null,
-    users: {},
-    loading: false,
-    error: null
-  },
-  reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
-    setCurrentUser: (state, action) => {
-      state.currentUser = action.payload;
-    },
-    logoutUser: (state) => {
-      state.currentUser = null;
-      state.users = {};
-    }
-  },
-  extraReducers: (builder) => {
-    builder
-      // Fetch user
-      .addCase(fetchUser.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.users[action.payload.id] = action.payload;
-        if (!state.currentUser) {
-          state.currentUser = action.payload;
-        }
-      })
-      .addCase(fetchUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      // Update user
-      .addCase(updateUser.fulfilled, (state, action) => {
-        const updatedUser = action.payload;
-        state.users[updatedUser.id] = updatedUser;
-        if (state.currentUser?.id === updatedUser.id) {
-          state.currentUser = updatedUser;
-        }
-      });
-  }
-});
-
-export const { clearError, setCurrentUser, logoutUser } = userSlice.actions;
-export default userSlice.reducer;
-
-// store/index.js
-import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './userSlice';
-import postsReducer from './postsSlice';
-
-export const store = configureStore({
-  reducer: {
-    user: userReducer,
-    posts: postsReducer
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: ['persist/PERSIST']
-      }
-    })
-});
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
-// hooks/redux.ts - Typed hooks
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
-import type { RootState, AppDispatch } from '../store';
-
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-
-// Component usage
-function UserProfile({ userId }: { userId: string }) {
-  const dispatch = useAppDispatch();
-  const { currentUser, loading, error } = useAppSelector(state => state.user);
-
-  useEffect(() => {
-    dispatch(fetchUser(userId));
-  }, [dispatch, userId]);
-
-  const handleUpdateProfile = (updates: any) => {
-    dispatch(updateUser({ userId, updates }));
-  };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  return (
-    <div>
-      <h1>{currentUser?.name}</h1>
-      <button onClick={() => handleUpdateProfile({ name: 'New Name' })}>
-        Update Name
-      </button>
-    </div>
-  );
-}
-```
-
-### Zustand - Lightweight Alternative
-
-**Problem:** How do we manage state with minimal boilerplate while maintaining TypeScript support?
-
-```jsx
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
-
-// Define store interface
-interface UserStore {
-  // State
-  user: User | null;
-  users: Record<string, User>;
-  loading: boolean;
-  error: string | null;
-
-  // Actions
-  setUser: (user: User) => void;
-  updateUser: (id: string, updates: Partial<User>) => void;
-  fetchUser: (id: string) => Promise<void>;
-  clearError: () => void;
-  reset: () => void;
-}
-
-// Create store
-const useUserStore = create<UserStore>()(
-  subscribeWithSelector((set, get) => ({
-    // Initial state
-    user: null,
-    users: {},
-    loading: false,
-    error: null,
-
-    // Actions
-    setUser: (user) => set({ user }),
-
-    clearError: () => set({ error: null }),
-
-    updateUser: (id, updates) => set((state) => ({
-      users: {
-        ...state.users,
-        [id]: { ...state.users[id], ...updates }
-      },
-      user: state.user?.id === id ? { ...state.user, ...updates } : state.user
-    })),
-
-    fetchUser: async (id) => {
-      set({ loading: true, error: null });
-      try {
-        const response = await fetch(`/api/users/${id}`);
-        if (!response.ok) throw new Error('Failed to fetch user');
-        const user = await response.json();
-
-        set((state) => ({
-          users: { ...state.users, [id]: user },
-          user: state.user?.id === id ? user : state.user,
-          loading: false
-        }));
-      } catch (error) {
-        set({ error: error.message, loading: false });
-      }
-    },
-
-    reset: () => set({ user: null, users: {}, loading: false, error: null })
-  }))
-);
-
-// Component usage
-function UserProfile({ userId }: { userId: string }) {
-  const { user, loading, error, fetchUser, updateUser } = useUserStore((state) => ({
-    user: state.users[userId] || state.user,
-    loading: state.loading,
-    error: state.error,
-    fetchUser: state.fetchUser,
-    updateUser: state.updateUser
-  }));
-
-  useEffect(() => {
-    if (!user) {
-      fetchUser(userId);
-    }
-  }, [userId, user, fetchUser]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
-  return (
-    <div>
-      <h1>{user?.name}</h1>
-      <button onClick={() => updateUser(userId, { name: 'Updated Name' })}>
-        Update Name
-      </button>
-    </div>
-  );
-}
-
-// Advanced Zustand patterns
-// Slices pattern for large stores
-const createUserSlice = (set, get) => ({
-  user: null,
-  setUser: (user) => set((state) => ({ ...state, user }))
-});
-
-const createPostsSlice = (set, get) => ({
-  posts: [],
-  addPost: (post) => set((state) => ({
-    ...state,
-    posts: [...state.posts, post]
-  }))
-});
-
-const useAppStore = create((...a) => ({
-  ...createUserSlice(...a),
-  ...createPostsSlice(...a)
-}));
-```
-
-### Context vs External Stores Decision Matrix
-
-| Factor                | Context API  | Redux Toolkit | Zustand     | Jotai          |
-| --------------------- | ------------ | ------------- | ----------- | -------------- |
-| **Learning Curve**    | Low          | High          | Low         | Medium         |
-| **Bundle Size**       | 0KB          | ~10KB         | ~1KB        | ~5KB           |
-| **DevTools**          | Basic        | Excellent     | Good        | Good           |
-| **Async Handling**    | Manual       | Built-in      | Manual      | Built-in       |
-| **Re-render Control** | Manual       | Automatic     | Automatic   | Atomic         |
-| **Best For**          | Simple state | Complex apps  | Medium apps | Atomic updates |
-
----
-
-## Data Fetching Patterns
-
-### React Query (TanStack Query) - The Modern Approach
-
-**Problem:** How do we handle server state, caching, synchronization, and loading states efficiently?
-
-```jsx
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
-// API functions
-const api = {
-  getUser: async (id: string) => {
-    const response = await fetch(`/api/users/${id}`);
-    if (!response.ok) throw new Error('Failed to fetch user');
-    return response.json();
-  },
-
-  getUsers: async ({ page = 1, search = '' }) => {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      search
-    });
-    const response = await fetch(`/api/users?${params}`);
-    if (!response.ok) throw new Error('Failed to fetch users');
-    return response.json();
-  },
-
-  updateUser: async ({ id, updates }: { id: string; updates: any }) => {
-    const response = await fetch(`/api/users/${id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates)
-    });
-    if (!response.ok) throw new Error('Failed to update user');
-    return response.json();
-  }
-};
-
-// Query keys factory
-const userKeys = {
-  all: ['users'] as const,
-  lists: () => [...userKeys.all, 'list'] as const,
-  list: (filters: any) => [...userKeys.lists(), filters] as const,
-  details: () => [...userKeys.all, 'detail'] as const,
-  detail: (id: string) => [...userKeys.details(), id] as const,
-};
-
-// Custom hooks
-function useUser(id: string) {
-  return useQuery({
-    queryKey: userKeys.detail(id),
-    queryFn: () => api.getUser(id),
-    enabled: !!id, // Only run if id exists
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
-  });
-}
-
-function useUsers(filters: { page: number; search: string }) {
-  return useQuery({
-    queryKey: userKeys.list(filters),
-    queryFn: () => api.getUsers(filters),
-    keepPreviousData: true, // Keep showing old data while fetching new
-    staleTime: 30 * 1000, // 30 seconds
-  });
-}
-
-function useUpdateUser() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: api.updateUser,
-    onSuccess: (updatedUser, { id }) => {
-      // Update user detail cache
-      queryClient.setQueryData(userKeys.detail(id), updatedUser);
-
-      // Invalidate and refetch user lists
-      queryClient.invalidateQueries({ queryKey: userKeys.lists() });
-
-      // Optimistically update lists
-      queryClient.setQueriesData(
-        { queryKey: userKeys.lists() },
-        (oldData: any) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            users: oldData.users.map((user: any) =>
-              user.id === id ? updatedUser : user
-            )
-          };
-        }
-      );
-    },
-    onError: () => {
-      // Invalidate queries on error to refetch fresh data
-      queryClient.invalidateQueries({ queryKey: userKeys.all });
-    }
-  });
-}
-
-// Component with React Query
-function UserList() {
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const deferredSearch = useDeferredValue(search);
-
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    isFetching,
-    isPreviousData
-  } = useUsers({ page, search: deferredSearch });
-
-  const updateUserMutation = useUpdateUser();
-
-  const handleUpdateUser = (id: string, updates: any) => {
-    updateUserMutation.mutate({ id, updates });
-  };
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error: {error.message}</div>;
-
-  return (
-    <div>
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search users..."
-      />
-
-      {isFetching && <div>Updating...</div>}
-
-      <div className={isPreviousData ? 'opacity-50' : ''}>
-        {data?.users.map(user => (
-          <UserCard
-            key={user.id}
-            user={user}
-            onUpdate={(updates) => handleUpdateUser(user.id, updates)}
-            isUpdating={updateUserMutation.isLoading}
-          />
-        ))}
-      </div>
-
-      <div>
-        <button
-          onClick={() => setPage(old => Math.max(old - 1, 1))}
-          disabled={page === 1}
-        >
-          Previous
-        </button>
-        <span>Page {page}</span>
-        <button
-          onClick={() => setPage(old => old + 1)}
-          disabled={isPreviousData || !data?.hasMore}
-        >
-          Next
-        </button>
-      </div>
-    </div>
-  );
-}
-```
-
-### Suspense for Data Fetching
-
-```jsx
-// React Query with Suspense
-function useUserSuspense(id: string) {
-	return useSuspenseQuery({
-		queryKey: userKeys.detail(id),
-		queryFn: () => api.getUser(id),
-	});
-}
-
-// Component that uses Suspense
-function UserProfile({ userId }: { userId: string }) {
-	const { data: user } = useUserSuspense(userId);
-
-	return (
-		<div>
-			<h1>{user.name}</h1>
+		<div className="user-card">
+			<img src={user.avatar} alt={user.name} />
+			<h3>{user.name}</h3>
 			<p>{user.email}</p>
 		</div>
 	);
 }
 
-// Parent component with error and loading boundaries
-function UserPage({ userId }: { userId: string }) {
+// With memoization - only re-renders when user prop changes
+const MemoizedUserCard = React.memo(function UserCard({ user }) {
+	console.log(`UserCard rendered for ${user.name}`);
+
 	return (
-		<ErrorBoundary fallback={<ErrorFallback />}>
-			<Suspense fallback={<UserProfileSkeleton />}>
-				<UserProfile userId={userId} />
-			</Suspense>
-		</ErrorBoundary>
+		<div className="user-card">
+			<img src={user.avatar} alt={user.name} />
+			<h3>{user.name}</h3>
+			<p>{user.email}</p>
+		</div>
 	);
-}
+});
 
-// Error boundary for data fetching errors
-class ErrorBoundary extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { hasError: false, error: null };
-	}
-
-	static getDerivedStateFromError(error) {
-		return { hasError: true, error };
-	}
-
-	componentDidCatch(error, errorInfo) {
-		console.error("Error caught by boundary:", error, errorInfo);
-	}
-
-	render() {
-		if (this.state.hasError) {
-			return this.props.fallback || <div>Something went wrong.</div>;
-		}
-
-		return this.props.children;
-	}
-}
-```
-
----
-
-## Code-Splitting & Lazy Loading
-
-### Route-Level Code Splitting
-
-**Problem:** How do we reduce initial bundle size by loading code only when needed?
-
-```jsx
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-// Lazy load route components
-const HomePage = lazy(() => import("./pages/HomePage"));
-const UserPage = lazy(() => import("./pages/UserPage"));
-const SettingsPage = lazy(() => import("./pages/SettingsPage"));
-const AdminPage = lazy(() =>
-	import("./pages/AdminPage").then((module) => ({
-		default: module.AdminPage,
-	}))
-);
-
-// Lazy load with error handling and retry
-const DashboardPage = lazy(() =>
-	import("./pages/DashboardPage").catch(() => {
-		// Fallback or retry logic
-		return import("./pages/ErrorPage");
-	})
-);
-
-function App() {
-	return (
-		<BrowserRouter>
-			<div className="app">
-				<Navigation />
-
-				<main>
-					<Suspense fallback={<PageLoadingSpinner />}>
-						<Routes>
-							<Route path="/" element={<HomePage />} />
-							<Route path="/users/:id" element={<UserPage />} />
-							<Route
-								path="/settings"
-								element={<SettingsPage />}
-							/>
-							<Route path="/admin" element={<AdminPage />} />
-							<Route
-								path="/dashboard"
-								element={<DashboardPage />}
-							/>
-						</Routes>
-					</Suspense>
-				</main>
+// With custom comparison function
+const MemoizedUserCardCustom = React.memo(
+	function UserCard({ user, onSelect }) {
+		return (
+			<div className="user-card" onClick={() => onSelect(user.id)}>
+				<img src={user.avatar} alt={user.name} />
+				<h3>{user.name}</h3>
+				<p>{user.email}</p>
 			</div>
-		</BrowserRouter>
-	);
-}
-
-// Enhanced loading component
-function PageLoadingSpinner() {
-	const [showSpinner, setShowSpinner] = useState(false);
-
-	// Only show spinner after a delay to avoid flashing
-	useEffect(() => {
-		const timer = setTimeout(() => setShowSpinner(true), 200);
-		return () => clearTimeout(timer);
-	}, []);
-
-	if (!showSpinner) return null;
-
-	return (
-		<div className="page-loading">
-			<div className="spinner" />
-			<p>Loading page...</p>
-		</div>
-	);
-}
-```
-
-### Component-Level Lazy Loading
-
-```jsx
-// Lazy load heavy components
-const HeavyChart = lazy(() => import("./components/HeavyChart"));
-const DataTable = lazy(() => import("./components/DataTable"));
-
-function Dashboard({ showChart, showTable, data }) {
-	return (
-		<div className="dashboard">
-			<h1>Dashboard</h1>
-
-			{/* Conditionally load heavy components */}
-			{showChart && (
-				<Suspense fallback={<ChartSkeleton />}>
-					<HeavyChart data={data} />
-				</Suspense>
-			)}
-
-			{showTable && (
-				<Suspense fallback={<TableSkeleton />}>
-					<DataTable data={data} />
-				</Suspense>
-			)}
-		</div>
-	);
-}
-
-// Dynamic imports with parameters
-function Modal({ type, isOpen, onClose }) {
-	const [ModalComponent, setModalComponent] = useState(null);
-
-	useEffect(() => {
-		if (isOpen && type) {
-			// Dynamically import modal component based on type
-			import(`./modals/${type}Modal`).then((module) => {
-				setModalComponent(() => module.default);
-			});
-		}
-	}, [isOpen, type]);
-
-	if (!isOpen || !ModalComponent) return null;
-
-	return (
-		<div className="modal-overlay" onClick={onClose}>
-			<Suspense fallback={<ModalSkeleton />}>
-				<ModalComponent onClose={onClose} />
-			</Suspense>
-		</div>
-	);
-}
-
-// Preloading strategy
-function usePreloadRoute(routePath: string) {
-	const preload = useCallback(() => {
-		// Preload route component
-		switch (routePath) {
-			case "/dashboard":
-				import("./pages/DashboardPage");
-				break;
-			case "/settings":
-				import("./pages/SettingsPage");
-				break;
-		}
-	}, [routePath]);
-
-	return preload;
-}
-
-// Component with preloading
-function NavigationLink({ to, children }) {
-	const preload = usePreloadRoute(to);
-
-	return (
-		<Link
-			to={to}
-			onMouseEnter={preload} // Preload on hover
-			onFocus={preload} // Preload on focus
-		>
-			{children}
-		</Link>
-	);
-}
-```
-
----
-
-## Accessibility (a11y)
-
-### Focus Management and Keyboard Navigation
-
-**Problem:** How do we ensure our applications are accessible to users with disabilities?
-
-```jsx
-// Accessible modal with focus management
-function AccessibleModal({ isOpen, onClose, title, children }) {
-	const modalRef = useRef(null);
-	const previousFocusRef = useRef(null);
-
-	useEffect(() => {
-		if (isOpen) {
-			// Store previously focused element
-			previousFocusRef.current = document.activeElement;
-
-			// Focus the modal
-			modalRef.current?.focus();
-
-			// Trap focus within modal
-			const handleKeyDown = (e) => {
-				if (e.key === "Escape") {
-					onClose();
-				} else if (e.key === "Tab") {
-					trapFocus(e, modalRef.current);
-				}
-			};
-
-			document.addEventListener("keydown", handleKeyDown);
-
-			return () => {
-				document.removeEventListener("keydown", handleKeyDown);
-				// Restore focus to previous element
-				previousFocusRef.current?.focus();
-			};
-		}
-	}, [isOpen, onClose]);
-
-	if (!isOpen) return null;
-
-	return (
-		<div
-			className="modal-overlay"
-			onClick={onClose}
-			role="dialog"
-			aria-modal="true"
-			aria-labelledby="modal-title"
-		>
-			<div
-				ref={modalRef}
-				className="modal-content"
-				onClick={(e) => e.stopPropagation()}
-				tabIndex={-1}
-				role="document"
-			>
-				<header className="modal-header">
-					<h2 id="modal-title">{title}</h2>
-					<button
-						onClick={onClose}
-						aria-label="Close modal"
-						className="close-button"
-					>
-						×
-					</button>
-				</header>
-
-				<div className="modal-body">{children}</div>
-			</div>
-		</div>
-	);
-}
-
-// Focus trap utility
-function trapFocus(event, container) {
-	const focusableElements = container.querySelectorAll(
-		'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-	);
-
-	const firstElement = focusableElements[0];
-	const lastElement = focusableElements[focusableElements.length - 1];
-
-	if (event.shiftKey) {
-		if (document.activeElement === firstElement) {
-			lastElement.focus();
-			event.preventDefault();
-		}
-	} else {
-		if (document.activeElement === lastElement) {
-			firstElement.focus();
-			event.preventDefault();
-		}
+		);
+	},
+	(prevProps, nextProps) => {
+		// Only re-render if user ID changes (ignores onSelect function reference changes)
+		return prevProps.user.id === nextProps.user.id;
 	}
-}
+);
 ```
 
-### Screen Reader Support and ARIA
+### useCallback for Stable Function References
+
+**Theory:** `useCallback` is a hook that returns a memoized version of a callback function that only changes if one of the dependencies changes. This is useful when passing functions to optimized child components that rely on reference equality to prevent unnecessary renders.
+
+**Important Concepts:**
+
+1. In JavaScript, functions are objects. When a component re-renders, any function defined inside it is recreated with a new reference.
+2. If you pass these functions as props to memoized child components, the changing reference will cause the child to re-render.
+3. `useCallback` solves this by ensuring the function reference remains stable between renders as long as dependencies haven't changed.
 
 ```jsx
-// Accessible form with proper labeling and error handling
-function AccessibleForm() {
-	const [formData, setFormData] = useState({
-		name: "",
-		email: "",
-		message: "",
-	});
-	const [errors, setErrors] = useState({});
-	const [isSubmitting, setIsSubmitting] = useState(false);
+// WITHOUT useCallback - creates new function on every render
+function ParentComponent() {
+	const [count, setCount] = useState(0);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		setIsSubmitting(true);
-
-		// Validate and submit
-		const newErrors = validateForm(formData);
-		setErrors(newErrors);
-
-		if (Object.keys(newErrors).length === 0) {
-			// Submit form
-			await submitForm(formData);
-		}
-
-		setIsSubmitting(false);
+	// This function reference changes on every render
+	const handleClick = () => {
+		console.log("Button clicked");
 	};
 
 	return (
-		<form onSubmit={handleSubmit} noValidate>
-			<fieldset>
-				<legend>Contact Information</legend>
+		<div>
+			<p>Count: {count}</p>
+			<button onClick={() => setCount(count + 1)}>Increment</button>
 
-				<div className="form-group">
-					<label htmlFor="name">Name *</label>
-					<input
-						id="name"
-						type="text"
-						value={formData.name}
-						onChange={(e) =>
-							setFormData((prev) => ({
-								...prev,
-								name: e.target.value,
-							}))
-						}
-						aria-required="true"
-						aria-invalid={errors.name ? "true" : "false"}
-						aria-describedby={
-							errors.name ? "name-error" : undefined
-						}
-					/>
-					{errors.name && (
-						<div id="name-error" role="alert" className="error">
-							{errors.name}
-						</div>
-					)}
+			{/* Even with React.memo, this will re-render on every count change 
+          because handleClick is a new reference each time */}
+			<MemoizedButton onClick={handleClick} label="Click me" />
+		</div>
+	);
+}
+
+// WITH useCallback - preserves function reference between renders
+function OptimizedParentComponent() {
+	const [count, setCount] = useState(0);
+
+	// This function reference stays stable between renders
+	const handleClick = useCallback(() => {
+		console.log("Button clicked");
+	}, []); // Empty dependency array = function never changes
+
+	return (
+		<div>
+			<p>Count: {count}</p>
+			<button onClick={() => setCount(count + 1)}>Increment</button>
+
+			{/* Now this won't re-render when count changes */}
+			<MemoizedButton onClick={handleClick} label="Click me" />
+		</div>
+	);
+}
+
+// With dependencies - function reference changes when dependencies change
+function UserActions({ userId, updateUser }) {
+	// This function reference changes when userId changes
+	const handleUserUpdate = useCallback(
+		(data) => {
+			updateUser(userId, data);
+		},
+		[userId, updateUser]
+	);
+
+	return (
+		<div>
+			<MemoizedUserForm onSubmit={handleUserUpdate} />
+		</div>
+	);
+}
+```
+
+### Practical Guide to Profiling & Debugging Performance
+
+**Theory:** The React DevTools Profiler is a powerful tool for identifying performance bottlenecks in your application. It helps you:
+
+1. Record rendering performance data
+2. Identify components that render unnecessarily or take too long to render
+3. Visualize component update "cascades" (render propagation)
+4. Measure the impact of your optimization efforts
+
+**Common Performance Issues and Solutions:**
+
+| Issue                              | Detection                                 | Solution                                          |
+| ---------------------------------- | ----------------------------------------- | ------------------------------------------------- |
+| Excessive re-renders               | Component appears frequently in profiler  | Use React.memo, useCallback, useMemo              |
+| Prop drilling causing re-renders   | Many components re-render with same props | Use Context API or state management library       |
+| Large component trees re-rendering | Parent causes many children to update     | Move state down, split components                 |
+| Expensive calculations             | Slow render times                         | Use useMemo or move calculation outside component |
+| Frequent context updates           | Context consumers re-rendering often      | Split context by purpose, memoize context value   |
+
+```jsx
+// Example of a performance-optimized component with multiple techniques
+function OptimizedDataGrid({ data, columns, onRowClick, filters }) {
+	// 1. Memoize expensive filtered data
+	const filteredData = useMemo(() => {
+		return data.filter((row) => {
+			// Expensive filtering logic
+			return Object.entries(filters).every(([key, value]) =>
+				row[key].toString().includes(value)
+			);
+		});
+	}, [data, filters]);
+
+	// 2. Stable callback for row clicks
+	const handleRowClick = useCallback(
+		(rowId) => {
+			onRowClick(rowId);
+		},
+		[onRowClick]
+	);
+
+	// 3. Stable cell renderer function
+	const renderCell = useCallback((row, column) => {
+		const value = row[column.key];
+		return column.formatter ? column.formatter(value, row) : value;
+	}, []);
+
+	return (
+		<div className="data-grid">
+			<GridHeader columns={columns} />
+
+			{filteredData.map((row) => (
+				// 4. Memoized row component
+				<MemoizedGridRow
+					key={row.id}
+					row={row}
+					columns={columns}
+					onClick={handleRowClick}
+					renderCell={renderCell}
+				/>
+			))}
+		</div>
+	);
+}
+
+// Memoized row component
+const MemoizedGridRow = React.memo(function GridRow({
+	row,
+	columns,
+	onClick,
+	renderCell,
+}) {
+	return (
+		<div className="grid-row" onClick={() => onClick(row.id)}>
+			{columns.map((column) => (
+				<div key={column.key} className="grid-cell">
+					{renderCell(row, column)}
 				</div>
+			))}
+		</div>
+	);
+});
+```
 
-				<div className="form-group">
-					<label htmlFor="email">Email Address *</label>
-					<input
-						id="email"
-						type="email"
-						value={formData.email}
-						onChange={(e) =>
-							setFormData((prev) => ({
-								...prev,
-								email: e.target.value,
-							}))
-						}
-						aria-required="true"
-						aria-invalid={errors.email ? "true" : "false"}
-						aria-describedby={
-							errors.email ? "email-error" : "email-help"
-						}
-					/>
-					<div id="email-help" className="help-text">
-						We'll never share your email address.
-					</div>
-					{errors.email && (
-						<div id="email-error" role="alert" className="error">
-							{errors.email}
-						</div>
-					)}
-				</div>
+## State Management Strategies
 
-				<div className="form-group">
-					<label htmlFor="message">Message</label>
-					<textarea
-						id="message"
-						value={formData.message}
-						onChange={(e) =>
-							setFormData((prev) => ({
-								...prev,
-								message: e.target.value,
-							}))
-						}
-						rows={4}
-						aria-describedby="message-help"
-					/>
-					<div id="message-help" className="help-text">
-						Optional: Tell us more about your inquiry.
-					</div>
-				</div>
-			</fieldset>
+### Context vs. External Stores
 
-			<button
-				type="submit"
-				disabled={isSubmitting}
-				aria-describedby="submit-status"
-			>
-				{isSubmitting ? "Submitting..." : "Submit Form"}
+**Problem:** How do we choose the right state management solution for different application scenarios?
+
+**Theory:** State management is one of the most critical architectural decisions in a React application. The choice depends on several factors:
+
+1. **Size and complexity** of the application
+2. **Team experience** and preferences
+3. **Performance requirements**
+4. **Data update patterns** (frequency, granularity)
+5. **Developer experience** priorities (debugging, tooling)
+
+**The State Management Spectrum:**
+
+| Solution      | Complexity | Bundle Size | Learning Curve | Performance         | Best For                              |
+| ------------- | ---------- | ----------- | -------------- | ------------------- | ------------------------------------- |
+| Local State   | Simple     | Zero        | None           | Excellent           | Component-specific state              |
+| Context API   | Moderate   | Zero        | Low            | Good for small apps | Shared state with infrequent updates  |
+| Zustand       | Low        | ~1KB        | Low            | Very good           | Medium apps with frequent updates     |
+| Jotai/Recoil  | Moderate   | ~3-7KB      | Moderate       | Excellent           | Fine-grained atomic state             |
+| Redux Toolkit | High       | ~15KB       | Steep          | Good (with RTK)     | Complex state logic, middleware needs |
+
+```jsx
+// LOCAL STATE - Best for component-specific state
+function Counter() {
+	const [count, setCount] = useState(0);
+	return (
+		<div>
+			<p>Count: {count}</p>
+			<button onClick={() => setCount(count + 1)}>Increment</button>
+		</div>
+	);
+}
+
+// CONTEXT API - Good for theme, user, preferences (low-frequency updates)
+const UserContext = React.createContext(null);
+
+function UserProvider({ children }) {
+	const [user, setUser] = useState(null);
+	const login = useCallback(async (credentials) => {
+		/* login logic */
+	}, []);
+	const logout = useCallback(async () => {
+		/* logout logic */
+	}, []);
+
+	// Memoize value to prevent unnecessary context consumer re-renders
+	const value = useMemo(
+		() => ({
+			user,
+			login,
+			logout,
+		}),
+		[user, login, logout]
+	);
+
+	return (
+		<UserContext.Provider value={value}>{children}</UserContext.Provider>
+	);
+}
+
+// ZUSTAND - Simple external store for more frequent updates
+import create from "zustand";
+
+// Create store
+const useCartStore = create((set) => ({
+	items: [],
+	totalItems: 0,
+	totalPrice: 0,
+	addItem: (item) =>
+		set((state) => {
+			const newItems = [...state.items, item];
+			return {
+				items: newItems,
+				totalItems: newItems.length,
+				totalPrice: newItems.reduce((sum, item) => sum + item.price, 0),
+			};
+		}),
+	removeItem: (itemId) =>
+		set((state) => {
+			const newItems = state.items.filter((item) => item.id !== itemId);
+			return {
+				items: newItems,
+				totalItems: newItems.length,
+				totalPrice: newItems.reduce((sum, item) => sum + item.price, 0),
+			};
+		}),
+	clearCart: () => set({ items: [], totalItems: 0, totalPrice: 0 }),
+}));
+
+// Use store in component
+function ShoppingCart() {
+	const { items, totalPrice, removeItem, clearCart } = useCartStore();
+
+	return (
+		<div className="cart">
+			<h2>Your Cart ({items.length} items)</h2>
+			<ul>
+				{items.map((item) => (
+					<li key={item.id}>
+						{item.name} - ${item.price}
+						<button onClick={() => removeItem(item.id)}>
+							Remove
+						</button>
+					</li>
+				))}
+			</ul>
+			<div>Total: ${totalPrice.toFixed(2)}</div>
+			<button onClick={clearCart}>Clear Cart</button>
+		</div>
+	);
+}
+```
+
+### Redux Toolkit Patterns
+
+**Theory:** Redux Toolkit (RTK) is the modern, official approach to using Redux. It simplifies Redux development by:
+
+1. Reducing boilerplate with createSlice
+2. Simplifying immutable updates with Immer
+3. Standardizing async logic with createAsyncThunk
+4. Providing optimized selectors
+5. Including RTK Query for data fetching/caching
+
+RTK is ideal for larger applications with complex state interactions, especially when you need powerful middleware capabilities, time-travel debugging, or strict state management patterns.
+
+```jsx
+// REDUX TOOLKIT EXAMPLE
+import {
+	configureStore,
+	createSlice,
+	createAsyncThunk,
+} from "@reduxjs/toolkit";
+
+// Async thunk for fetching data
+export const fetchProducts = createAsyncThunk(
+	"products/fetchProducts",
+	async (_, { rejectWithValue }) => {
+		try {
+			const response = await fetch("/api/products");
+			if (!response.ok) throw new Error("Server error");
+			return await response.json();
+		} catch (error) {
+			return rejectWithValue(error.message);
+		}
+	}
+);
+
+// Create a slice (combines actions and reducers)
+const productsSlice = createSlice({
+	name: "products",
+	initialState: {
+		items: [],
+		status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+		error: null,
+	},
+	reducers: {
+		// Standard reducers - Immer handles immutability
+		setFavorite: (state, action) => {
+			const { productId, isFavorite } = action.payload;
+			const product = state.items.find((p) => p.id === productId);
+			if (product) {
+				product.isFavorite = isFavorite;
+			}
+		},
+	},
+	extraReducers: (builder) => {
+		// Handle async action states
+		builder
+			.addCase(fetchProducts.pending, (state) => {
+				state.status = "loading";
+			})
+			.addCase(fetchProducts.fulfilled, (state, action) => {
+				state.status = "succeeded";
+				state.items = action.payload;
+			})
+			.addCase(fetchProducts.rejected, (state, action) => {
+				state.status = "failed";
+				state.error = action.payload;
+			});
+	},
+});
+
+// Export actions and reducer
+export const { setFavorite } = productsSlice.actions;
+export default productsSlice.reducer;
+
+// Configure the store
+const store = configureStore({
+	reducer: {
+		products: productsSlice.reducer,
+		// other reducers...
+	},
+});
+
+// Component using Redux
+import { useSelector, useDispatch } from "react-redux";
+
+function ProductList() {
+	const dispatch = useDispatch();
+	const { items, status, error } = useSelector((state) => state.products);
+
+	useEffect(() => {
+		if (status === "idle") {
+			dispatch(fetchProducts());
+		}
+	}, [status, dispatch]);
+
+	if (status === "loading") return <div>Loading products...</div>;
+	if (status === "failed") return <div>Error: {error}</div>;
+
+	return (
+		<div className="product-list">
+			{items.map((product) => (
+				<ProductCard
+					key={product.id}
+					product={product}
+					onToggleFavorite={(isFavorite) =>
+						dispatch(
+							setFavorite({ productId: product.id, isFavorite })
+						)
+					}
+				/>
+			))}
+		</div>
+	);
+}
+```
+
+### Zustand for Simpler State Management
+
+**Theory:** Zustand has gained popularity as a simpler alternative to Redux that still offers powerful state management. It's known for:
+
+1. **Minimal API** - Simple store creation without reducers, actions, or dispatchers
+2. **Small bundle size** (~1KB) without sacrificing features
+3. **No Provider required** - Access state from anywhere without wrapping components
+4. **TypeScript friendly** with excellent type inference
+5. **Middleware support** for devtools, persistence, immer, etc.
+
+Zustand is ideal for small to medium applications where Redux would be overkill but Context API would be insufficient for performance.
+
+```jsx
+import create from "zustand";
+import { persist } from "zustand/middleware";
+
+// Create store with persistence middleware
+const useAuthStore = create(
+	persist(
+		(set, get) => ({
+			user: null,
+			token: null,
+			isAuthenticated: false,
+			isLoading: false,
+			error: null,
+
+			login: async (credentials) => {
+				set({ isLoading: true, error: null });
+				try {
+					// API call simulation
+					const response = await fetch("/api/login", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify(credentials),
+					});
+
+					if (!response.ok) {
+						throw new Error("Login failed");
+					}
+
+					const data = await response.json();
+					set({
+						user: data.user,
+						token: data.token,
+						isAuthenticated: true,
+						isLoading: false,
+					});
+					return data;
+				} catch (error) {
+					set({
+						error: error.message,
+						isLoading: false,
+						user: null,
+						token: null,
+						isAuthenticated: false,
+					});
+					throw error;
+				}
+			},
+
+			logout: () => {
+				set({
+					user: null,
+					token: null,
+					isAuthenticated: false,
+				});
+			},
+
+			updateProfile: (profileData) => {
+				set((state) => ({
+					user: { ...state.user, ...profileData },
+				}));
+			},
+		}),
+		{
+			name: "auth-storage", // unique name for localStorage key
+			getStorage: () => localStorage,
+		}
+	)
+);
+
+// Using the store in components
+function LoginForm() {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const { login, isLoading, error } = useAuthStore();
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		try {
+			await login({ email, password });
+		} catch (err) {
+			// UI-specific error handling
+			console.log("Login form submission error:", err);
+		}
+	};
+
+	return (
+		<form onSubmit={handleSubmit}>
+			{error && <div className="error">{error}</div>}
+			<input
+				type="email"
+				value={email}
+				onChange={(e) => setEmail(e.target.value)}
+				placeholder="Email"
+				required
+			/>
+			<input
+				type="password"
+				value={password}
+				onChange={(e) => setPassword(e.target.value)}
+				placeholder="Password"
+				required
+			/>
+			<button type="submit" disabled={isLoading}>
+				{isLoading ? "Logging in..." : "Login"}
 			</button>
-
-			{isSubmitting && (
-				<div id="submit-status" aria-live="polite" className="sr-only">
-					Submitting form, please wait.
-				</div>
-			)}
 		</form>
 	);
 }
 
-// Accessible data table
-function AccessibleDataTable({ data, columns }) {
-	const [sortConfig, setSortConfig] = useState({
-		key: null,
-		direction: "asc",
-	});
+function UserProfile() {
+	const { user, updateProfile, logout } = useAuthStore();
 
-	const sortedData = useMemo(() => {
-		if (!sortConfig.key) return data;
-
-		return [...data].sort((a, b) => {
-			if (a[sortConfig.key] < b[sortConfig.key]) {
-				return sortConfig.direction === "asc" ? -1 : 1;
-			}
-			if (a[sortConfig.key] > b[sortConfig.key]) {
-				return sortConfig.direction === "asc" ? 1 : -1;
-			}
-			return 0;
-		});
-	}, [data, sortConfig]);
-
-	const handleSort = (key) => {
-		setSortConfig((prev) => ({
-			key,
-			direction:
-				prev.key === key && prev.direction === "asc" ? "desc" : "asc",
-		}));
-	};
+	if (!user) return <div>Please log in</div>;
 
 	return (
-		<table role="table" aria-label="User data">
-			<caption>
-				List of {data.length} users. Use column headers to sort data.
-			</caption>
-
-			<thead>
-				<tr>
-					{columns.map((column) => (
-						<th
-							key={column.key}
-							scope="col"
-							aria-sort={
-								sortConfig.key === column.key
-									? sortConfig.direction === "asc"
-										? "ascending"
-										: "descending"
-									: "none"
-							}
-						>
-							<button
-								onClick={() => handleSort(column.key)}
-								className="sort-button"
-								aria-label={`Sort by ${column.label}`}
-							>
-								{column.label}
-								{sortConfig.key === column.key && (
-									<span aria-hidden="true">
-										{sortConfig.direction === "asc"
-											? " ↑"
-											: " ↓"}
-									</span>
-								)}
-							</button>
-						</th>
-					))}
-				</tr>
-			</thead>
-
-			<tbody>
-				{sortedData.map((row) => (
-					<tr key={row.id}>
-						{columns.map((column) => (
-							<td key={column.key}>{row[column.key]}</td>
-						))}
-					</tr>
-				))}
-			</tbody>
-		</table>
+		<div className="profile">
+			<h2>Welcome, {user.name}!</h2>
+			<p>Email: {user.email}</p>
+			<button onClick={() => updateProfile({ lastSeen: new Date() })}>
+				Update Last Seen
+			</button>
+			<button onClick={logout}>Logout</button>
+		</div>
 	);
 }
 ```
-
----
-
-**Continue to:** [[reactjs-expert-architectural|Stage 4: Expert & Architectural (Pro)]]
-
----
-
-## Advanced Engineering Mastery Checklist
-
-Before moving to Stage 4, ensure you can:
-
--   [ ] Implement concurrent rendering features (useTransition, useDeferredValue)
--   [ ] Profile and optimize component performance
--   [ ] Design scalable state management solutions
--   [ ] Implement server-side rendering strategies
--   [ ] Use modern data fetching patterns with React Query
--   [ ] Implement code-splitting and lazy loading
--   [ ] Build accessible components with proper ARIA support
--   [ ] Set up internationalization for global applications
--   [ ] Create maintainable design systems
--   [ ] Write comprehensive test suites

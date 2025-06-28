@@ -13,10 +13,10 @@ Core JavaScript concepts, from fundamental principles to advanced patterns. Cove
 
 ### **React.js** (`reactjs/`)
 
-Complete React.js mastery from foundational concepts to production-grade applications. Covers components, hooks, state management, and architectural patterns.
+A comprehensive, checklist-driven guide to mastering React.js, structured for a Lead-Level Interview. The notes are organized into four distinct stages, progressing from foundational knowledge to expert-level architectural patterns.
 
--   **Roadmap:** [[reactjs/reactjs-roadmap|React.js Learning Path]]
--   **Focus:** Component-based UI development, state management, and React ecosystem
+-   **Roadmap:** [[reactjs/README|React.js Interview Prep Checklist]]
+-   **Focus:** Foundational, Core, Advanced, and Expert architectural concepts.
 
 ### **Node.js** (`nodejs/`)
 

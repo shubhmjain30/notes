@@ -27,7 +27,16 @@ Master these intermediate concepts to build dynamic, interactive React applicati
 
 **Problem:** Why do Hooks have specific rules, and how do they work internally?
 
-**Theory:** Hooks rely on call order to maintain state between renders. React uses a linked list internally to track Hook state.
+**Theory:** Hooks are a revolutionary addition to React that allow you to use state and other React features without writing a class component. However, they rely on a specific implementation detail - **the order in which they are called**.
+
+React maintains an internal "memory cell" list for each component that uses Hooks. Each time a Hook is called during rendering, React moves to the next memory cell. This is why Hooks must be called in the exact same order on every render - so React can correctly preserve state between multiple `useState` and `useEffect` calls.
+
+**How Hooks Work Internally:**
+
+1. React associates Hook calls with components using the call stack
+2. Each component has a "memory cells" array where state values are stored
+3. A "cursor" keeps track of which Hook is currently being processed
+4. The call order must remain stable between renders for this system to work
 
 **The Two Rules:**
 
@@ -75,6 +84,13 @@ function GoodComponent({ showUser }) {
 ### useState Deep Dive
 
 **Problem:** How do we manage complex state updates efficiently?
+
+**Theory:** Unlike class components where all state is stored in a single object, the `useState` Hook encourages splitting state into multiple, independent pieces. This helps keep state management clean and focused. When dealing with complex state:
+
+1. **State immutability** is crucial - never mutate state objects directly
+2. Use the **functional update form** when new state depends on previous state
+3. For complex objects, consider splitting state into multiple `useState` calls or use `useReducer` for related state transitions
+4. Remember that state updates may be batched for better performance
 
 ```jsx
 function ShoppingCart() {
@@ -375,7 +391,20 @@ function useWindowSize() {
 
 **Problem:** How do we avoid recalculating expensive values on every render?
 
-**Theory:** `useMemo` memoizes the result of a computation and only recalculates when dependencies change.
+**Theory:** Every time a component renders in React, all the code inside the component runs again. This means any complex calculations or transformations inside your component will be performed on each render, even if the inputs haven't changed. This can significantly impact performance.
+
+The `useMemo` Hook addresses this issue by:
+
+1. **Memoizing computationally expensive values** - Storing the result of calculations and returning the cached result when the same inputs occur again
+2. **Recalculating only when dependencies change** - Similar to `useEffect`, `useMemo` takes a dependency array that determines when the value should be recomputed
+3. **Avoiding unnecessary rendering in child components** - When passing objects or arrays to child components, memoization prevents unnecessary re-renders
+
+**Key Principles:**
+
+-   Only use `useMemo` for computationally expensive operations
+-   Include all values used in the calculation in the dependency array
+-   Don't overuse - there's overhead to memoization itself
+-   For simple calculations, regular variables are more efficient
 
 ```jsx
 function ExpensiveList({ items, searchTerm, sortBy, filterCategory }) {
@@ -571,6 +600,21 @@ function DataProcessor({ rawData, config, userPreferences }) {
 
 **Problem:** How do we access DOM elements directly when React's declarative approach isn't sufficient?
 
+**Theory:** While React's declarative approach normally handles DOM updates for you, sometimes you need direct access to DOM elements. Common use cases include:
+
+1. **Managing focus, text selection, or media playback**
+2. **Triggering imperative animations**
+3. **Integrating with third-party DOM libraries**
+
+`useRef` creates a mutable reference object with a `.current` property that persists across renders. Unlike state, updating a ref doesn't trigger a re-render.
+
+**Key Concepts:**
+
+-   A ref is like a "box" that can hold a mutable value in its `.current` property
+-   Changes to `.current` don't trigger re-renders
+-   Refs give you a way to access DOM nodes created in the render method
+-   You should minimize direct DOM manipulation and use React's declarative approach when possible
+
 ```jsx
 function FocusableInput() {
 	const inputRef = useRef(null);
@@ -621,6 +665,20 @@ function FocusableInput() {
 ### useRef for Storing Mutable Values
 
 **Problem:** How do we store values that persist across renders but don't trigger re-renders when changed?
+
+**Theory:** Besides DOM access, `useRef` solves another important problem: storing mutable values that should persist between renders without causing re-renders. Unlike state:
+
+1. Updating a ref doesn't trigger component re-rendering
+2. Refs persist throughout the component's lifecycle
+3. Refs can hold any value, not just DOM elements
+4. Changes to refs are synchronous, unlike state updates which may be batched
+
+Common use cases include:
+
+-   Storing previous state values
+-   Keeping track of timers and intervals
+-   Storing instances of external libraries
+-   Solving the "stale closure" problem in callbacks
 
 ```jsx
 function Timer() {
@@ -675,170 +733,27 @@ function Timer() {
 }
 ```
 
-### Forwarding Refs
-
-**Problem:** How do we pass refs through component boundaries to access child DOM elements?
-
-```jsx
-// Custom input component that forwards ref
-const CustomInput = React.forwardRef((props, ref) => {
-	const { label, error, ...inputProps } = props;
-
-	return (
-		<div className="input-group">
-			{label && <label>{label}</label>}
-			<input
-				ref={ref}
-				className={`input ${error ? "input-error" : ""}`}
-				{...inputProps}
-			/>
-			{error && <span className="error-message">{error}</span>}
-		</div>
-	);
-});
-
-// Set display name for debugging
-CustomInput.displayName = "CustomInput";
-
-// Using the forwarded ref
-function Form() {
-	const emailRef = useRef(null);
-	const passwordRef = useRef(null);
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
-
-		const email = emailRef.current.value;
-		const password = passwordRef.current.value;
-
-		if (!email) {
-			emailRef.current.focus();
-			return;
-		}
-
-		if (!password) {
-			passwordRef.current.focus();
-			return;
-		}
-
-		// Process form submission
-		console.log("Submitting:", { email, password });
-	};
-
-	return (
-		<form onSubmit={handleSubmit}>
-			<CustomInput
-				ref={emailRef}
-				label="Email"
-				type="email"
-				placeholder="Enter your email"
-				required
-			/>
-
-			<CustomInput
-				ref={passwordRef}
-				label="Password"
-				type="password"
-				placeholder="Enter your password"
-				required
-			/>
-
-			<button type="submit">Login</button>
-		</form>
-	);
-}
-```
-
-### useImperativeHandle for Custom Ref APIs
-
-**Problem:** How do we expose custom methods to parent components through refs?
-
-```jsx
-// Video player component with imperative API
-const VideoPlayer = React.forwardRef((props, ref) => {
-	const videoRef = useRef(null);
-	const [isPlaying, setIsPlaying] = useState(false);
-	const [currentTime, setCurrentTime] = useState(0);
-
-	// Expose custom methods to parent through ref
-	useImperativeHandle(ref, () => ({
-		play: () => {
-			videoRef.current?.play();
-			setIsPlaying(true);
-		},
-		pause: () => {
-			videoRef.current?.pause();
-			setIsPlaying(false);
-		},
-		seekTo: (time) => {
-			if (videoRef.current) {
-				videoRef.current.currentTime = time;
-				setCurrentTime(time);
-			}
-		},
-		getCurrentTime: () => videoRef.current?.currentTime || 0,
-		getDuration: () => videoRef.current?.duration || 0,
-		isPlaying: () => isPlaying,
-	}));
-
-	const handleTimeUpdate = () => {
-		if (videoRef.current) {
-			setCurrentTime(videoRef.current.currentTime);
-		}
-	};
-
-	return (
-		<video
-			ref={videoRef}
-			onTimeUpdate={handleTimeUpdate}
-			onPlay={() => setIsPlaying(true)}
-			onPause={() => setIsPlaying(false)}
-			{...props}
-		/>
-	);
-});
-
-VideoPlayer.displayName = "VideoPlayer";
-
-// Parent component using the video player
-function VideoApp() {
-	const playerRef = useRef(null);
-
-	const handlePlayPause = () => {
-		if (playerRef.current.isPlaying()) {
-			playerRef.current.pause();
-		} else {
-			playerRef.current.play();
-		}
-	};
-
-	const handleSeekForward = () => {
-		const currentTime = playerRef.current.getCurrentTime();
-		playerRef.current.seekTo(currentTime + 10);
-	};
-
-	return (
-		<div>
-			<VideoPlayer ref={playerRef} src="/video.mp4" controls={false} />
-
-			<div className="controls">
-				<button onClick={handlePlayPause}>Play/Pause</button>
-				<button onClick={handleSeekForward}>+10s</button>
-			</div>
-		</div>
-	);
-}
-```
-
----
-
 ## Custom Hooks
 
 ### Creating Reusable Logic
 
 **Problem:** How do we extract and reuse stateful logic across multiple components?
 
-**Theory:** Custom Hooks are functions that start with "use" and can call other Hooks. They allow sharing stateful logic without changing component hierarchy.
+**Theory:** Custom Hooks are JavaScript functions that start with "use" and may call other Hooks. They represent a powerful pattern for:
+
+1. **Extracting component logic into reusable functions**
+2. **Sharing stateful logic between components without render props or higher-order components**
+3. **Creating a clean separation between UI and stateful logic**
+4. **Building component libraries with consistent behavior**
+
+Custom Hooks follow the same rules as built-in Hooks - they must be called at the top level and only from React function components or custom Hooks.
+
+**Benefits of Custom Hooks:**
+
+-   Cleaner component code with logic extracted into focused functions
+-   Reusing the same logic across multiple components
+-   Easier testing of complex stateful logic
+-   Building your own Hook library for team conventions
 
 ```jsx
 // Custom hook for managing local storage
@@ -944,257 +859,36 @@ function Settings() {
 }
 ```
 
-### Advanced Custom Hooks
-
-```jsx
-// Custom hook for API data fetching
-function useApi(url, options = {}) {
-	const [data, setData] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-
-	const {
-		immediate = true,
-		transform = (data) => data,
-		dependencies = [],
-	} = options;
-
-	const fetchData = useCallback(async () => {
-		try {
-			setLoading(true);
-			setError(null);
-
-			const response = await fetch(url);
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-
-			const result = await response.json();
-			const transformedData = transform(result);
-
-			setData(transformedData);
-		} catch (err) {
-			setError(err.message);
-		} finally {
-			setLoading(false);
-		}
-	}, [url, transform]);
-
-	useEffect(() => {
-		if (immediate) {
-			fetchData();
-		}
-	}, [fetchData, immediate, ...dependencies]);
-
-	const refetch = () => {
-		fetchData();
-	};
-
-	return {
-		data,
-		loading,
-		error,
-		refetch,
-	};
-}
-
-// Custom hook for form validation
-function useFormValidation(initialValues, validationRules) {
-	const [values, setValues] = useState(initialValues);
-	const [errors, setErrors] = useState({});
-	const [touched, setTouched] = useState({});
-
-	const validateField = (name, value) => {
-		const rules = validationRules[name];
-		if (!rules) return "";
-
-		for (const rule of rules) {
-			const error = rule(value, values);
-			if (error) return error;
-		}
-		return "";
-	};
-
-	const validateForm = () => {
-		const newErrors = {};
-		let isValid = true;
-
-		Object.keys(validationRules).forEach((name) => {
-			const error = validateField(name, values[name]);
-			if (error) {
-				newErrors[name] = error;
-				isValid = false;
-			}
-		});
-
-		setErrors(newErrors);
-		return isValid;
-	};
-
-	const handleChange = (name, value) => {
-		setValues((prev) => ({ ...prev, [name]: value }));
-
-		// Validate field if it has been touched
-		if (touched[name]) {
-			const error = validateField(name, value);
-			setErrors((prev) => ({ ...prev, [name]: error }));
-		}
-	};
-
-	const handleBlur = (name) => {
-		setTouched((prev) => ({ ...prev, [name]: true }));
-		const error = validateField(name, values[name]);
-		setErrors((prev) => ({ ...prev, [name]: error }));
-	};
-
-	const reset = () => {
-		setValues(initialValues);
-		setErrors({});
-		setTouched({});
-	};
-
-	return {
-		values,
-		errors,
-		touched,
-		handleChange,
-		handleBlur,
-		validateForm,
-		reset,
-		isValid: Object.keys(errors).length === 0,
-	};
-}
-
-// Using custom hooks together
-function UserForm() {
-	const validationRules = {
-		email: [
-			(value) => (!value ? "Email is required" : ""),
-			(value) => (!/\S+@\S+\.\S+/.test(value) ? "Email is invalid" : ""),
-		],
-		password: [
-			(value) => (!value ? "Password is required" : ""),
-			(value) =>
-				value.length < 6
-					? "Password must be at least 6 characters"
-					: "",
-		],
-		confirmPassword: [
-			(value) => (!value ? "Please confirm password" : ""),
-			(value, values) =>
-				value !== values.password ? "Passwords do not match" : "",
-		],
-	};
-
-	const {
-		values,
-		errors,
-		touched,
-		handleChange,
-		handleBlur,
-		validateForm,
-		reset,
-	} = useFormValidation(
-		{ email: "", password: "", confirmPassword: "" },
-		validationRules
-	);
-
-	const {
-		data: submitResult,
-		loading: submitting,
-		error: submitError,
-		refetch: submitForm,
-	} = useApi("/api/register", {
-		immediate: false,
-		transform: (data) => ({ success: true, user: data }),
-	});
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-
-		if (validateForm()) {
-			// Submit form
-			await submitForm();
-			if (!submitError) {
-				reset();
-			}
-		}
-	};
-
-	return (
-		<form onSubmit={handleSubmit}>
-			<div>
-				<input
-					type="email"
-					placeholder="Email"
-					value={values.email}
-					onChange={(e) => handleChange("email", e.target.value)}
-					onBlur={() => handleBlur("email")}
-				/>
-				{touched.email && errors.email && (
-					<span className="error">{errors.email}</span>
-				)}
-			</div>
-
-			<div>
-				<input
-					type="password"
-					placeholder="Password"
-					value={values.password}
-					onChange={(e) => handleChange("password", e.target.value)}
-					onBlur={() => handleBlur("password")}
-				/>
-				{touched.password && errors.password && (
-					<span className="error">{errors.password}</span>
-				)}
-			</div>
-
-			<div>
-				<input
-					type="password"
-					placeholder="Confirm Password"
-					value={values.confirmPassword}
-					onChange={(e) =>
-						handleChange("confirmPassword", e.target.value)
-					}
-					onBlur={() => handleBlur("confirmPassword")}
-				/>
-				{touched.confirmPassword && errors.confirmPassword && (
-					<span className="error">{errors.confirmPassword}</span>
-				)}
-			</div>
-
-			<button type="submit" disabled={submitting}>
-				{submitting ? "Creating Account..." : "Create Account"}
-			</button>
-
-			{submitError && <div className="error">Error: {submitError}</div>}
-			{submitResult?.success && (
-				<div className="success">Account created successfully!</div>
-			)}
-		</form>
-	);
-}
-```
-
 ---
 
 ## Context API
 
-### Creating and Using Context
+### Provider & Consumer Pattern
 
 **Problem:** How do we share state across many components without prop drilling?
 
-**Theory:** Context provides a way to pass data through the component tree without having to pass props down manually at every level.
+**Theory:** React's Context API provides a way to share values like themes, user data, or preferences across components without explicitly passing props through every level of the component tree. It solves the "prop drilling" problem where data is passed through multiple layers of components that don't actually need the data.
+
+**The Context API consists of three main parts:**
+
+1. `React.createContext()` - Creates a Context object with an optional default value
+2. `Context.Provider` - A component that allows consuming components to subscribe to context changes
+3. `Context.Consumer` or `useContext` Hook - Ways to consume the context data
+
+**When to use Context:**
+
+-   For global state that is needed by many components (themes, user data, preferences)
+-   For deeply nested component trees where prop drilling becomes unwieldy
+-   When data needs to be accessible by many components at different nesting levels
 
 ```jsx
-// 1. Create context
-const ThemeContext = createContext({
+// Create a context with a default value
+const ThemeContext = React.createContext({
 	theme: "light",
 	toggleTheme: () => {},
 });
 
-// 2. Create provider component
+// Provider component - makes the context available
 function ThemeProvider({ children }) {
 	const [theme, setTheme] = useState("light");
 
@@ -1202,28 +896,32 @@ function ThemeProvider({ children }) {
 		setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
 	};
 
-	const value = {
-		theme,
-		toggleTheme,
-	};
-
 	return (
-		<ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+		<ThemeContext.Provider value={{ theme, toggleTheme }}>
+			{children}
+		</ThemeContext.Provider>
 	);
 }
 
-// 3. Create custom hook for consuming context
-function useTheme() {
-	const context = useContext(ThemeContext);
+// Consumer component using useContext Hook
+function ThemedButton() {
+	const { theme, toggleTheme } = useContext(ThemeContext);
 
-	if (context === undefined) {
-		throw new Error("useTheme must be used within a ThemeProvider");
-	}
-
-	return context;
+	return (
+		<button
+			onClick={toggleTheme}
+			style={{
+				backgroundColor: theme === "light" ? "#fff" : "#333",
+				color: theme === "light" ? "#333" : "#fff",
+				border: `1px solid ${theme === "light" ? "#333" : "#fff"}`,
+			}}
+		>
+			Toggle Theme
+		</button>
+	);
 }
 
-// 4. Use in components
+// App with context
 function App() {
 	return (
 		<ThemeProvider>
@@ -1233,383 +931,611 @@ function App() {
 		</ThemeProvider>
 	);
 }
-
-function Header() {
-	const { theme, toggleTheme } = useTheme();
-
-	return (
-		<header className={`header header-${theme}`}>
-			<h1>My App</h1>
-			<button onClick={toggleTheme}>
-				Switch to {theme === "light" ? "dark" : "light"} mode
-			</button>
-		</header>
-	);
-}
-
-function MainContent() {
-	const { theme } = useTheme();
-
-	return (
-		<main className={`main main-${theme}`}>
-			<p>This content adapts to the theme!</p>
-		</main>
-	);
-}
 ```
 
-### Complex Context with Reducer
-
-```jsx
-// Actions
-const ACTIONS = {
-	LOGIN: "LOGIN",
-	LOGOUT: "LOGOUT",
-	UPDATE_PROFILE: "UPDATE_PROFILE",
-	SET_LOADING: "SET_LOADING",
-};
-
-// Reducer
-function authReducer(state, action) {
-	switch (action.type) {
-		case ACTIONS.SET_LOADING:
-			return { ...state, loading: action.payload };
-
-		case ACTIONS.LOGIN:
-			return {
-				...state,
-				user: action.payload.user,
-				token: action.payload.token,
-				isAuthenticated: true,
-				loading: false,
-			};
-
-		case ACTIONS.LOGOUT:
-			return {
-				...state,
-				user: null,
-				token: null,
-				isAuthenticated: false,
-				loading: false,
-			};
-
-		case ACTIONS.UPDATE_PROFILE:
-			return {
-				...state,
-				user: { ...state.user, ...action.payload },
-			};
-
-		default:
-			return state;
-	}
-}
-
-// Context
-const AuthContext = createContext();
-
-// Provider
-function AuthProvider({ children }) {
-	const [state, dispatch] = useReducer(authReducer, {
-		user: null,
-		token: null,
-		isAuthenticated: false,
-		loading: true,
-	});
-
-	// Initialize auth state from localStorage
-	useEffect(() => {
-		const token = localStorage.getItem("token");
-		const user = localStorage.getItem("user");
-
-		if (token && user) {
-			dispatch({
-				type: ACTIONS.LOGIN,
-				payload: {
-					token,
-					user: JSON.parse(user),
-				},
-			});
-		} else {
-			dispatch({ type: ACTIONS.SET_LOADING, payload: false });
-		}
-	}, []);
-
-	// Actions
-	const login = async (credentials) => {
-		dispatch({ type: ACTIONS.SET_LOADING, payload: true });
-
-		try {
-			const response = await fetch("/api/login", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(credentials),
-			});
-
-			const data = await response.json();
-
-			if (response.ok) {
-				localStorage.setItem("token", data.token);
-				localStorage.setItem("user", JSON.stringify(data.user));
-
-				dispatch({
-					type: ACTIONS.LOGIN,
-					payload: data,
-				});
-			} else {
-				throw new Error(data.message);
-			}
-		} catch (error) {
-			dispatch({ type: ACTIONS.SET_LOADING, payload: false });
-			throw error;
-		}
-	};
-
-	const logout = () => {
-		localStorage.removeItem("token");
-		localStorage.removeItem("user");
-		dispatch({ type: ACTIONS.LOGOUT });
-	};
-
-	const updateProfile = (updates) => {
-		dispatch({
-			type: ACTIONS.UPDATE_PROFILE,
-			payload: updates,
-		});
-	};
-
-	const value = {
-		...state,
-		login,
-		logout,
-		updateProfile,
-	};
-
-	return (
-		<AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-	);
-}
-
-// Custom hook
-function useAuth() {
-	const context = useContext(AuthContext);
-
-	if (context === undefined) {
-		throw new Error("useAuth must be used within an AuthProvider");
-	}
-
-	return context;
-}
-
-// Usage
-function LoginForm() {
-	const { login, loading } = useAuth();
-	const [credentials, setCredentials] = useState({ email: "", password: "" });
-	const [error, setError] = useState("");
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		try {
-			await login(credentials);
-		} catch (err) {
-			setError(err.message);
-		}
-	};
-
-	return (
-		<form onSubmit={handleSubmit}>
-			<input
-				type="email"
-				value={credentials.email}
-				onChange={(e) =>
-					setCredentials((prev) => ({
-						...prev,
-						email: e.target.value,
-					}))
-				}
-				placeholder="Email"
-				required
-			/>
-			<input
-				type="password"
-				value={credentials.password}
-				onChange={(e) =>
-					setCredentials((prev) => ({
-						...prev,
-						password: e.target.value,
-					}))
-				}
-				placeholder="Password"
-				required
-			/>
-			<button type="submit" disabled={loading}>
-				{loading ? "Logging in..." : "Login"}
-			</button>
-			{error && <div className="error">{error}</div>}
-		</form>
-	);
-}
-```
-
-### Avoiding Context Re-render Issues
+### Context Performance Considerations
 
 **Problem:** How do we prevent unnecessary re-renders when using Context?
 
+**Theory:** When a context value changes, all components that consume that context will re-render, even if they only use a portion of the context value. This can lead to performance issues if:
+
+1. Your context value is a complex object
+2. The context changes frequently
+3. Many components consume the same context
+
+**Best practices for optimizing Context performance:**
+
+1. **Split contexts by purpose** - Create separate contexts for values that change at different frequencies
+2. **Memoize context values** - Use `useMemo` to prevent unnecessary context provider re-renders
+3. **Use selective consumption** - Consume only the specific parts of context that a component needs
+4. **Consider context alternatives** for performance-critical sections (component composition, prop drilling for shallow hierarchies)
+
 ```jsx
-// ❌ Problem: All consumers re-render when any part of context changes
-function ProblematicProvider({ children }) {
+// PROBLEM: Every consumer re-renders when ANY part of value changes
+function BadContextProvider({ children }) {
 	const [user, setUser] = useState(null);
 	const [theme, setTheme] = useState("light");
-	const [settings, setSettings] = useState({});
+	const [notifications, setNotifications] = useState([]);
 
-	// This object is recreated on every render, causing all consumers to re-render
+	// ❌ New object created on every render, causing all consumers to re-render
 	const value = {
 		user,
 		setUser,
 		theme,
 		setTheme,
-		settings,
-		setSettings,
+		notifications,
+		setNotifications,
 	};
 
-	return <MyContext.Provider value={value}>{children}</MyContext.Provider>;
+	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
-// ✅ Solution 1: Split contexts by concern
-const UserContext = createContext();
-const ThemeContext = createContext();
-const SettingsContext = createContext();
-
-function UserProvider({ children }) {
-	const [user, setUser] = useState(null);
-
-	const value = useMemo(
-		() => ({
-			user,
-			setUser,
-		}),
-		[user]
-	);
-
-	return (
-		<UserContext.Provider value={value}>{children}</UserContext.Provider>
-	);
-}
-
-function ThemeProvider({ children }) {
-	const [theme, setTheme] = useState("light");
-
-	const value = useMemo(
-		() => ({
-			theme,
-			setTheme,
-		}),
-		[theme]
-	);
-
-	return (
-		<ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
-	);
-}
-
-// ✅ Solution 2: Memoize context value
-function OptimizedProvider({ children }) {
+// SOLUTION: Split contexts by concern and memoize values
+function OptimizedApp({ children }) {
+	// Separate contexts by update frequency
 	const [user, setUser] = useState(null);
 	const [theme, setTheme] = useState("light");
+	const [notifications, setNotifications] = useState([]);
 
-	const userValue = useMemo(
-		() => ({
-			user,
-			setUser,
-		}),
-		[user]
-	);
-
-	const themeValue = useMemo(
-		() => ({
-			theme,
-			setTheme,
-		}),
-		[theme]
+	// Memoize context values
+	const userContextValue = useMemo(() => ({ user, setUser }), [user]);
+	const themeContextValue = useMemo(() => ({ theme, setTheme }), [theme]);
+	const notificationContextValue = useMemo(
+		() => ({ notifications, setNotifications }),
+		[notifications]
 	);
 
 	return (
-		<UserContext.Provider value={userValue}>
-			<ThemeContext.Provider value={themeValue}>
-				{children}
+		<UserContext.Provider value={userContextValue}>
+			<ThemeContext.Provider value={themeContextValue}>
+				<NotificationContext.Provider value={notificationContextValue}>
+					{children}
+				</NotificationContext.Provider>
 			</ThemeContext.Provider>
 		</UserContext.Provider>
 	);
-}
-
-// ✅ Solution 3: Separate state and actions
-const StateContext = createContext();
-const ActionsContext = createContext();
-
-function AppProvider({ children }) {
-	const [state, setState] = useState({
-		user: null,
-		theme: "light",
-		settings: {},
-	});
-
-	// Actions don't change, so they won't cause re-renders
-	const actions = useMemo(
-		() => ({
-			setUser: (user) => setState((prev) => ({ ...prev, user })),
-			setTheme: (theme) => setState((prev) => ({ ...prev, theme })),
-			updateSettings: (updates) =>
-				setState((prev) => ({
-					...prev,
-					settings: { ...prev.settings, ...updates },
-				})),
-		}),
-		[]
-	);
-
-	return (
-		<StateContext.Provider value={state}>
-			<ActionsContext.Provider value={actions}>
-				{children}
-			</ActionsContext.Provider>
-		</StateContext.Provider>
-	);
-}
-
-// Custom hooks for consuming split contexts
-function useAppState() {
-	const context = useContext(StateContext);
-	if (!context)
-		throw new Error("useAppState must be used within AppProvider");
-	return context;
-}
-
-function useAppActions() {
-	const context = useContext(ActionsContext);
-	if (!context)
-		throw new Error("useAppActions must be used within AppProvider");
-	return context;
 }
 ```
 
 ---
 
-_Continue to next sections..._
+## Error Boundaries
 
-**Next:** [[reactjs-advanced-engineering|Stage 3: Advanced Engineering (Upper-Intermediate)]]
+### Graceful Error Handling
+
+**Problem:** How do we prevent a JavaScript error in one component from breaking the entire application?
+
+**Theory:** Error Boundaries are special React components that:
+
+1. **Catch JavaScript errors** anywhere in their child component tree
+2. **Display fallback UI** instead of the component tree that crashed
+3. **Log error information** to error reporting services
+
+Error boundaries work like a JavaScript `catch {}` block, but for components. They catch errors during rendering, in lifecycle methods, and in constructors of components below them in the tree.
+
+**Important limitations:**
+
+-   Error boundaries do NOT catch errors in:
+    -   Event handlers
+    -   Asynchronous code (e.g., `setTimeout` or `requestAnimationFrame`)
+    -   Server-side rendering
+    -   Errors thrown in the error boundary itself
+
+**Note:** Error Boundaries must be implemented using class components (not functional components with Hooks).
+
+```jsx
+// Creating an Error Boundary component
+class ErrorBoundary extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = { hasError: false, error: null, errorInfo: null };
+	}
+
+	// This lifecycle is invoked after an error is thrown
+	static getDerivedStateFromError(error) {
+		// Update state to show fallback UI
+		return { hasError: true, error };
+	}
+
+	// This lifecycle lets you log the error
+	componentDidCatch(error, errorInfo) {
+		// Log the error to an error reporting service
+		console.error("Error caught by boundary:", error, errorInfo);
+		this.setState({ errorInfo });
+
+		// In production, you would send to your error tracking service:
+		// logErrorToService(error, errorInfo);
+	}
+
+	render() {
+		if (this.state.hasError) {
+			// You can render any custom fallback UI
+			return (
+				<div className="error-boundary">
+					<h2>Something went wrong.</h2>
+					<details style={{ whiteSpace: "pre-wrap" }}>
+						<summary>Show error details</summary>
+						{this.state.error && this.state.error.toString()}
+						<br />
+						{this.state.errorInfo &&
+							this.state.errorInfo.componentStack}
+					</details>
+					<button onClick={() => this.setState({ hasError: false })}>
+						Try again
+					</button>
+				</div>
+			);
+		}
+
+		// If no error occurred, render children normally
+		return this.props.children;
+	}
+}
+
+// Using the Error Boundary
+function App() {
+	return (
+		<div className="app">
+			<Header />
+
+			{/* Each section gets its own error boundary */}
+			<ErrorBoundary>
+				<UserProfile userId="123" />
+			</ErrorBoundary>
+
+			<ErrorBoundary>
+				<Dashboard />
+			</ErrorBoundary>
+
+			<ErrorBoundary>
+				<Footer />
+			</ErrorBoundary>
+		</div>
+	);
+}
+```
 
 ---
 
-## Core Proficiency Mastery Checklist
+## Forms
 
-Before moving to Stage 3, ensure you can:
+### Controlled vs. Uncontrolled Components
 
--   [ ] Use Hooks following all rules correctly
--   [ ] Implement complex state logic with useState and useEffect
--   [ ] Optimize performance with useMemo and useCallback
--   [ ] Access and manipulate DOM elements with refs
--   [ ] Create reusable custom hooks
--   [ ] Implement Context API for state sharing
--   [ ] Handle forms with controlled components
--   [ ] Set up routing with React Router
--   [ ] Write basic tests with React Testing Library
--   [ ] Type React components with TypeScript
+**Problem:** What are the different approaches to handling form inputs in React?
+
+**Theory:** React offers two main ways to handle form inputs:
+
+**1. Controlled Components:**
+
+-   Form data is handled by React state
+-   Every state mutation has an associated handler function
+-   React is the "single source of truth" for input values
+-   More code but offers more control and immediate validation
+
+**2. Uncontrolled Components:**
+
+-   Form data is handled by the DOM itself
+-   Use refs to get values when needed (e.g., on form submission)
+-   Less code but offers less direct control
+-   More similar to traditional HTML forms
+
+**When to use each:**
+
+-   **Use controlled components** when you need: immediate field validation, conditional disabling of submit button, enforcing input format, or dynamic inputs
+-   **Use uncontrolled components** for: simple forms without much validation, integrating with non-React code, or when performance is critical (rare inputs with many changes)
+
+```jsx
+// Controlled component example
+function ControlledForm() {
+	const [values, setValues] = useState({
+		name: "",
+		email: "",
+		message: "",
+	});
+	const [errors, setErrors] = useState({});
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setValues({
+			...values,
+			[name]: value,
+		});
+
+		// Live validation
+		if (name === "email" && value && !/\S+@\S+\.\S+/.test(value)) {
+			setErrors((prev) => ({
+				...prev,
+				email: "Please enter a valid email address",
+			}));
+		} else {
+			setErrors((prev) => ({
+				...prev,
+				[name]: undefined,
+			}));
+		}
+	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		// Form is already validated during input
+		console.log("Submitting:", values);
+	};
+
+	return (
+		<form onSubmit={handleSubmit}>
+			<div>
+				<label htmlFor="name">Name:</label>
+				<input
+					id="name"
+					name="name"
+					value={values.name}
+					onChange={handleChange}
+					required
+				/>
+			</div>
+
+			<div>
+				<label htmlFor="email">Email:</label>
+				<input
+					id="email"
+					name="email"
+					type="email"
+					value={values.email}
+					onChange={handleChange}
+					required
+				/>
+				{errors.email && <p className="error">{errors.email}</p>}
+			</div>
+
+			<div>
+				<label htmlFor="message">Message:</label>
+				<textarea
+					id="message"
+					name="message"
+					value={values.message}
+					onChange={handleChange}
+					required
+				/>
+			</div>
+
+			<button type="submit">Submit</button>
+		</form>
+	);
+}
+
+// Uncontrolled component example
+function UncontrolledForm() {
+	const nameRef = useRef();
+	const emailRef = useRef();
+	const messageRef = useRef();
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+
+		// Access values via refs when form is submitted
+		const formData = {
+			name: nameRef.current.value,
+			email: emailRef.current.value,
+			message: messageRef.current.value,
+		};
+
+		console.log("Submitting:", formData);
+	};
+
+	return (
+		<form onSubmit={handleSubmit}>
+			<div>
+				<label htmlFor="name">Name:</label>
+				<input
+					id="name"
+					name="name"
+					ref={nameRef}
+					defaultValue=""
+					required
+				/>
+			</div>
+
+			<div>
+				<label htmlFor="email">Email:</label>
+				<input
+					id="email"
+					name="email"
+					type="email"
+					ref={emailRef}
+					defaultValue=""
+					required
+				/>
+			</div>
+
+			<div>
+				<label htmlFor="message">Message:</label>
+				<textarea
+					id="message"
+					name="message"
+					ref={messageRef}
+					defaultValue=""
+					required
+				/>
+			</div>
+
+			<button type="submit">Submit</button>
+		</form>
+	);
+}
+```
+
+### Form Libraries: React Hook Form & Formik
+
+**Problem:** How do we manage complex forms in React without writing repetitive boilerplate code?
+
+**Theory:** As forms get more complex with many fields, validations, and submit logic, managing them becomes challenging. Form libraries solve common issues like:
+
+1. Field validation (including complex validation rules)
+2. Handling form submission
+3. Tracking form state (dirty, touched, errors)
+4. Reducing unnecessary re-renders
+5. Managing complex nested form structures
+
+**React Hook Form** and **Formik** are the two most popular form libraries in the React ecosystem:
+
+**React Hook Form:**
+
+-   Focuses on performance with minimal re-renders
+-   Uses uncontrolled components with refs by default
+-   Lightweight with minimal boilerplate
+-   Built for hooks from the ground up
+
+**Formik:**
+
+-   More mature with longer history
+-   Uses controlled components by default
+-   Highly configurable with rich API
+-   Good for complex validation scenarios
+
+```jsx
+// Using React Hook Form
+import { useForm } from "react-hook-form";
+
+function ReactHookFormExample() {
+	const {
+		register,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+		reset,
+	} = useForm();
+
+	const onSubmit = async (data) => {
+		try {
+			// Simulate API call
+			await new Promise((r) => setTimeout(r, 1000));
+			console.log("Form submitted:", data);
+			reset();
+		} catch (error) {
+			console.error("Submission error:", error);
+		}
+	};
+
+	return (
+		<form onSubmit={handleSubmit(onSubmit)}>
+			<div>
+				<label htmlFor="name">Name:</label>
+				<input
+					id="name"
+					{...register("name", {
+						required: "Name is required",
+						minLength: {
+							value: 2,
+							message: "Name must be at least 2 characters",
+						},
+					})}
+				/>
+				{errors.name && <p className="error">{errors.name.message}</p>}
+			</div>
+
+			<div>
+				<label htmlFor="email">Email:</label>
+				<input
+					id="email"
+					type="email"
+					{...register("email", {
+						required: "Email is required",
+						pattern: {
+							value: /\S+@\S+\.\S+/,
+							message: "Please enter a valid email",
+						},
+					})}
+				/>
+				{errors.email && (
+					<p className="error">{errors.email.message}</p>
+				)}
+			</div>
+
+			<button type="submit" disabled={isSubmitting}>
+				{isSubmitting ? "Submitting..." : "Submit"}
+			</button>
+		</form>
+	);
+}
+```
+
+---
+
+## Routing
+
+### React Router v6 Concepts
+
+**Problem:** How do we create multi-page experiences in a single-page React application?
+
+**Theory:** React Router enables "client-side routing" in React applications, allowing users to navigate between different "pages" without full page reloads. This provides a smoother user experience while maintaining the performance advantages of a single-page application.
+
+**Core Concepts in React Router v6:**
+
+1. **BrowserRouter** - Provides routing functionality using HTML5 history API
+2. **Routes & Route** - Components that define the route configuration
+3. **Link & NavLink** - Components to create navigation without page reloads
+4. **Outlet** - Component for rendering nested routes
+5. **useParams, useSearchParams, useNavigate** - Hooks for accessing route parameters, query strings, and programmatic navigation
+
+**Key Changes in v6:**
+
+-   Routes are now relative and nested by default (simplified nesting)
+-   `Switch` has been replaced by `Routes`
+-   `useNavigate` replaces `useHistory`
+-   Route elements are specified directly with an `element` prop rather than as children
+
+```jsx
+import {
+	BrowserRouter,
+	Routes,
+	Route,
+	Link,
+	NavLink,
+	Outlet,
+	useParams,
+	useNavigate,
+	useSearchParams,
+} from "react-router-dom";
+
+// Basic routing setup
+function App() {
+	return (
+		<BrowserRouter>
+			<Navigation />
+
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/about" element={<About />} />
+
+				{/* Nested routes */}
+				<Route path="/products" element={<ProductLayout />}>
+					<Route index element={<ProductList />} />
+					<Route path=":id" element={<ProductDetail />} />
+				</Route>
+
+				{/* Protected route */}
+				<Route
+					path="/admin"
+					element={
+						<ProtectedRoute>
+							<Admin />
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* Catch-all for 404s */}
+				<Route path="*" element={<NotFound />} />
+			</Routes>
+
+			<Footer />
+		</BrowserRouter>
+	);
+}
+
+// Navigation with active styles
+function Navigation() {
+	return (
+		<nav>
+			<NavLink
+				to="/"
+				className={({ isActive }) => (isActive ? "active-link" : "")}
+			>
+				Home
+			</NavLink>
+			<NavLink
+				to="/about"
+				className={({ isActive }) => (isActive ? "active-link" : "")}
+			>
+				About
+			</NavLink>
+			<NavLink
+				to="/products"
+				className={({ isActive }) => (isActive ? "active-link" : "")}
+			>
+				Products
+			</NavLink>
+		</nav>
+	);
+}
+
+// Layout component with outlet for nested routes
+function ProductLayout() {
+	return (
+		<div className="product-section">
+			<h1>Products</h1>
+			<aside className="sidebar">
+				<ProductFilter />
+			</aside>
+			<main className="content">
+				{/* Nested routes render here */}
+				<Outlet />
+			</main>
+		</div>
+	);
+}
+
+// Using route parameters
+function ProductDetail() {
+	const { id } = useParams();
+	const [product, setProduct] = useState(null);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		async function fetchProduct() {
+			try {
+				const response = await fetch(`/api/products/${id}`);
+				if (!response.ok) throw new Error("Product not found");
+				const data = await response.json();
+				setProduct(data);
+			} catch (error) {
+				navigate("/products", { replace: true });
+			}
+		}
+
+		fetchProduct();
+	}, [id, navigate]);
+
+	if (!product) return <div>Loading...</div>;
+
+	return (
+		<div>
+			<h2>{product.name}</h2>
+			<p>{product.description}</p>
+			<p>Price: ${product.price}</p>
+			<button onClick={() => navigate(-1)}>Go Back</button>
+		</div>
+	);
+}
+
+// Using query parameters
+function ProductList() {
+	const [searchParams, setSearchParams] = useSearchParams();
+	const category = searchParams.get("category") || "all";
+
+	const handleCategoryChange = (newCategory) => {
+		setSearchParams({ category: newCategory });
+	};
+
+	return (
+		<div>
+			<div className="filters">
+				<button
+					onClick={() => handleCategoryChange("all")}
+					className={category === "all" ? "active" : ""}
+				>
+					All
+				</button>
+				<button
+					onClick={() => handleCategoryChange("electronics")}
+					className={category === "electronics" ? "active" : ""}
+				>
+					Electronics
+				</button>
+			</div>
+
+			<div className="product-grid">
+				{/* Products filtered by category */}
+			</div>
+		</div>
+	);
+}
+```
