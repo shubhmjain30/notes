@@ -11,22 +11,18 @@ Mastering React is not merely about learning its API. It is a journey that invol
 Before writing a single line of React code, a solid foundation in core web technologies and modern JavaScript is essential. React does not exist in a vacuum; it is a tool to build for the web, and it is written _in_ JavaScript. Attempting to learn React without this bedrock is like trying to build a house without a foundation—it is possible to erect a frame, but it will be unstable and fundamentally flawed. The most common struggles for beginners stem not from React's complexity, but from a weak grasp of the underlying JavaScript concepts that React utilises extensively.
 
 ### **The Non-Negotiables: Core Web Technologies**
-
 A fundamental understanding of HTML and CSS is a prerequisite for any front-end development, and React is no exception. React's ultimate output is a tree of DOM nodes, which are rendered by the browser based on HTML standards. Therefore, a developer must understand:
 
 -   **Semantic HTML:** Knowing how to structure a document with semantic tags (\<header\>, \<main\>, \<article\>, \<footer\>, etc.) is crucial for accessibility and SEO, principles that remain vital in a React application.
 -   **CSS Fundamentals:** A strong grasp of CSS, including the box model, flex-box, grid, and media queries, is necessary to style the components that React renders. While React offers various styling strategies, they all ultimately generate CSS that the browser must interpret.
 
 ### **Modern JavaScript (ES6+): The Language of React**
-
 React leverages many features of modern JavaScript (officially ECMAScript 2015 and later, often referred to as ES6+). Mastering these concepts is not optional; they are the building blocks of idiomatic React code. The shift to these features enables the declarative and functional paradigm that React promotes.
 
 #### **Variables and Scope (let, const)**
-
 The introduction of let and const brought block-scoping to JavaScript, replacing the often-confusing function-scoping of var. In React, const is heavily preferred for variable declarations. This is not merely a stylistic choice; it reinforces the principle of immutability. React's state updates should be handled without directly mutating existing state variables or objects. Using const helps prevent accidental reassignments, which can lead to bugs and unpredictable behaviour.
 
 #### **Arrow Functions**
-
 Arrow functions offer a more concise syntax for writing functions and, critically, they do not have their own this context. They inherit this from the surrounding (lexical) scope. This feature was a major advantage in the era of class components, as it eliminated the need to manually bind event handlers in the constructor. In modern functional components, their conciseness makes them the standard for defining helper functions, callbacks, and even the components themselves.
 
 ```javascript
@@ -52,7 +48,6 @@ class MyClassComponentWithArrow extends React.Component {
 ```
 
 #### **Destructuring (Objects and Arrays)**
-
 Destructuring is a convenient way of extracting values from arrays or properties from objects into distinct variables. This syntax is ubiquitous in React for two primary use cases: accessing props and using hooks.
 
 -   **Props Destructuring:** Instead of repeatedly writing props.name and props.age, props can be destructured directly in the component's function signature, leading to cleaner and more readable code.
@@ -76,7 +71,6 @@ const [count, setCount] = useState(0); // Destructuring array returned by useSta
 ```
 
 #### **Template Literals**
-
 Template literals, enclosed in backticks (\`), allow for embedded expressions and multi-line strings. They provide a much cleaner way to construct strings with dynamic values compared to traditional string concatenation, a common requirement when generating text for the UI.
 
 ```javascript
@@ -96,7 +90,6 @@ const messageNew = `Welcome back, ${userName}! You have ${notificationCount} new
 ```
 
 #### **Modules (import/export)**
-
 Modern JavaScript applications are modular, and React applications are no exception. The entire component model is built on the ability to define a component in one file and use it in another. A thorough understanding of the import and export syntax is therefore fundamental. This includes:
 
 -   **Default Exports/Imports:** Used for the primary export of a module, typically the component itself.
@@ -120,7 +113,6 @@ import { PI, formatCurrency } from "./utils.js"; // Named imports
 ```
 
 #### **Array Methods (.map(), .filter(), .reduce())**
-
 These higher-order functions are essential for data manipulation. In React, the .map() method is the standard, idiomatic way to render a list of components from an array of data. Instead of using imperative for loops, .map() allows for a declarative transformation of data into UI elements. The .filter() method is also commonly used to selectively render items based on a condition, such as in a search feature.
 
 ```javascript
@@ -144,7 +136,6 @@ function ProductList() {
 ```
 
 #### **Asynchronous JavaScript (Promises and async/await)**
-
 Web applications are inherently asynchronous, constantly fetching data from servers, waiting for user input, or handling timers. A deep understanding of how JavaScript handles asynchronous operations is critical. While callbacks and Promises are the underlying mechanisms, the async/await syntax provides a much cleaner and more readable way to write asynchronous code that looks synchronous. This is especially important when performing data fetching inside the useEffect hook.
 
 ## **Stage 2: First Steps with React - Core Concepts & Tooling**
@@ -154,8 +145,7 @@ Web applications are inherently asynchronous, constantly fetching data from serv
 With a strong JavaScript foundation, the next stage is to dive into React itself. This involves setting up a modern development environment and mastering the fundamental building blocks of any React application: JSX, Components, Props, and State. These concepts are deeply intertwined and form the core mental model for "thinking in React."
 
 ### **Setting Up a Modern Development Environment**
-
-While it is possible to add React to a project via a simple `<script>` tag, modern development relies on a sophisticated toolchain to handle tasks like transpilation, bundling, and optimization.
+While it is possible to add React to a project via a simple `<script>` tag, modern development relies on a sophisticated toolchain to handle tasks like transpilation, bundling, and optimisation.
 
 -   **Node.js and npm/yarn:** The React development environment runs on Node.js. It provides the runtime for build tools and includes a package manager (npm, the Node Package Manager, or its popular alternative, Yarn) to install and manage project dependencies like React itself. As of late 2023, a recent Long-Term Support (LTS) version of Node.js (e.g., Node 20 or later) is recommended.
 -   **Build Tools: Vite vs. Create React App (CRA):** For years, Create React App (CRA) was the official and most recommended tool for bootstrapping a new React project. However, the ecosystem has evolved. **Vite** is now the recommended choice for new projects due to its significantly faster development server startup and Hot Module Replacement (HMR) speeds. CRA is being officially sunsetted, making Vite the clear path forward for modern React development.
@@ -166,11 +156,9 @@ While it is possible to add React to a project via a simple `<script>` tag, mode
 -   **Project Structure and Bootstrapping:** A new Vite project provides a clean and understandable file structure. The entry point is src/main.jsx, where the root React component, `<App />`, is rendered into the DOM element with the ID root in index.html. This process, known as "mounting," is what brings the React application to life in the browser.
 
 ### **The Heart of React: Components & JSX**
-
 The core abstraction in React is the **component**. A component is a self-contained, reusable piece of the user interface that encapsulates its own logic and appearance. Components can be as small as a button or as large as an entire page. This modularity is what makes complex UIs manageable. A critical convention is that component names must always start with a capital letter (e.g., `<MyComponent />`), which allows React to distinguish them from native HTML tags (e.g., `<div />`).
 
 #### **Understanding JSX (JavaScript XML)**
-
 React's most distinctive feature is JSX. It is a syntax extension for JavaScript, not a separate language, that allows developers to write markup that looks like HTML directly inside their JavaScript files. While optional, JSX is used in the vast majority of React projects for its conciseness and readability.
 
 This blending of markup and logic is a deliberate philosophical choice. In traditional web development, concerns were separated by technology (HTML, CSS, JS). However, in modern UI development, the logic that determines what to display is inherently coupled with the markup that is displayed. JSX embraces this by allowing them to be co-located within a component, making the component a truly self-contained unit.
@@ -210,7 +198,6 @@ function Profile() {
 ```
 
 #### **Functional vs. Class Components**
-
 React components can be defined in two ways. Understanding both is crucial, as modern codebases use one while legacy codebases are filled with the other. The official recommendation is to use Functional Components for all new code.
 
 -   **Functional Components:** These are simple JavaScript functions that accept an object of props as an argument and return JSX. They are the modern standard, especially since the introduction of Hooks, which allow them to manage state and side effects.

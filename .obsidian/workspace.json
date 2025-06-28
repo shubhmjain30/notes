@@ -78,7 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 237.5,
+    "width": 200,
     "collapsed": true
   },
   "right": {
@@ -172,6 +172,7 @@
   },
   "active": "b56460ad67813a67",
   "lastOpenFiles": [
+    "reactjs/reactjs-roadmap.md",
     "expressjs/express-roadmap.md",
     "javascript/javascript-building-blocks.md",
     "javascript/javascript-modern-toolkit.md",
@@ -179,7 +180,6 @@
     "nodejs/nodejs-core-modules.md",
     "nodejs/nodejs-database-mongoose.md",
     "nodejs/nodejs-roadmap.md",
-    "reactjs/reactjs-roadmap.md",
     "README.md",
     "nodejs-scaling-patterns.md",
     "reactjs/README.md",
