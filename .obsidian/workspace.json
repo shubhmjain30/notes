@@ -11,10 +11,14 @@
             "id": "418969e916326634",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "reactjs/reactjs-roadmap.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "reactjs-roadmap"
             }
           }
         ]
@@ -165,14 +169,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "33c78ad343a8039e",
+  "active": "418969e916326634",
   "lastOpenFiles": [
-    "reactjs-bedrock.md",
     "reactjs/reactjs-foundations.md",
-    "reactjs/reactjs-advanced-engineering.md",
-    "README.md",
-    "expressjs/README.md",
     "reactjs/reactjs-roadmap.md",
+    "README.md",
+    "reactjs-bedrock.md",
+    "reactjs/reactjs-advanced-engineering.md",
+    "expressjs/README.md",
     "reactjs/README.md",
     "reactjs/README-new.md",
     "reactjs/reactjs-bedrock.md",
