@@ -11,24 +11,29 @@ Node.js is a runtime environment that executes JavaScript code outside the brows
 Traditional servers (like Apache) use a thread-per-connection model, which can become resource-intensive and struggle with high concurrency (the C10k problem). Node.js uses a single-threaded event loop and delegates I/O to the system, enabling lightweight, scalable servers.
 
 **Mental Model:**
-- Think of Node.js as a busy restaurant with a single waiter (the event loop) who takes orders (events) and delegates cooking (I/O) to the kitchen (libuv/system). The waiter never blocks—he keeps taking new orders while the kitchen works in the background.
+
+-   Think of Node.js as a busy restaurant with a single waiter (the event loop) who takes orders (events) and delegates cooking (I/O) to the kitchen (libuv/system). The waiter never blocks—he keeps taking new orders while the kitchen works in the background.
 
 ## Key Components
-- **V8 Engine:** Compiles JavaScript to machine code for fast execution.
-- **libuv:** Handles asynchronous I/O, thread pool, and cross-platform abstractions.
-- **Event Loop:** The core mechanism that processes events and callbacks.
-- **Callback Queue:** Where completed I/O operations are queued for execution.
+
+-   **V8 Engine:** Compiles JavaScript to machine code for fast execution.
+-   **libuv:** Handles asynchronous I/O, thread pool, and cross-platform abstractions.
+-   **Event Loop:** The core mechanism that processes events and callbacks.
+-   **Callback Queue:** Where completed I/O operations are queued for execution.
 
 ## Best Practices
-- Use non-blocking APIs for I/O (e.g., `fs.readFile` instead of `fs.readFileSync`).
-- Offload CPU-intensive tasks to worker threads or external services.
-- Monitor event loop lag to detect performance bottlenecks.
+
+-   Use non-blocking APIs for I/O (e.g., `fs.readFile` instead of `fs.readFileSync`).
+-   Offload CPU-intensive tasks to worker threads or external services.
+-   Monitor event loop lag to detect performance bottlenecks.
 
 ## Common Pitfalls
-- Blocking the event loop with synchronous code or heavy computation.
-- Assuming Node.js is always faster—it's best for I/O-bound, not CPU-bound, workloads.
+
+-   Blocking the event loop with synchronous code or heavy computation.
+-   Assuming Node.js is always faster—it's best for I/O-bound, not CPU-bound, workloads.
 
 ## Interview Q&A
+
 **Q: How does Node.js handle multiple requests with a single thread?**
 A: The event loop processes requests one at a time, but delegates I/O to the system. When I/O completes, callbacks are queued for execution, allowing Node.js to handle many concurrent connections efficiently.
 

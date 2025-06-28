@@ -8,25 +8,30 @@ Asynchronous programming is the backbone of Node.js's performance and scalabilit
 Node.js uses a single-threaded event loop. If you block the thread with synchronous code, all other requests are delayed. Asynchronous programming allows Node.js to handle many operations concurrently, making it ideal for I/O-bound applications.
 
 **Mental Model:**
-- Imagine a chef (Node.js) who can start many dishes (I/O operations) and only returns to finish them when the ingredients (data) are ready, instead of waiting idly.
+
+-   Imagine a chef (Node.js) who can start many dishes (I/O operations) and only returns to finish them when the ingredients (data) are ready, instead of waiting idly.
 
 ## Key Patterns
-- **Callbacks:** The original async pattern, but can lead to deeply nested code (callback hell).
-- **Promises:** Provide a cleaner, chainable way to handle async results and errors.
-- **Async/Await:** Syntactic sugar over promises for writing async code that looks synchronous.
-- **Streams & Event Emitters:** Advanced patterns for handling data and events efficiently.
+
+-   **Callbacks:** The original async pattern, but can lead to deeply nested code (callback hell).
+-   **Promises:** Provide a cleaner, chainable way to handle async results and errors.
+-   **Async/Await:** Syntactic sugar over promises for writing async code that looks synchronous.
+-   **Streams & Event Emitters:** Advanced patterns for handling data and events efficiently.
 
 ## Best Practices
-- Always handle errors in async code (e.g., use `.catch()` or try/catch with async/await).
-- Avoid deeply nested callbacks—modularize and use promises/async-await.
-- Use streams for large data processing to avoid memory bloat.
+
+-   Always handle errors in async code (e.g., use `.catch()` or try/catch with async/await).
+-   Avoid deeply nested callbacks—modularize and use promises/async-await.
+-   Use streams for large data processing to avoid memory bloat.
 
 ## Common Pitfalls
-- Forgetting to return or await a promise, leading to unhandled rejections.
-- Mixing callbacks and promises in the same codebase.
-- Not handling errors, causing silent failures.
+
+-   Forgetting to return or await a promise, leading to unhandled rejections.
+-   Mixing callbacks and promises in the same codebase.
+-   Not handling errors, causing silent failures.
 
 ## Interview Q&A
+
 **Q: What is the event loop, and how does it relate to async programming?**
 A: The event loop is the mechanism that processes callbacks and async events. It allows Node.js to handle many operations concurrently without blocking the main thread.
 

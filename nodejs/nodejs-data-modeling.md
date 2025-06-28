@@ -8,26 +8,31 @@ Data modeling is the process of structuring and organizing data for efficient st
 A well-designed data model prevents redundancy, enforces data integrity, and makes your application easier to extend and maintain.
 
 **Mental Model:**
-- Think of your data model as the blueprint for your application's information. Just as a building needs a solid foundation, your app needs a robust data structure.
+
+-   Think of your data model as the blueprint for your application's information. Just as a building needs a solid foundation, your app needs a robust data structure.
 
 ## Key Concepts
-- **Schema Design:** Define the structure, types, and constraints of your data.
-- **Relationships:** Model associations (one-to-one, one-to-many, many-to-many).
-- **Validation:** Ensure only valid data enters your system.
-- **Normalization vs. Denormalization:** Balance between reducing redundancy and optimizing for read/write performance.
+
+-   **Schema Design:** Define the structure, types, and constraints of your data.
+-   **Relationships:** Model associations (one-to-one, one-to-many, many-to-many).
+-   **Validation:** Ensure only valid data enters your system.
+-   **Normalization vs. Denormalization:** Balance between reducing redundancy and optimizing for read/write performance.
 
 ## Best Practices
-- Use validation at both the application and database level.
-- Prefer explicit schemas, even in NoSQL databases, for predictability.
-- Model relationships according to access patterns.
-- Document your data model for future maintainers.
+
+-   Use validation at both the application and database level.
+-   Prefer explicit schemas, even in NoSQL databases, for predictability.
+-   Model relationships according to access patterns.
+-   Document your data model for future maintainers.
 
 ## Common Pitfalls
-- Over-normalizing or under-normalizing data.
-- Relying solely on client-side validation.
-- Ignoring indexing and query optimization.
+
+-   Over-normalizing or under-normalizing data.
+-   Relying solely on client-side validation.
+-   Ignoring indexing and query optimization.
 
 ## Interview Q&A
+
 **Q: What is the difference between normalization and denormalization?**
 A: Normalization reduces redundancy by splitting data into related tables; denormalization combines data for faster reads at the cost of redundancy.
 

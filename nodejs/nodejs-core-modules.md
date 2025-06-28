@@ -8,28 +8,33 @@ Node.js comes with a powerful set of core modules that provide essential functio
 Core modules are built into Node.js and do not require installation. They offer low-level access to the file system, networking, streams, cryptography, and more.
 
 **Mental Model:**
-- Think of core modules as the standard library of Node.js—tools you can rely on for most server-side tasks, optimized for performance and security.
+
+-   Think of core modules as the standard library of Node.js—tools you can rely on for most server-side tasks, optimized for performance and security.
 
 ## Key Modules
-- **fs:** File system operations (read, write, watch files)
-- **http/https:** Create web servers and clients
-- **path:** Work with file and directory paths
-- **os:** System information
-- **events:** Event-driven programming
-- **stream:** Handle streaming data
-- **crypto:** Cryptography utilities
+
+-   **fs:** File system operations (read, write, watch files)
+-   **http/https:** Create web servers and clients
+-   **path:** Work with file and directory paths
+-   **os:** System information
+-   **events:** Event-driven programming
+-   **stream:** Handle streaming data
+-   **crypto:** Cryptography utilities
 
 ## Best Practices
-- Prefer asynchronous methods to avoid blocking the event loop.
-- Use streams for large file or network operations.
-- Always handle errors in callbacks and promise chains.
+
+-   Prefer asynchronous methods to avoid blocking the event loop.
+-   Use streams for large file or network operations.
+-   Always handle errors in callbacks and promise chains.
 
 ## Common Pitfalls
-- Using synchronous methods in production code.
-- Not handling errors, leading to crashes.
-- Forgetting to close file descriptors or network connections.
+
+-   Using synchronous methods in production code.
+-   Not handling errors, leading to crashes.
+-   Forgetting to close file descriptors or network connections.
 
 ## Interview Q&A
+
 **Q: What is the difference between fs.readFile and fs.readFileSync?**
 A: fs.readFile is asynchronous and non-blocking; fs.readFileSync blocks the event loop until the operation completes.
 

@@ -8,25 +8,30 @@ Modules are the building blocks of Node.js applications. Understanding how to or
 Modules solve the problem of global namespace pollution and enable code reuse, separation of concerns, and dependency management.
 
 **Mental Model:**
-- Think of modules as self-contained toolboxes. Each toolbox (module) has its own tools (functions, classes) and only exposes what is necessary to the outside world.
+
+-   Think of modules as self-contained toolboxes. Each toolbox (module) has its own tools (functions, classes) and only exposes what is necessary to the outside world.
 
 ## Key Concepts
-- **CommonJS:** Synchronous, used by default in Node.js (`require`, `module.exports`).
-- **ES Modules:** Asynchronous, modern standard (`import`, `export`).
-- **Module Resolution:** How Node.js finds and loads modules.
-- **Encapsulation:** Each module has its own scope.
+
+-   **CommonJS:** Synchronous, used by default in Node.js (`require`, `module.exports`).
+-   **ES Modules:** Asynchronous, modern standard (`import`, `export`).
+-   **Module Resolution:** How Node.js finds and loads modules.
+-   **Encapsulation:** Each module has its own scope.
 
 ## Best Practices
-- Use modules to separate concerns (e.g., routes, controllers, services).
-- Prefer ES Modules for new projects, but understand CommonJS for legacy code.
-- Avoid circular dependencies.
+
+-   Use modules to separate concerns (e.g., routes, controllers, services).
+-   Prefer ES Modules for new projects, but understand CommonJS for legacy code.
+-   Avoid circular dependencies.
 
 ## Common Pitfalls
-- Mixing CommonJS and ES Modules incorrectly.
-- Relying on global variables.
-- Not understanding module caching and its effects.
+
+-   Mixing CommonJS and ES Modules incorrectly.
+-   Relying on global variables.
+-   Not understanding module caching and its effects.
 
 ## Interview Q&A
+
 **Q: What is the difference between CommonJS and ES Modules?**
 A: CommonJS is synchronous and used by default in Node.js; ES Modules are asynchronous and follow the modern JavaScript standard. Syntax and loading mechanisms differ.
 
