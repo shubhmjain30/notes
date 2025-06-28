@@ -1,7 +1,5 @@
 # 🏗 Stage 4: Expert & Architectural (Pro)
 
-← [Back to React.js Interview Prep Checklist](README.md)
-
 Master advanced React internals, architectural patterns, and lead-level engineering practices. This stage prepares you for technical leadership and complex system design.
 
 ---

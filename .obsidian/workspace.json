@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "49cb8e3ca32bd48e",
+        "id": "2003160d49593fd8",
         "type": "tabs",
         "children": [
           {
-            "id": "26da46de9bd9807e",
+            "id": "418969e916326634",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -165,8 +165,12 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "26da46de9bd9807e",
+  "active": "33c78ad343a8039e",
   "lastOpenFiles": [
+    "reactjs-bedrock.md",
+    "reactjs/reactjs-foundations.md",
+    "reactjs/reactjs-advanced-engineering.md",
+    "README.md",
     "expressjs/README.md",
     "reactjs/reactjs-roadmap.md",
     "reactjs/README.md",
@@ -174,12 +178,9 @@
     "reactjs/reactjs-bedrock.md",
     "reactjs/reactjs-core-concepts.md",
     "reactjs/reactjs-expert-architectural.md",
-    "reactjs/reactjs-foundations.md",
     "reactjs/reactjs-core-proficiency.md",
     "reactjs/reactjs-production-optimization.md",
     "reactjs/README-old.md",
-    "README.md",
-    "reactjs/reactjs-advanced-engineering.md",
     "reactjs/reactjs-architecture-patterns.md",
     "reactjs/reactjs-interactivity-hooks.md",
     "reactjs/reactjs-ecosystem.md",
@@ -192,7 +193,6 @@
     "nodejs/nodejs-database-mongoose.md",
     "nodejs/nodejs-roadmap.md",
     "nodejs-scaling-patterns.md",
-    "javascript/README.md",
     "expressjs",
     "Untitled 1.canvas",
     "Untitled.canvas",
