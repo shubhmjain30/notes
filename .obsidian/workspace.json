@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "8cba6da67d5a9588",
@@ -172,7 +171,15 @@
   },
   "active": "b56460ad67813a67",
   "lastOpenFiles": [
+    "reactjs/README.md",
     "reactjs/reactjs-roadmap.md",
+    "reactjs/reactjs-architecture-patterns.md",
+    "reactjs/reactjs-bedrock.md",
+    "reactjs/reactjs-core-concepts.md",
+    "reactjs/reactjs-interactivity-hooks.md",
+    "reactjs/reactjs-ecosystem.md",
+    "reactjs/reactjs-internals.md",
+    "reactjs/reactjs-production-optimization.md",
     "expressjs/express-roadmap.md",
     "javascript/javascript-building-blocks.md",
     "javascript/javascript-modern-toolkit.md",
@@ -182,7 +189,6 @@
     "nodejs/nodejs-roadmap.md",
     "README.md",
     "nodejs-scaling-patterns.md",
-    "reactjs/README.md",
     "javascript/README.md",
     "nodejs/README.md",
     "nodejs/express-intro.md",
@@ -191,14 +197,7 @@
     "nodejs/express-routing-middleware.md",
     "nodejs/express-advanced-features.md",
     "expressjs/README.md",
-    "expressjs/express-advanced-features.md",
-    "expressjs/express-error-handling.md",
-    "expressjs/express-restful-api.md",
-    "expressjs/express-routing-middleware.md",
-    "expressjs/express-intro.md",
     "expressjs",
-    "javascript/javascript-structure.md",
-    "reactjs/reactjs-bedrock.md",
     "Untitled 1.canvas",
     "Untitled.canvas",
     "nodejs",

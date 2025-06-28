@@ -1,4 +1,4 @@
-# Architectural Excellence: Design Patterns & Advanced Concepts
+# 🏗 Stage 5 — Architectural Excellence: Design Patterns & Advanced Concepts
 
 As React applications grow, architectural patterns become essential for maintaining code quality, reusability, and developer productivity. This section explores proven patterns for structuring React applications.
 

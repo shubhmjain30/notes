@@ -1,4 +1,4 @@
-# Building Interactivity: State, Events, and Hooks
+# ⚡️ Stage 3 — Building Interactivity: State, Events, and Hooks
 
 This section explores how React enables interactive user interfaces through state management, event handling, and the Hooks API.
 

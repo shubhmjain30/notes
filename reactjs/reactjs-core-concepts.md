@@ -1,4 +1,4 @@
-# Core Concepts & Tooling
+# 🔑 Stage 2 — Core Concepts & Tooling
 
 This section covers the fundamental concepts of React and the modern tooling that makes React development efficient and productive.
 

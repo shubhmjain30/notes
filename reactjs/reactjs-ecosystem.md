@@ -1,4 +1,4 @@
-# Scaling Up: The React Ecosystem
+# 🚀 Stage 4 — Scaling Up: The React Ecosystem
 
 React itself is a focused UI library, not a complete framework. To build full-featured applications, you'll need to integrate with the broader React ecosystem of libraries and tools.
 

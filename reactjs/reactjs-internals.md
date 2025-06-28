@@ -1,4 +1,4 @@
-# A Deep Dive into React's Internals
+# 🔬 Stage 6 — A Deep Dive into React's Internals
 
 Understanding how React works under the hood helps you write more efficient code and debug complex issues. This section explores React's internal mechanisms and rendering process.
 

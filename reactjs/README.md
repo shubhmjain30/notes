@@ -1,5 +1,17 @@
 # React.js Mastery Notes
 
+## Stage Overview
+
+| Stage | Focus | Jump Link |
+|-------|-------|-----------|
+| 1 | 🌱 **Foundations** | [[reactjs-bedrock|Stage 1]] |
+| 2 | 🔑 **Core Concepts** | [[reactjs-core-concepts|Stage 2]] |
+| 3 | ⚡️ **Interactivity & Hooks** | [[reactjs-interactivity-hooks|Stage 3]] |
+| 4 | 🚀 **Ecosystem** | [[reactjs-ecosystem|Stage 4]] |
+| 5 | 🏗 **Architecture Patterns** | [[reactjs-architecture-patterns|Stage 5]] |
+| 6 | 🔬 **React Internals** | [[reactjs-internals|Stage 6]] |
+| 7 | 🎯 **Production Optimization** | [[reactjs-production-optimization|Stage 7]] |
+
 This folder contains comprehensive React.js learning materials, progressing from foundational concepts to advanced architectural patterns for building scalable applications.
 
 ## **Learning Path**

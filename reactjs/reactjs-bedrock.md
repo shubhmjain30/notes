@@ -1,4 +1,4 @@
-# Foundational Web & JavaScript Knowledge
+# 🌱 Stage 1 — Foundational Web & JavaScript Knowledge
 
 Before diving into React, you need a solid foundation in web technologies and modern JavaScript. This knowledge is essential for understanding React's concepts and writing efficient code.
 
