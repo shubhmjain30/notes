@@ -27,7 +27,7 @@ The introduction of let and const brought block-scoping to JavaScript, replacing
 
 #### **Arrow Functions**
 
-Arrow functions offer a more concise syntax for writing functions and, critically, they do not have their own this context. They inherit this from the surrounding (lexical) scope.7 This feature was a major advantage in the era of class components, as it eliminated the need to manually bind event handlers in the constructor. In modern functional components, their conciseness makes them the standard for defining helper functions, callbacks, and even the components themselves.
+Arrow functions offer a more concise syntax for writing functions and, critically, they do not have their own this context. They inherit this from the surrounding (lexical) scope. This feature was a major advantage in the era of class components, as it eliminated the need to manually bind event handlers in the constructor. In modern functional components, their conciseness makes them the standard for defining helper functions, callbacks, and even the components themselves.
 
 JavaScript
 
