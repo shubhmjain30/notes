@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "2003160d49593fd8",
+        "id": "10e48cd5a147020e",
         "type": "tabs",
         "children": [
           {
-            "id": "418969e916326634",
+            "id": "41b22c8949aca77f",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "reactjs/reactjs-roadmap.md",
+                "file": "reactjs/Rendering Types Guide.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "reactjs-roadmap"
+              "title": "Rendering Types Guide"
             }
           }
         ]
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "8cba6da67d5a9588",
@@ -169,10 +170,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "418969e916326634",
+  "active": "41b22c8949aca77f",
   "lastOpenFiles": [
-    "reactjs/reactjs-foundations.md",
     "reactjs/reactjs-roadmap.md",
+    "reactjs/Rendering Types Guide.md",
+    "reactjs/reactjs-foundations.md",
     "README.md",
     "reactjs-bedrock.md",
     "reactjs/reactjs-advanced-engineering.md",
@@ -196,7 +198,6 @@
     "nodejs/nodejs-core-modules.md",
     "nodejs/nodejs-database-mongoose.md",
     "nodejs/nodejs-roadmap.md",
-    "nodejs-scaling-patterns.md",
     "expressjs",
     "Untitled 1.canvas",
     "Untitled.canvas",
