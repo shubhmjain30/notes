@@ -49,7 +49,8 @@
               "title": "reactjs-design-patterns"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -198,16 +199,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "41b22c8949aca77f",
+  "active": "eb53ec7ff526e3e5",
   "lastOpenFiles": [
+    "reactjs/reactjs-design-patterns.md",
+    "system-design/frontend-system-design.md",
+    "reactjs/reactjs-fiber-structure.md",
     "nodejs/README.md",
     "javascript/README.md",
     "expressjs/README.md",
     "README.md",
     "reactjs/README-new.md",
-    "reactjs/reactjs-design-patterns.md",
-    "reactjs/reactjs-fiber-structure.md",
-    "system-design/frontend-system-design.md",
     "ai/mastering-ai-guide.md",
     "system-design",
     "untitled folder",
