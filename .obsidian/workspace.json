@@ -22,6 +22,18 @@
             }
           },
           {
+            "id": "8a5aac1d967c27ee",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.9.14"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.9.14"
+            }
+          },
+          {
             "id": "eb53ec7ff526e3e5",
             "type": "leaf",
             "state": {
@@ -48,21 +60,9 @@
               "icon": "lucide-file",
               "title": "reactjs-design-patterns"
             }
-          },
-          {
-            "id": "3cb02baab889481c",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.9.12"
-              },
-              "icon": "lucide-book-up",
-              "title": "Release Notes 1.9.12"
-            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -212,15 +212,15 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "3cb02baab889481c",
+  "active": "8a5aac1d967c27ee",
   "lastOpenFiles": [
-    "ai/mastering-ai-guide.md",
     "system-design/frontend-system-design.md",
+    "reactjs/reactjs-design-patterns.md",
+    "ai/mastering-ai-guide.md",
     "system-design/frontend-system-design-question.md",
     "nodejs/nodejs-roadmap.md",
     "nodejs/nodejs-asynchronous-programming.md",
     "reactjs/reactjs-fiber-structure.md",
-    "reactjs/reactjs-design-patterns.md",
     "conflict-files-obsidian-git.md",
     "nodejs/README.md",
     "javascript/README.md",
