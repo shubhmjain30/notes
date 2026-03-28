@@ -1,8 +1,26 @@
 # Node.js Interview Roadmap
 
-This folder should help you revise Node.js efficiently. Use this file to find the right note fast instead of reading long repeated explanations.
+Interview-focused notes for Node.js runtime behavior, async programming, modules, core APIs, and data modeling tradeoffs.
+
+This folder is designed for preparation, not passive reading. Use it to revise quickly, study in a sane order, and build strong answers around runtime constraints, concurrency, and backend architecture tradeoffs.
+
+## What This Folder Covers
+
+- Event loop, libuv, thread pool, and runtime architecture
+- Callbacks, promises, async/await, streams, and async control flow
+- CommonJS, ES Modules, resolution, caching, and core APIs
+- Data modeling, SQL vs NoSQL, and persistence tradeoffs
+- Operational thinking around performance, blocking work, and resilience
 
 ## How To Use This Folder
+
+1. Start with this roadmap.
+2. Read the canonical topic notes in order.
+3. Prioritize the highest-yield topics if time is limited.
+4. Finish with the cheat sheet before interviews.
+5. Practice giving short spoken answers for each core concept.
+
+## File Map
 
 | File                                                                     | Purpose                                                   | When to Read            |
 | ------------------------------------------------------------------------ | --------------------------------------------------------- | ----------------------- |
@@ -27,6 +45,8 @@ This folder should help you revise Node.js efficiently. Use this file to find th
 8. [nodejs-interview-cheat-sheet.md](nodejs-interview-cheat-sheet.md)
 
 ## Highest-Yield Topics
+
+If time is limited, prioritize these in order:
 
 1. Event loop
 2. Single-threaded execution model
@@ -65,14 +85,31 @@ This folder should help you revise Node.js efficiently. Use this file to find th
 - How would you design data boundaries for scale?
 - How would you structure observability and operational resilience?
 
-## What To Memorize Verbatim
+## Suggested Preparation Plans
 
-- Node.js is a runtime, not a framework.
-- JavaScript execution is single-threaded, but Node can still handle many concurrent I/O operations.
-- The event loop schedules callbacks and async work.
-- CPU-heavy code can block the event loop.
-- Streams reduce memory pressure by processing data incrementally.
+### 2-Hour Refresh
+
+- Read [nodejs-runtime-architecture.md](nodejs-runtime-architecture.md)
+- Read [nodejs-asynchronous-programming.md](nodejs-asynchronous-programming.md)
+- Review [nodejs-modules.md](nodejs-modules.md)
+- Review [nodejs-core-modules.md](nodejs-core-modules.md)
+- Finish with [nodejs-interview-cheat-sheet.md](nodejs-interview-cheat-sheet.md)
+
+### 1-Day Revision
+
+- Cover runtime architecture, async programming, and modules first
+- Review core modules and common operational patterns
+- Revisit persistence tradeoffs in [nodejs-data-modeling.md](nodejs-data-modeling.md)
+- Read the database implementation notes most relevant to your target stack
+- End with [nodejs-interview-cheat-sheet.md](nodejs-interview-cheat-sheet.md)
+
+## Best Way To Get Interview Value From This Folder
+
+- Explain Node.js as a runtime model, not just a package ecosystem
+- Focus on why the event loop works well for I/O-heavy systems and where it breaks down
+- Use data-modeling notes to support backend architecture answers
+- Re-read only the topics you miss in mock interviews
 
 ## Final Advice
 
-Node.js interviews are usually less about memorizing APIs and more about understanding runtime behavior, async control flow, and architecture tradeoffs.
+Start from the roadmap, then use the topic files as canonical references instead of collecting overlapping summaries from multiple notes.

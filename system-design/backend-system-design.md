@@ -1,6 +1,32 @@
 # Backend System Design For Node.js And Express
 
-This file is the backend system design companion to the frontend system design notes. It is written for JavaScript interviews where the backend stack is primarily Node.js plus Express.
+Interview-focused notes for backend system design in a Node.js and Express stack, covering request flow, API design, async behavior, caching, authentication, data ownership, and operational tradeoffs.
+
+This file is designed for preparation, not passive reading. Use it to build clear backend design answers, reason about tradeoffs, and connect runtime behavior with API, storage, and scaling decisions.
+
+## What This File Covers
+
+- Node.js runtime constraints and Express request pipeline design
+- API style choices, validation boundaries, and request flow structure
+- Caching, authentication, authorization, and data-model tradeoffs
+- Scaling, background processing, reliability, and observability
+
+## How To Use This File
+
+1. Start here before practicing backend system design prompts.
+2. Use each section as a checklist for the tradeoffs you should mention.
+3. Map the ideas to one concrete backend domain, such as auth, notifications, search, or payments.
+4. Continue with the prompt file for mock-interview practice.
+5. Practice giving a 5 to 10 minute answer using the answer pattern near the end.
+
+## Best Companion Files
+
+| File                                                                   | Purpose                             | When to Read          |
+| ---------------------------------------------------------------------- | ----------------------------------- | --------------------- |
+| [backend-system-design-question.md](backend-system-design-question.md) | Prompt playbook for mock interviews | After this foundation |
+| [../nodejs/nodejs-roadmap.md](../nodejs/nodejs-roadmap.md)             | Runtime and async companion         | Alongside this file   |
+| [../expressjs/express-roadmap.md](../expressjs/express-roadmap.md)     | Request pipeline and API companion  | Alongside this file   |
+| [../nodejs/nodejs-data-modeling.md](../nodejs/nodejs-data-modeling.md) | Data-model tradeoff companion       | After this foundation |
 
 ## TL;DR
 
@@ -291,3 +317,30 @@ Designing only the happy path and saying nothing about failure, timeout, or degr
 - [expressjs/express-restful-api.md](../expressjs/express-restful-api.md)
 - [expressjs/express-error-handling.md](../expressjs/express-error-handling.md)
 - [expressjs/express-advanced-features.md](../expressjs/express-advanced-features.md)
+
+## Suggested Preparation Plans
+
+### 2-Hour Refresh
+
+- Read this file once from top to bottom
+- Drill the API, caching, auth, and scaling sections aloud
+- Practice 2 to 3 prompts from [backend-system-design-question.md](backend-system-design-question.md)
+- Revisit runtime and request pipeline notes if any answer feels weak
+
+### 1-Day Revision
+
+- Read this foundation file and turn each major section into a spoken answer
+- Practice 3 to 5 prompts from [backend-system-design-question.md](backend-system-design-question.md)
+- Revisit runtime topics in [../nodejs/nodejs-roadmap.md](../nodejs/nodejs-roadmap.md)
+- Revisit API and middleware topics in [../expressjs/express-roadmap.md](../expressjs/express-roadmap.md)
+
+## Best Way To Get Interview Value From This File
+
+- Separate API boundaries, business logic, data access, and background work clearly
+- Explain why a design choice fits the access pattern instead of naming tools by habit
+- Always mention consistency, failure handling, and observability
+- Re-read only the sections you struggle to include in mock answers
+
+## Final Advice
+
+Use this file to build your backend reasoning model first. Once that model is clear, use the prompt file to practice applying it under interview pressure.

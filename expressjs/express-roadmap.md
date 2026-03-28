@@ -1,8 +1,26 @@
 # Express Interview Roadmap
 
-This folder should help you revise Express quickly. Use this file as the navigator, then jump into the topic files you need.
+Interview-focused notes for Express request flow, middleware, REST API design, error handling, and production concerns.
+
+This folder is designed for preparation, not passive reading. Use it to revise quickly, study in a sane order, and build strong answers around the request pipeline, API boundaries, and pragmatic backend tradeoffs.
+
+## What This Folder Covers
+
+- Express philosophy, setup, and request-response basics
+- Routing, middleware composition, and request lifecycle design
+- REST API structure, validation, controllers, and services
+- Async error handling, response consistency, and production readiness
+- Authentication, security, performance, and deployment awareness
 
 ## How To Use This Folder
+
+1. Start with this roadmap.
+2. Read the canonical topic notes in order.
+3. Prioritize the highest-yield topics if time is limited.
+4. Finish with the cheat sheet before interviews.
+5. Practice giving short spoken answers for each core concept.
+
+## File Map
 
 | File                                                                 | Purpose                                                      | When to Read         |
 | -------------------------------------------------------------------- | ------------------------------------------------------------ | -------------------- |
@@ -23,6 +41,8 @@ This folder should help you revise Express quickly. Use this file as the navigat
 6. [express-interview-cheat-sheet.md](express-interview-cheat-sheet.md)
 
 ## Highest-Yield Topics
+
+If time is limited, prioritize these in order:
 
 1. What Express is and why it exists
 2. Routing and middleware
@@ -61,6 +81,31 @@ This folder should help you revise Express quickly. Use this file as the navigat
 - When is Express a better fit than a more opinionated framework?
 - How do you think about observability and production resilience?
 
+## Suggested Preparation Plans
+
+### 2-Hour Refresh
+
+- Read [express-intro.md](express-intro.md)
+- Read [express-routing-middleware.md](express-routing-middleware.md)
+- Read [express-restful-api.md](express-restful-api.md)
+- Review [express-error-handling.md](express-error-handling.md)
+- Finish with [express-interview-cheat-sheet.md](express-interview-cheat-sheet.md)
+
+### 1-Day Revision
+
+- Cover request-response basics, routing, and middleware first
+- Review REST design, validation, controllers, and service boundaries
+- Revisit async error handling and response consistency
+- Finish with security, auth, and production-awareness topics
+- End with [express-interview-cheat-sheet.md](express-interview-cheat-sheet.md)
+
+## Best Way To Get Interview Value From This Folder
+
+- Explain Express as a request pipeline, not just a list of APIs
+- Keep HTTP concerns, validation, business logic, and data access clearly separated in your answers
+- Use error-handling and advanced-features notes to support production-readiness discussions
+- Re-read only the topics you miss in mock interviews
+
 ## Final Advice
 
-Express interviews are usually about the request pipeline, API design, and pragmatic architecture decisions more than obscure framework trivia.
+Start from the roadmap, then use the topic files as canonical references instead of jumping straight into isolated deep dives.

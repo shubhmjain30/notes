@@ -1,18 +1,36 @@
 # React.js Interview Roadmap
 
-This folder should help you revise React fast, not read a book every time. Use this file as the 5-minute navigator, then study the stage files in order.
+Interview-focused notes for React fundamentals, hooks, patterns, performance, Fiber, and large-scale architecture.
+
+This folder is designed for preparation, not passive reading. Use it to revise quickly, study in a sane order, and build strong answers around rendering, state ownership, performance, and architecture tradeoffs.
+
+## What This Folder Covers
+
+- Components, props, state, JSX, and rendering basics
+- Hooks, context, forms, refs, and custom hooks
+- Design patterns, testing basics, and state management tradeoffs
+- Performance, data fetching, and React 18 behavior
+- Fiber, reconciliation, server components, and large-scale architecture
 
 ## How To Use This Folder
+
+1. Start with this roadmap.
+2. Read the canonical topic notes in order.
+3. Prioritize the highest-yield topics if time is limited.
+4. Finish with the cheat sheet before interviews.
+5. Practice giving short spoken answers for each core concept.
+
+## File Map
 
 | File                                                                 | Purpose                                                              | When to Read          |
 | -------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------- |
 | [reactjs-foundations.md](reactjs-foundations.md)                     | React basics and entry-level interview prep                          | Start here            |
 | [reactjs-core-proficiency.md](reactjs-core-proficiency.md)           | Hooks, context, forms, refs, testing basics                          | After foundations     |
-| [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md) | Rapid-fire interview questions and model answers                     | Before interviews     |
-| [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)   | Performance, state management, data fetching, architecture tradeoffs | Mid to senior prep    |
 | [reactjs-design-patterns.md](reactjs-design-patterns.md)             | Most common React design patterns with tradeoffs                     | After core            |
+| [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)   | Performance, state management, data fetching, architecture tradeoffs | Mid to senior prep    |
 | [reactjs-fiber-structure.md](reactjs-fiber-structure.md)             | Fiber and reconciliation interview essentials                        | Senior prep           |
 | [reactjs-expert-architectural.md](reactjs-expert-architectural.md)   | Server components, large-scale architecture, migrations              | Senior and staff prep |
+| [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md) | Rapid-fire interview questions and model answers                     | Before interviews     |
 
 ## Reading Order
 
@@ -20,101 +38,11 @@ This folder should help you revise React fast, not read a book every time. Use t
 2. [reactjs-core-proficiency.md](reactjs-core-proficiency.md)
 3. [reactjs-design-patterns.md](reactjs-design-patterns.md)
 4. [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)
-5. [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md)
-6. [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
-7. [reactjs-expert-architectural.md](reactjs-expert-architectural.md)
+5. [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
+6. [reactjs-expert-architectural.md](reactjs-expert-architectural.md)
+7. [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md)
 
-## Stage Breakdown
-
-### Stage 1: Foundations
-
-Focus on:
-
-- JSX rules and rendering
-- Functional vs class components
-- Props vs state
-- Event handling
-- Conditional rendering
-- Lists and keys
-- Basic styling and tooling
-
-Expected interview level:
-
-- Junior frontend
-- React beginner
-- Basic coding rounds
-
-Primary file:
-
-- [reactjs-foundations.md](reactjs-foundations.md)
-
-### Stage 2: Core Proficiency
-
-Focus on:
-
-- Rules of Hooks
-- useState, useEffect, useRef
-- Custom hooks
-- Context API basics
-- Error boundaries
-- Forms
-- Routing
-- Testing and TypeScript basics
-
-Expected interview level:
-
-- 1 to 3 years React experience
-- Product engineering teams
-- Most day-to-day React interviews
-
-Primary file:
-
-- [reactjs-core-proficiency.md](reactjs-core-proficiency.md)
-
-### Stage 3: Advanced Engineering
-
-Focus on:
-
-- Profiling and performance
-- React 18 concurrent features
-- Context vs classic Redux vs Redux Toolkit
-- Data fetching strategy
-- Code splitting
-- Accessibility and test strategy
-
-Expected interview level:
-
-- Mid-level to senior frontend
-- Architecture and scaling discussions
-- Performance-heavy interviews
-
-Primary file:
-
-- [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)
-
-### Stage 4: Expert Topics
-
-Focus on:
-
-- Fiber and reconciliation
-- Lanes and scheduling
-- Server Components and hydration
-- Large-scale architecture choices
-- Migration strategy
-- Security and monitoring
-
-Expected interview level:
-
-- Senior frontend
-- Lead frontend
-- System design and architecture rounds
-
-Primary files:
-
-- [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
-- [reactjs-expert-architectural.md](reactjs-expert-architectural.md)
-
-## Highest-Yield Interview Topics
+## Highest-Yield Topics
 
 If time is limited, prioritize these in order:
 
@@ -129,7 +57,7 @@ If time is limited, prioritize these in order:
 9. Error boundaries
 10. Reconciliation and Fiber basics
 
-## Common Interview Buckets
+## Interview Buckets
 
 ### Junior
 
@@ -155,35 +83,31 @@ If time is limited, prioritize these in order:
 - What problem did Fiber solve?
 - How would you structure state in a large React app?
 
-## Fast Revision Plans
+## Suggested Preparation Plans
 
-### 2-Hour Revision
+### 2-Hour Refresh
 
-1. Foundations: JSX, props/state, keys
-2. Core: hooks, context, forms
-3. Advanced: performance, state management
+- Read [reactjs-foundations.md](reactjs-foundations.md)
+- Read [reactjs-core-proficiency.md](reactjs-core-proficiency.md)
+- Review [reactjs-design-patterns.md](reactjs-design-patterns.md)
+- Read performance and state sections in [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)
+- Finish with [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md)
 
 ### 1-Day Revision
 
-1. Read [reactjs-foundations.md](reactjs-foundations.md)
-2. Read [reactjs-core-proficiency.md](reactjs-core-proficiency.md)
-3. Review [reactjs-design-patterns.md](reactjs-design-patterns.md)
-4. Read state management and performance sections in [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)
-5. Drill [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md)
-6. Finish with [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
+- Cover foundations first: JSX, props, state, lists, event handling
+- Review hooks, context, forms, refs, and custom hooks
+- Revisit patterns, performance, and state management tradeoffs
+- Finish with Fiber basics and architecture notes
+- End with [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md)
 
-## What To Memorize Verbatim
+## Best Way To Get Interview Value From This Folder
 
-These are worth having a polished 30-second answer for:
-
-- Props vs state
-- useEffect dependency array
-- Why keys matter
-- Context vs Redux
-- Why RTK over classic Redux
-- useMemo vs useCallback
-- Render phase vs commit phase
+- Do not treat React as only a hooks checklist; explain rendering and state ownership clearly
+- Prefer tradeoffs over slogans when discussing context, Redux, and performance
+- Use Fiber and reconciliation notes to strengthen senior-level answers
+- Re-read only the topics you miss in mock interviews
 
 ## Final Advice
 
-Study for interview depth, not documentation completeness. If a topic already has a canonical file in this folder, treat every other mention as supporting context only.
+Start from the roadmap, then use the topic files as canonical references instead of repeating the same concept across multiple notes.

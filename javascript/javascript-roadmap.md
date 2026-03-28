@@ -1,8 +1,26 @@
 # JavaScript Interview Roadmap
 
-This folder should help you revise JavaScript quickly and in the right order. Use this file as the navigator, then study the topic files as needed.
+Interview-focused notes for JavaScript fundamentals, async behavior, object model, performance, and frontend architecture.
+
+This folder is designed for preparation, not passive reading. Use it to revise quickly, study in a sane order, and build interview answers around language behavior, browser runtime details, and tradeoffs.
+
+## What This Folder Covers
+
+- Scope, hoisting, closures, and `this`
+- Types, coercion, equality, and object behavior
+- Prototypes, inheritance, classes, and the object model
+- Event loop, promises, async/await, and concurrency basics
+- Memory, performance, DOM behavior, and frontend architecture
 
 ## How To Use This Folder
+
+1. Start with this roadmap.
+2. Read the canonical topic notes in order.
+3. Prioritize the highest-yield topics if time is limited.
+4. Finish with the cheat sheet before interviews.
+5. Practice giving short spoken answers for each core concept.
+
+## File Map
 
 | File                                                                       | Purpose                                          | When to Read                  |
 | -------------------------------------------------------------------------- | ------------------------------------------------ | ----------------------------- |
@@ -15,7 +33,6 @@ This folder should help you revise JavaScript quickly and in the right order. Us
 | [javascript-performance-memory.md](javascript-performance-memory.md)       | Memory, GC, optimization                         | Advanced prep                 |
 | [javascript-advanced-frontend.md](javascript-advanced-frontend.md)         | DOM, browser APIs, rendering performance         | Frontend-focused interviews   |
 | [javascript-system-design.md](javascript-system-design.md)                 | Frontend architecture and system design          | Senior interviews             |
-| [javascript-interview-cheat-sheet.md](javascript-interview-cheat-sheet.md) | Rapid-fire interview questions and model answers | Before interviews             |
 | [javascript-interview-cheat-sheet.md](javascript-interview-cheat-sheet.md) | Rapid-fire interview questions and model answers | Before interviews             |
 
 ## Reading Order
@@ -30,7 +47,6 @@ This folder should help you revise JavaScript quickly and in the right order. Us
 8. [javascript-advanced-frontend.md](javascript-advanced-frontend.md)
 9. [javascript-system-design.md](javascript-system-design.md)
 10. [javascript-interview-cheat-sheet.md](javascript-interview-cheat-sheet.md)
-11. [javascript-interview-cheat-sheet.md](javascript-interview-cheat-sheet.md)
 
 ## Highest-Yield Topics
 
@@ -73,36 +89,31 @@ If time is limited, prioritize these in order:
 - How would you reason about rendering performance?
 - How would you structure a large frontend codebase?
 
-## Fast Revision Plans
+## Suggested Preparation Plans
 
-### 90-Minute Revision
+### 2-Hour Refresh
 
-1. [javascript-first-principle.md](javascript-first-principle.md)
-2. [javascript-building-blocks.md](javascript-building-blocks.md)
-3. [javascript-structure.md](javascript-structure.md)
-4. [javascript-async.md](javascript-async.md)
+- Read [javascript-first-principle.md](javascript-first-principle.md)
+- Read [javascript-building-blocks.md](javascript-building-blocks.md)
+- Read [javascript-structure.md](javascript-structure.md)
+- Read [javascript-async.md](javascript-async.md)
+- Finish with [javascript-interview-cheat-sheet.md](javascript-interview-cheat-sheet.md)
 
 ### 1-Day Revision
 
-1. Core language: first principle, building blocks, structure
-2. Runtime model: async and event loop
-3. Modern syntax: modern toolkit
-4. Advanced topics: object model, performance, frontend, system design
-5. Finish with [javascript-interview-cheat-sheet.md](javascript-interview-cheat-sheet.md)
+- Cover core language first: first principle, building blocks, structure
+- Review runtime behavior with [javascript-async.md](javascript-async.md)
+- Revisit modern syntax in [javascript-modern-toolkit.md](javascript-modern-toolkit.md)
+- Finish advanced topics: object model, performance, frontend, and system design
+- End with [javascript-interview-cheat-sheet.md](javascript-interview-cheat-sheet.md)
 
-## What To Memorize Verbatim
+## Best Way To Get Interview Value From This Folder
 
-These should be polished 30-second answers:
-
-- Lexical scope
-- Hoisting
-- Closure
-- `this` binding
-- `==` vs `===`
-- Event loop
-- Prototype chain
-- Promise vs async/await
+- Do not memorize definitions without examples
+- Explain why language behavior happens, not just what happens
+- Use async and object model notes to connect language and runtime questions
+- Re-read only the topics you miss in mock interviews
 
 ## Final Advice
 
-Every topic should have one canonical file. Use this roadmap to find the right file quickly, not to relearn the topic from duplicated summaries.
+Start from the roadmap, then use the topic files as canonical references instead of re-reading duplicated summaries.

@@ -1,10 +1,22 @@
 # Master Cross-Stack Interview Sheet
 
-This file links the interview prep set across JavaScript, React, Node.js, and Express. Use it when you want to revise by topic instead of by technology folder.
+Interview-focused cross-stack navigation for JavaScript, React.js, Node.js, Express.js, and system design.
+
+This file is designed for preparation, not passive reading. Use it to revise by topic across the stack and build answers that connect language behavior, frontend architecture, backend runtime constraints, and API design tradeoffs.
+
+## What This Sheet Covers
+
+- A topic map that links related notes across JavaScript, React, Node.js, and Express
+- Suggested preparation paths for frontend, backend, full-stack, and last-minute revision
+- Cross-stack practice questions that force connected interview answers
 
 ## How To Use This Sheet
 
-Pick a topic row, then revise across the stack from language basics to frontend architecture to backend runtime and API design.
+1. Start here when you want to revise by topic instead of by technology folder.
+2. Pick one topic row from the map below.
+3. Read the linked canonical notes across the stack.
+4. Use the preparation paths if you want a role-based study sequence.
+5. Practice the cross-stack questions aloud and answer them as one connected system.
 
 ## Topic Map
 
@@ -20,7 +32,7 @@ Pick a topic row, then revise across the stack from language basics to frontend 
 | Security                | [javascript/javascript-advanced-frontend.md](javascript/javascript-advanced-frontend.md)                                                                                             | [reactjs/reactjs-expert-architectural.md](reactjs/reactjs-expert-architectural.md)                                                                             | [nodejs/nodejs-runtime-architecture.md](nodejs/nodejs-runtime-architecture.md)                                                                                         | [expressjs/express-advanced-features.md](expressjs/express-advanced-features.md)   |
 | System design           | [javascript/javascript-system-design.md](javascript/javascript-system-design.md)                                                                                                     | [reactjs/reactjs-expert-architectural.md](reactjs/reactjs-expert-architectural.md)                                                                             | [nodejs/nodejs-roadmap.md](nodejs/nodejs-roadmap.md)                                                                                                                   | [expressjs/express-roadmap.md](expressjs/express-roadmap.md)                       |
 
-## Best Revision Paths
+## Suggested Preparation Paths
 
 ### Frontend-Focused Path
 
@@ -94,6 +106,13 @@ Use:
 - [nodejs/nodejs-data-modeling.md](nodejs/nodejs-data-modeling.md)
 - [expressjs/express-restful-api.md](expressjs/express-restful-api.md)
 - [expressjs/express-advanced-features.md](expressjs/express-advanced-features.md)
+
+## Best Way To Get Interview Value From This Sheet
+
+- Use this sheet when isolated stack knowledge starts feeling disconnected
+- Move from browser and UI behavior to API design and backend runtime behavior in the same answer
+- Prefer tradeoffs and flow explanations over stack-by-stack definitions
+- Revisit the rows that expose weak connections between frontend and backend concepts
 
 ## Final Advice
 

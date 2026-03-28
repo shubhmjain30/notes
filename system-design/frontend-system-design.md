@@ -1,6 +1,32 @@
 # Frontend System Design Foundations
 
-This file is the concise foundation for frontend system design interviews. The goal is not to memorize a giant theory manual. The goal is to reason clearly about tradeoffs.
+Interview-focused notes for frontend system design, covering state ownership, rendering strategy, performance, reliability, accessibility, and architecture tradeoffs.
+
+This file is designed for preparation, not passive reading. Use it to build clear system design answers, reason about tradeoffs, and connect product requirements to frontend architecture decisions.
+
+## What This File Covers
+
+- State ownership, data flow, rendering strategy, and API interaction
+- Performance, reliability, accessibility, security, and maintainability
+- Architecture choices from monoliths to micro-frontends
+- A reusable answer pattern for frontend system design interviews
+
+## How To Use This File
+
+1. Start here before practicing prompt-based frontend system design rounds.
+2. Use each section as a checklist for the tradeoffs you should mention.
+3. Map the ideas to one product you already know, such as a feed, dashboard, or commerce UI.
+4. Continue with the prompt and cheat-sheet files for drills and fast recall.
+5. Practice giving a 5 to 10 minute answer using the answer pattern near the end.
+
+## Best Companion Files
+
+| File                                                                                   | Purpose                                                        | When to Read          |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------- | --------------------- |
+| [frontend-system-design-question.md](frontend-system-design-question.md)               | Prompt playbook for mock interviews                            | After this foundation |
+| [frontend-system-design-cheat-sheet.md](frontend-system-design-cheat-sheet.md)         | Rapid-fire revision layer                                      | Before interviews     |
+| [../reactjs/reactjs-roadmap.md](../reactjs/reactjs-roadmap.md)                         | React interview path that supports UI architecture discussions | Alongside this file   |
+| [../javascript/javascript-system-design.md](../javascript/javascript-system-design.md) | Frontend architecture companion from the JavaScript side       | After this foundation |
 
 ## TL;DR
 
@@ -155,7 +181,7 @@ One of the biggest frontend design mistakes is putting all state into one global
 - Caching
 - Memoization only where justified
 
-## Good Senior Answer Pattern
+## Strong Interview Answer Pattern
 
 1. Clarify constraints.
 2. Define core user journeys.
@@ -163,3 +189,30 @@ One of the biggest frontend design mistakes is putting all state into one global
 4. Choose rendering and API strategy.
 5. Explain performance, reliability, and security tradeoffs.
 6. Mention observability and future scaling.
+
+## Suggested Preparation Plans
+
+### 2-Hour Refresh
+
+- Read this file once from top to bottom
+- Drill the rendering, state, performance, and reliability sections aloud
+- Review [frontend-system-design-question.md](frontend-system-design-question.md)
+- Finish with [frontend-system-design-cheat-sheet.md](frontend-system-design-cheat-sheet.md)
+
+### 1-Day Revision
+
+- Read this foundation file and turn each major section into a spoken answer
+- Practice 3 to 5 prompts from [frontend-system-design-question.md](frontend-system-design-question.md)
+- Revisit React architecture topics using [../reactjs/reactjs-roadmap.md](../reactjs/reactjs-roadmap.md)
+- End with [frontend-system-design-cheat-sheet.md](frontend-system-design-cheat-sheet.md)
+
+## Best Way To Get Interview Value From This File
+
+- Do not memorize architecture names without explaining when they fit
+- Separate local UI state, shared client state, server state, and URL state clearly
+- Always mention performance, reliability, accessibility, and security
+- Re-read only the sections you struggle to include in mock answers
+
+## Final Advice
+
+Use this file to build your reasoning model first. Once that model is clear, use the prompt file to practice applying it under interview pressure.
