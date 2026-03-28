@@ -4,14 +4,15 @@ This folder should help you revise React fast, not read a book every time. Use t
 
 ## How To Use This Folder
 
-| File                                                               | Purpose                                                              | When to Read          |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------- | --------------------- |
-| [reactjs-foundations.md](reactjs-foundations.md)                   | React basics and entry-level interview prep                          | Start here            |
-| [reactjs-core-proficiency.md](reactjs-core-proficiency.md)         | Hooks, context, forms, refs, testing basics                          | After foundations     |
-| [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md) | Performance, state management, data fetching, architecture tradeoffs | Mid to senior prep    |
-| [reactjs-design-patterns.md](reactjs-design-patterns.md)           | Most common React design patterns with tradeoffs                     | After core            |
-| [reactjs-fiber-structure.md](reactjs-fiber-structure.md)           | Fiber and reconciliation interview essentials                        | Senior prep           |
-| [reactjs-expert-architectural.md](reactjs-expert-architectural.md) | Server components, large-scale architecture, migrations              | Senior and staff prep |
+| File                                                                 | Purpose                                                              | When to Read          |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------- |
+| [reactjs-foundations.md](reactjs-foundations.md)                     | React basics and entry-level interview prep                          | Start here            |
+| [reactjs-core-proficiency.md](reactjs-core-proficiency.md)           | Hooks, context, forms, refs, testing basics                          | After foundations     |
+| [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md) | Rapid-fire interview questions and model answers                     | Before interviews     |
+| [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)   | Performance, state management, data fetching, architecture tradeoffs | Mid to senior prep    |
+| [reactjs-design-patterns.md](reactjs-design-patterns.md)             | Most common React design patterns with tradeoffs                     | After core            |
+| [reactjs-fiber-structure.md](reactjs-fiber-structure.md)             | Fiber and reconciliation interview essentials                        | Senior prep           |
+| [reactjs-expert-architectural.md](reactjs-expert-architectural.md)   | Server components, large-scale architecture, migrations              | Senior and staff prep |
 
 ## Reading Order
 
@@ -19,8 +20,9 @@ This folder should help you revise React fast, not read a book every time. Use t
 2. [reactjs-core-proficiency.md](reactjs-core-proficiency.md)
 3. [reactjs-design-patterns.md](reactjs-design-patterns.md)
 4. [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)
-5. [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
-6. [reactjs-expert-architectural.md](reactjs-expert-architectural.md)
+5. [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md)
+6. [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
+7. [reactjs-expert-architectural.md](reactjs-expert-architectural.md)
 
 ## Stage Breakdown
 
@@ -167,7 +169,8 @@ If time is limited, prioritize these in order:
 2. Read [reactjs-core-proficiency.md](reactjs-core-proficiency.md)
 3. Review [reactjs-design-patterns.md](reactjs-design-patterns.md)
 4. Read state management and performance sections in [reactjs-advanced-engineering.md](reactjs-advanced-engineering.md)
-5. Finish with [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
+5. Drill [reactjs-interview-cheat-sheet.md](reactjs-interview-cheat-sheet.md)
+6. Finish with [reactjs-fiber-structure.md](reactjs-fiber-structure.md)
 
 ## What To Memorize Verbatim
 

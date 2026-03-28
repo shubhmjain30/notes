@@ -1,192 +1,67 @@
-[[javascript-roadmap.md]]
+# Advanced Frontend JavaScript
 
-# Advanced Frontend Concepts & Design Patterns
+This file focuses on browser-side JavaScript topics that often appear in frontend interviews after the core language basics.
 
-## Introduction
+## TL;DR
 
-This section focuses on advanced frontend topics, including React hooks, essential design patterns, and principles for building scalable frontend systems. It is especially relevant for senior and lead developer roles.
+Strong frontend JavaScript means understanding the DOM, browser rendering, event handling, and how JavaScript decisions affect perceived performance.
 
-### Knowledge Points
+## DOM And Rendering Basics
 
-#### React Hooks: useEffect vs. useLayoutEffect
+### What To Know
 
-Understanding the timing differences between these hooks is crucial:
+- The DOM is a browser object model, not part of the language itself.
+- DOM updates can trigger style recalculation, layout, and paint.
+- Too many read-write layout cycles can hurt performance.
 
-```javascript
-// useEffect runs after browser paint
-// Preferred for most cases
-function ComponentWithEffect() {
-	const [count, setCount] = useState(0);
+## Event Delegation
 
-	useEffect(() => {
-		// Runs after the component renders and the browser paints
-		console.log("Effect ran, count:", count);
+### TL;DR
 
-		return () => {
-			// Cleanup function runs before next effect or unmount
-			console.log("Cleaning up effect");
-		};
-	}, [count]); // Only re-run when count changes
+Instead of attaching many listeners to many child nodes, attach one listener higher in the tree and inspect the event target.
 
-	return (
-		<button onClick={() => setCount((c) => c + 1)}>Count: {count}</button>
-	);
-}
+### Why It Matters
 
-// useLayoutEffect runs before browser paint
-// Use for DOM measurements and visual updates that must be synchronous
-function ComponentWithLayoutEffect() {
-	const [width, setWidth] = useState(0);
-	const elementRef = useRef(null);
+- Less memory overhead
+- Works well for dynamic content
+- Simpler listener management
 
-	useLayoutEffect(() => {
-		// Runs synchronously after DOM mutations but before browser paint
-		if (elementRef.current) {
-			const newWidth = elementRef.current.getBoundingClientRect().width;
-			setWidth(newWidth); // This update happens before the user sees anything
-		}
-	}, [elementRef.current]);
+## Browser Storage
 
-	return (
-		<div>
-			<div ref={elementRef}>Measure my width</div>
-			<p>Width: {width}px</p>
-		</div>
-	);
-}
-```
+### What To Know
 
-#### Other Essential React Hooks
+- `localStorage` persists across sessions
+- `sessionStorage` lasts for a tab session
+- IndexedDB is better for larger structured client storage
 
-Modern React development relies on these core hooks:
+## Network And Browser APIs
 
-```javascript
-function EssentialHooks() {
-	// useState - Add state to functional components
-	const [count, setCount] = useState(0);
+### Core APIs To Know
 
-	// useRef - Persistent value that doesn't cause re-renders
-	const inputRef = useRef(null);
-	const renderCount = useRef(0);
+- `fetch`
+- `AbortController`
+- `IntersectionObserver`
+- `ResizeObserver`
+- `requestAnimationFrame`
 
-	// useCallback - Memoize functions to prevent unnecessary re-renders
-	const handleClick = useCallback(() => {
-		setCount((c) => c + 1);
-		inputRef.current?.focus();
-	}, []);
+## Rendering Performance
 
-	// useMemo - Memoize expensive calculations
-	const expensiveValue = useMemo(() => {
-		console.log("Computing expensive value");
-		return count * count * count;
-	}, [count]);
+### Good Rules
 
-	// Track renders without affecting them
-	useEffect(() => {
-		renderCount.current += 1;
-		console.log(`Rendered ${renderCount.current} times`);
-	});
+- Use `requestAnimationFrame` for animation work.
+- Avoid expensive work inside scroll and resize listeners.
+- Prefer CSS for simple visual transitions when possible.
 
-	return (
-		<div>
-			<p>Count: {count}</p>
-			<p>Expensive calculation: {expensiveValue}</p>
-			<input ref={inputRef} placeholder="Focus on click" />
-			<button onClick={handleClick}>Increment & Focus</button>
-		</div>
-	);
-}
-```
+## Frontend Interview Questions
 
-#### Core Design Patterns: Singleton, Observer, Factory
+### What is event delegation?
 
-Essential patterns for scalable frontend architecture:
+A pattern where a parent handles events for children by relying on event bubbling.
 
-```javascript
-// Singleton Pattern - One instance shared throughout the app
-class ThemeManager {
-	static instance;
+### Why can DOM work be expensive?
 
-	constructor() {
-		if (ThemeManager.instance) {
-			return ThemeManager.instance;
-		}
+Because browser rendering may need style recalculation, layout, and paint after updates.
 
-		this.theme = "light";
-		ThemeManager.instance = this;
-	}
+### When would you use AbortController?
 
-	getTheme() {
-		return this.theme;
-	}
-
-	setTheme(newTheme) {
-		this.theme = newTheme;
-		this.notifyListeners();
-	}
-
-	// Observer pattern integration
-	listeners = [];
-
-	subscribe(callback) {
-		this.listeners.push(callback);
-		return () => {
-			this.listeners = this.listeners.filter((cb) => cb !== callback);
-		};
-	}
-
-	notifyListeners() {
-		this.listeners.forEach((callback) => callback(this.theme));
-	}
-}
-
-// Usage
-const themeManager1 = new ThemeManager();
-const themeManager2 = new ThemeManager();
-console.log(themeManager1 === themeManager2); // true
-
-// Factory Pattern - Create objects without specifying exact class
-class Button {
-	constructor(text, color) {
-		this.text = text;
-		this.color = color;
-	}
-
-	render() {
-		return `<button style="color: ${this.color}">${this.text}</button>`;
-	}
-}
-
-class Link {
-	constructor(text, url) {
-		this.text = text;
-		this.url = url;
-	}
-
-	render() {
-		return `<a href="${this.url}">${this.text}</a>`;
-	}
-}
-
-// Factory
-class UIFactory {
-	createElement(type, config) {
-		switch (type) {
-			case "button":
-				return new Button(config.text, config.color);
-			case "link":
-				return new Link(config.text, config.url);
-			default:
-				throw new Error(`Element type ${type} not supported`);
-		}
-	}
-}
-
-// Usage
-const factory = new UIFactory();
-const submitButton = factory.createElement("button", {
-	text: "Submit",
-	color: "blue",
-});
-const homeLink = factory.createElement("link", { text: "Home", url: "/" });
-```
+To cancel in-flight fetch requests or other abortable browser operations.
