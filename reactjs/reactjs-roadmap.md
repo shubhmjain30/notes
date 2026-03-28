@@ -263,8 +263,7 @@ With components, JSX, props, and state understood, the final piece of the core p
     	);
     }
     ```
--   **Rendering Lists:** The standard pattern for rendering a list of items is to use the JavaScript `.map()` method. This method transforms an array of data into an array of React elements. When doing this, it is crucial to provide a unique
-    **key** prop to each element in the list. The key should be a stable and unique string or number that identifies an item among its siblings. This key helps React identify which items have changed, been added, or been removed, allowing for much more efficient updates to the DOM. Using the array index as a key is discouraged if the list can be reordered, as it can lead to performance issues and bugs with component state.
+-   **Rendering Lists:** The standard pattern for rendering a list of items is to use the JavaScript `.map()` method. This method transforms an array of data into an array of React elements. When doing this, it is crucial to provide a unique **key** prop to each element in the list. The key should be a stable and unique string or number that identifies an item among its siblings. This key helps React identify which items have changed, been added, or been removed, allowing for much more efficient updates to the DOM. Using the array index as a key is discouraged if the list can be reordered, as it can lead to performance issues and bugs with component state.
 
 ## **Stage 3: Building Interactivity - State, Events, and Hooks**
 
@@ -318,9 +317,7 @@ function Counter() {
 
 #### **useEffect**
 
-This Hook lets you perform side effects in your components. Side effects are operations that are not directly related to rendering the UI, such as data fetching, setting up subscriptions, or manually changing the DOM. The
-
-useEffect Hook runs _after_ every render by default. Its behavior can be controlled with a dependency array, its second argument.
+This Hook lets you perform side effects in your components. Side effects are operations that are not directly related to rendering the UI, such as data fetching, setting up subscriptions, or manually changing the DOM. The useEffect Hook runs _after_ every render by default. Its behavior can be controlled with a dependency array, its second argument.
 
 -   **Running Once on Mount:** To run an effect only once after the component initially mounts (similar to componentDidMount in classes), provide an empty dependency array (`[]`). This is the standard pattern for initial data fetching.
 -   **Running on State/Prop Change:** To re-run an effect only when specific values change (similar to componentDidUpdate), include those values (props or state) in the dependency array.
