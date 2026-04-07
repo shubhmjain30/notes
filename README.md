@@ -1,4 +1,4 @@
-# Cross-Stack Interview Notes
+# Interview Notes
 
 Interview-focused Markdown notes for JavaScript, React.js, Node.js, Express.js, and system design.
 
